@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">SpotifyApi</string>
 
+    //login
+    <string name="enter_account_spotify">Entre com sua conta Spotify</string>
+    <string name="entrar_button">Entrar</string>
 </resources>
