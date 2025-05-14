@@ -3,6 +3,7 @@ package com.example.spotifyapi.di
 import com.example.spotifyapi.data.networking.SpotifyApiService
 import com.example.spotifyapi.data.repository.AuthRepository
 import com.example.spotifyapi.data.repository.AuthRepositoryImpl
+import com.example.spotifyapi.data.repository.TokenRepository
 import com.example.spotifyapi.domain.usecase.GetAccessTokenUseCase
 import com.example.spotifyapi.ui.login.LoginViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -15,7 +16,9 @@ val appModule = module {
 
     factory { GetAccessTokenUseCase(get()) }
 
-    viewModel { LoginViewModel(get()) }
+    single { TokenRepository() }
+
+    viewModel { LoginViewModel(get(), get()) }
 }
 
 val networkModule = module {
