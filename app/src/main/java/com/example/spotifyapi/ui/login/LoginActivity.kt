@@ -1,18 +1,13 @@
 package com.example.spotifyapi.ui.login
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.spotify.utils.Constants
-import com.example.spotifyapi.MainActivity
-import com.example.spotifyapi.R
+import com.example.spotifyapi.ui.MainActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,25 +36,18 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupButtonListeners() {
         binding.buttonStart.setOnClickListener {
-            if (!isInternetAvailable()) {
-                Toast.makeText(this, "Sem conexão com a internet. Carregando offline.", Toast.LENGTH_SHORT).show()
+            if (!loginViewModel.isInternetAvailable(this)) {
+                Toast.makeText(
+                    this,
+                    "Sem conexão com a internet. Carregando offline.",
+                    Toast.LENGTH_SHORT
+                ).show()
                 navigateToMainActivity()
             } else {
-                startAuthentication()
+                val authIntent = loginViewModel.startAuthentication()
+                startActivity(authIntent)
             }
         }
-    }
-
-    private fun startAuthentication() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.AUTH_URL))
-        startActivity(intent)
-    }
-
-    private fun isInternetAvailable(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     private fun handleRedirect(intent: Intent?) {
@@ -67,18 +55,12 @@ class LoginActivity : AppCompatActivity() {
             Log.d("LoginActivity", "handleRedirect() chamado com URI: $uri")
             if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
-                    result?.onSuccess { tokenState ->
-                        tokenState.token?.let { tokens ->
-                            Log.d("LoginActivity", "Tokens recebidos: accessToken=${tokens.accessToken}")
-
-                            if (loginViewModel.saveTokens(tokens.accessToken, tokens.refreshToken)) {
-                                navigateToMainActivity()
-                            } else {
-                                Log.e("LoginActivity", "Falha ao salvar tokens!")
-                            }
-                        }
-                    }?.onFailure { e ->
-                        Log.e("LoginActivity", "Erro ao obter token: ${e.message}")
+                    result?.onSuccess {
+                        Log.d("LoginActivity", "Tokens recebidos! Iniciando navegação...")
+                        navigateToMainActivity()
+                    }?.onFailure {
+                        Log.e("LoginActivity", "Erro ao obter token: ${it.message}")
+                        Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
