@@ -2,7 +2,7 @@ package com.example.spotifyapi.data.repository
 
 
 import android.content.Context
-import com.example.spotifyapi.data.model.Tokens
+import com.example.spotifyapi.data.model.SpotifyTokens
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -20,7 +20,7 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
     private val sharedPreferences =
         context.getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
 
-    override suspend fun getAccessToken(authorizationCode: String, redirectUri: String): Tokens {
+    override suspend fun getAccessToken(authorizationCode: String, redirectUri: String): SpotifyTokens {
         val requestBody = FormBody.Builder().add("grant_type", "authorization_code")
             .add("code", authorizationCode).add("redirect_uri", "meuapp://callback")
             .add("client_id", "9cde7198eaf54c06860b6d0257dcd893")
@@ -42,10 +42,10 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
         val jsonObject = JSONObject(responseBody)
         val accessToken = jsonObject.getString("access_token")
         val refreshToken = jsonObject.getString("refresh_token")
-        return Tokens(accessToken, refreshToken)
+        return SpotifyTokens(accessToken, refreshToken)
     }
 
-    override suspend fun refreshAccessToken(refreshToken: String): Tokens {
+    override suspend fun refreshAccessToken(refreshToken: String): SpotifyTokens {
         val requestBody =
             FormBody.Builder().add("grant_type", "refresh_token").add("refresh_token", refreshToken)
                 .add("client_id", "9cde7198eaf54c06860b6d0257dcd893")
@@ -67,7 +67,7 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
         val jsonObject = JSONObject(responseBody)
         val accessToken = jsonObject.getString("access_token")
         val newRefreshToken = jsonObject.optString("refresh_token", refreshToken)
-        return Tokens(accessToken, newRefreshToken)
+        return SpotifyTokens(accessToken, newRefreshToken)
     }
 
     override fun saveTokens(accessToken: String, refreshToken: String) {

@@ -6,8 +6,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.spotifyapi.ui.topartists.ArtistActivity
 import com.example.spotify.utils.Constants
-import com.example.spotifyapi.ui.MainActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,8 +20,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-
-
         Log.d("LoginActivity", "onCreate chamado. Intent data: ${intent?.data}")
 
         setupButtonListeners()
@@ -38,11 +36,9 @@ class LoginActivity : AppCompatActivity() {
         binding.buttonStart.setOnClickListener {
             if (!loginViewModel.isInternetAvailable(this)) {
                 Toast.makeText(
-                    this,
-                    "Sem conexão com a internet. Carregando offline.",
-                    Toast.LENGTH_SHORT
+                    this, "Sem conexão com a internet. Carregando offline.", Toast.LENGTH_SHORT
                 ).show()
-                navigateToMainActivity()
+                navigateToTopArtistsActivity(accessToken = "")
             } else {
                 val authIntent = loginViewModel.startAuthentication()
                 startActivity(authIntent)
@@ -56,10 +52,11 @@ class LoginActivity : AppCompatActivity() {
             if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
                     result?.onSuccess {
-                        Log.d("LoginActivity", "Tokens recebidos! Iniciando navegação...")
-                        navigateToMainActivity()
+                        val accessToken = it.token?.accessToken ?: ""
+                        Log.d("LoginActivity", "✅ Token pronto para navegação: $accessToken")
+                        navigateToTopArtistsActivity(accessToken)
                     }?.onFailure {
-                        Log.e("LoginActivity", "Erro ao obter token: ${it.message}")
+                        Log.e("LoginActivity", "❌ Erro ao obter token: ${it.message}")
                         Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -67,8 +64,11 @@ class LoginActivity : AppCompatActivity() {
         } ?: Log.e("LoginActivity", "URI inválida")
     }
 
-    private fun navigateToMainActivity() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun navigateToTopArtistsActivity(accessToken: String) {
+        val intent = Intent(this, ArtistActivity::class.java).apply {
+            putExtra("ACCESS_TOKEN", accessToken)
+        }
+        startActivity(intent)
         finish()
     }
 }

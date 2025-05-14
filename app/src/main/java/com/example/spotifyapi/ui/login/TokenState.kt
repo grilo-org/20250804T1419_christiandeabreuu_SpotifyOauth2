@@ -1,8 +1,11 @@
 package com.example.spotifyapi.ui.login
 
-import com.example.spotifyapi.data.model.Tokens
+import com.example.spotifyapi.data.model.SpotifyTokens
 
-data class TokenState(val token: Tokens? = null, val event: TokenStateEvent = TokenStateEvent.Loading)
+data class TokenState(
+    val token: SpotifyTokens? = null,
+    val event: TokenStateEvent = TokenStateEvent.Loading
+)
 
 sealed interface TokenStateEvent {
     data object GetToken : TokenStateEvent

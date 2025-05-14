@@ -24,12 +24,18 @@ class LoginViewModel(
             emit(Result.failure(Exception("Código de autorização não encontrado")))
             return@liveData
         }
+
+        Log.d("LoginViewModel", "✅ Código de autorização recebido: $authorizationCode")
+
         try {
             val tokens = getAccessTokenUseCase.execute(authorizationCode, redirectUri)
+            Log.d("LoginViewModel", "✅ Token gerado: ${tokens.accessToken}")
+
             val isSaved = tokenRepository.saveTokens(tokens.accessToken, tokens.refreshToken)
             if (isSaved) {
                 emit(Result.success(TokenState(tokens, TokenStateEvent.GetToken)))
             } else {
+                Log.e("LoginViewModel", "❌ Erro ao salvar tokens")
                 emit(Result.failure(Exception("Erro ao salvar tokens")))
             }
         } catch (e: Exception) {
