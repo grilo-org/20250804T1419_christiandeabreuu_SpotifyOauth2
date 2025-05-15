@@ -14,7 +14,7 @@ import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.app.ui.playlist.PlaylistActivity
 import com.example.spotifyapi.app.ui.profile.ProfileActivity
 import com.example.spotifyapi.databinding.ActivityTopArtistsBinding
-import com.example.spotifyapi.oauth2.ui.login.LoginActivity
+import com.example.spotifyapi.authenticate.ui.login.LoginActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TopArtistsActivity : AppCompatActivity() {

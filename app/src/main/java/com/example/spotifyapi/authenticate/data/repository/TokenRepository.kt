@@ -1,9 +1,9 @@
-package com.example.spotifyapi.oauth2.data.repository
+package com.example.spotifyapi.authenticate.data.repository
 
 
 import android.content.Context
 import android.util.Log
-import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
+import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
 
 class TokenRepository(private val context: Context) {
     private val sharedPreferences = context.getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)

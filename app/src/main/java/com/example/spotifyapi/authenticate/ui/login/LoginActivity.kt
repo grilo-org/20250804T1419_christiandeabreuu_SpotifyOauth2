@@ -1,4 +1,4 @@
-package com.example.spotifyapi.oauth2.ui.login
+package com.example.spotifyapi.authenticate.ui.login
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,9 +1,9 @@
-package com.example.spotifyapi.oauth2.data.repository
+package com.example.spotifyapi.authenticate.data.repository
 
 import android.content.Context
 import com.example.spotifyapi.BuildConfig
-import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
-import com.example.spotifyapi.oauth2.domain.interfacies.AuthRepository
+import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
+import com.example.spotifyapi.authenticate.domain.interfacies.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody

@@ -21,7 +21,7 @@
             android:name=".app.ui.profile.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".oauth2.ui.login.LoginActivity"
+            android:name=".authenticate.ui.login.LoginActivity"
             android:exported="true">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.MAIN" />

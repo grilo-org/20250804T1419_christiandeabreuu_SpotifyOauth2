@@ -1,7 +1,7 @@
-package com.example.spotifyapi.oauth2.domain.usecase
+package com.example.spotifyapi.authenticate.domain.usecase
 
-import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
-import com.example.spotifyapi.oauth2.data.repository.TokenRepository
+import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
+import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 
 class AuthUseCase(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,

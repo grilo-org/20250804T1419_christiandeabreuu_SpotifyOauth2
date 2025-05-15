@@ -1,10 +1,7 @@
-package com.example.spotifyapi.oauth2.ui.login
+package com.example.spotifyapi.authenticate.ui.login
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,13 +9,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.BuildConfig
-import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
-import com.example.spotifyapi.oauth2.domain.usecase.AuthUseCase
+import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
+import com.example.spotifyapi.authenticate.domain.usecase.AuthUseCase
+import com.example.spotifyapi.authenticate.domain.usecase.ExtractTokensUseCase
+import com.example.spotifyapi.utils.NetworkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authUseCase: AuthUseCase,
+    private val extractTokensUseCase: ExtractTokensUseCase
+
 ) : ViewModel() {
 
     private val _connectionStatus = MutableLiveData<Boolean>()
@@ -43,20 +44,14 @@ class LoginViewModel(
     }
 
     fun checkInternet(context: Context) {
-        _connectionStatus.postValue(isInternetAvailable(context))
+        _connectionStatus.postValue(NetworkUtils.isInternetAvailable(context))
     }
 
     fun processRedirect(uri: Uri) {
         viewModelScope.launch {
-            val tokens = extractTokensFromUri(uri)
+            val tokens = extractTokensUseCase.execute(uri)
             _authResult.postValue(Result.success(tokens))
         }
-    }
-
-    private fun extractTokensFromUri(uri: Uri): SpotifyTokens {
-        val accessToken = uri.getQueryParameter("access_token") ?: ""
-        val refreshToken = uri.getQueryParameter("refresh_token") ?: ""
-        return SpotifyTokens(accessToken, refreshToken)
     }
 
     fun getAuthIntent(): Intent {
@@ -78,13 +73,4 @@ class LoginViewModel(
                 _authError.postValue(it.message)
             }
         }
-
-    @SuppressLint("ServiceCast")
-    fun isInternetAvailable(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return activeNetwork.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
 }

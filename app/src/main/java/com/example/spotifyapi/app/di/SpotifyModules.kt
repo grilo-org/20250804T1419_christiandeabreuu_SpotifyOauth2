@@ -4,7 +4,7 @@ import com.example.spotifyapi.app.data.SpotifyAuthHelper
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.repository.TopArtistsRepository
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
-import com.example.spotifyapi.oauth2.data.repository.TokenRepository
+import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
