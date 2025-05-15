@@ -15,10 +15,20 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class TopArtistsViewModel(private val useCase: GetTopArtistsUseCase, private val spotifyApiService: SpotifyApiService, private val spotifyAuthHelper: SpotifyAuthHelper) : ViewModel() {
+class TopArtistsViewModel(
+    private val useCase: GetTopArtistsUseCase,
+    private val spotifyApiService: SpotifyApiService,
+    private val spotifyAuthHelper: SpotifyAuthHelper,
+    private val topArtistsUseCase: GetTopArtistsUseCase
+) : ViewModel() {
 
     private val _artistsLiveData = MutableLiveData<List<Artist>>()
     val artistsLiveData: LiveData<List<Artist>> get() = _artistsLiveData
+
+    init {
+        getTopArtists(accessToken = "")
+    }
+
 
     fun getTopArtists(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -27,7 +37,7 @@ class TopArtistsViewModel(private val useCase: GetTopArtistsUseCase, private val
         }
     }
 
-        fun getUserProfile(accessToken: String) = liveData(Dispatchers.IO) {
+    fun getUserProfile(accessToken: String) = liveData(Dispatchers.IO) {
         try {
             val userProfile = spotifyApiService.getUserProfile("Bearer $accessToken")
             emit(userProfile)

@@ -1,4 +1,4 @@
-package com.example.spotifyapi.app.ui.playlist
+package com.example.spotifyapi.app.ui.profile
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

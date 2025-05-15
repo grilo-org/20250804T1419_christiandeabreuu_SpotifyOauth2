@@ -1,34 +1,35 @@
-package com.example.spotifyapi.app.ui.topartists
-
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import coil.load
 import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.databinding.ItemTopArtistsBinding
 
-class TopArtistsAdapter(
-    private val artists: List<Artist>, private val context: Context, private val accessToken: String
-) : RecyclerView.Adapter<TopArtistsAdapter.ArtistViewHolder>() {
+class TopArtistsAdapter : ListAdapter<Artist, TopArtistsAdapter.ArtistViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
-        val binding =
-            ItemTopArtistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemTopArtistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ArtistViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
-        val artist = artists[position]
+        val artist = getItem(position)
         holder.binding.tvArtist.text = artist.name
-        holder.binding.imageArtist.load(artist.images.firstOrNull()?.url) {
-
-        }
-
+        holder.binding.imageArtist.load(artist.images.firstOrNull()?.url)
     }
 
-    override fun getItemCount(): Int = artists.size
+    class ArtistViewHolder(val binding: ItemTopArtistsBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root)
 
-    class ArtistViewHolder(val binding: ItemTopArtistsBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Artist>() {
+            override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 }

@@ -18,7 +18,7 @@
             android:name=".app.ui.playlist.PlaylistActivity"
             android:exported="false" />
         <activity
-            android:name=".app.ui.playlist.ProfileActivity"
+            android:name=".app.ui.profile.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".oauth2.ui.login.LoginActivity"
