@@ -2,8 +2,9 @@ package com.example.spotifyapi.oauth2.data.repository
 
 
 import android.content.Context
+import com.example.spotifyapi.BuildConfig
 import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
-import com.example.spotifyapi.oauth2.domain.interf.AuthRepository
+import com.example.spotifyapi.oauth2.domain.interfacies.AuthRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -24,8 +25,8 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
     override suspend fun getAccessToken(authorizationCode: String, redirectUri: String): SpotifyTokens {
         val requestBody = FormBody.Builder().add("grant_type", "authorization_code")
             .add("code", authorizationCode).add("redirect_uri", "meuapp://callback")
-            .add("client_id", "9cde7198eaf54c06860b6d0257dcd893")
-            .add("client_secret", "d601127a963c4791a61e9145bedd7fe6").build()
+            .add("client_id", BuildConfig.SPOTIFY_CLIENT_ID)
+            .add("client_secret", BuildConfig.SPOTIFY_CLIENT_SECRET).build()
 
         val request =
             Request.Builder().url("https://accounts.spotify.com/api/token").post(requestBody)
@@ -49,8 +50,8 @@ class AuthRepositoryImpl(context: Context) : AuthRepository {
     override suspend fun refreshAccessToken(refreshToken: String): SpotifyTokens {
         val requestBody =
             FormBody.Builder().add("grant_type", "refresh_token").add("refresh_token", refreshToken)
-                .add("client_id", "9cde7198eaf54c06860b6d0257dcd893")
-                .add("client_secret", "d601127a963c4791a61e9145bedd7fe6").build()
+                .add("client_id", BuildConfig.SPOTIFY_CLIENT_ID)
+                .add("client_secret", BuildConfig.SPOTIFY_CLIENT_SECRET).build()
 
         val request =
             Request.Builder().url("https://accounts.spotify.com/api/token").post(requestBody)

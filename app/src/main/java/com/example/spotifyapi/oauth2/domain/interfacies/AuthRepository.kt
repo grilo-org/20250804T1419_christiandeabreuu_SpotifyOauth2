@@ -1,4 +1,4 @@
-package com.example.spotifyapi.oauth2.domain.interf
+package com.example.spotifyapi.oauth2.domain.interfacies
 
 
 import com.example.spotifyapi.oauth2.data.model.SpotifyTokens

@@ -1,6 +1,6 @@
 package com.example.spotifyapi.oauth2.di
 
-import com.example.spotifyapi.oauth2.domain.interf.AuthRepository
+import com.example.spotifyapi.oauth2.domain.interfacies.AuthRepository
 import com.example.spotifyapi.oauth2.data.repository.AuthRepositoryImpl
 import com.example.spotifyapi.oauth2.domain.usecase.GetAccessTokenUseCase
 import com.example.spotifyapi.oauth2.ui.login.LoginViewModel
@@ -12,8 +12,6 @@ val authModules = module {
     factory<AuthRepository> { AuthRepositoryImpl(get()) }
     factory { GetAccessTokenUseCase(get()) }
     viewModel { LoginViewModel(get(), get()) }
-
-
 }
 
 

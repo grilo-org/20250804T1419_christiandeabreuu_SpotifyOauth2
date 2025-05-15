@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val spotifyModules = module {
 
-    single { TokenRepository() }
+    single { TokenRepository(context = get()) }
     single { SpotifyAuthHelper(get()) }
     viewModel { TopArtistsViewModel(get(), get(), get(), get())  }
 

@@ -6,10 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.spotifyapi.BuildConfig
 import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
-import com.example.spotifyapi.utils.Constants
 import com.example.spotifyapi.databinding.ActivityLoginBinding
+import com.example.spotifyapi.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -21,13 +20,34 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-        Log.d("LoginActivity", "onCreate chamado. Intent data: ${intent?.data}")
-
-        Log.d("ConfigTest", "SPOTIFY_CLIENT_ID: ${BuildConfig.SPOTIFY_CLIENT_ID}")
-        Log.d("ConfigTest", "SPOTIFY_CLIENT_SECRET: ${BuildConfig.SPOTIFY_CLIENT_SECRET}")
-        Log.d("ConfigTest", "SPOTIFY_AUTH_URL: ${BuildConfig.SPOTIFY_AUTH_URL}")
         setupButtonListeners()
         handleRedirect(intent)
+        observeNavigation()
+        observeAuthResult()
+    }
+
+    private fun observeAuthResult() {
+        loginViewModel.authResult.observe(this) { result ->
+            result?.onSuccess { spotifyTokens ->
+                Log.d(
+                    "LoginActivity",
+                    "✅ Token pronto para navegação: ${spotifyTokens.accessToken}"
+                )
+                loginViewModel.navigate(spotifyTokens.accessToken)
+            }?.onFailure {
+                Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun observeNavigation() {
+        loginViewModel.navigateToArtists.observe(this) { accessToken ->
+            val intent = Intent(this, TopArtistsActivity::class.java).apply {
+                putExtra("ACCESS_TOKEN", accessToken)
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -38,14 +58,14 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupButtonListeners() {
         binding.buttonStart.setOnClickListener {
-            if (!loginViewModel.isInternetAvailable(this)) {
-                Toast.makeText(
-                    this, "Sem conexão com a internet. Carregando offline.", Toast.LENGTH_SHORT
-                ).show()
-                navigateToTopArtistsActivity(accessToken = "")
+            loginViewModel.checkInternet(this)
+        }
+
+        loginViewModel.connectionStatus.observe(this) { isConnected ->
+            if (!isConnected) {
+                loginViewModel.notifyError("Sem conexão com a internet. Carregando offline.")
             } else {
-                val authIntent = loginViewModel.startAuthentication()
-                startActivity(authIntent)
+                startActivity(loginViewModel.getAuthIntent())
             }
         }
     }
