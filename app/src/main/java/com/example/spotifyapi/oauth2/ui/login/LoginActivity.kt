@@ -6,8 +6,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.spotifyapi.BuildConfig
 import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
-import com.example.spotify.utils.Constants
+import com.example.spotifyapi.utils.Constants
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,6 +23,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         Log.d("LoginActivity", "onCreate chamado. Intent data: ${intent?.data}")
 
+        Log.d("ConfigTest", "SPOTIFY_CLIENT_ID: ${BuildConfig.SPOTIFY_CLIENT_ID}")
+        Log.d("ConfigTest", "SPOTIFY_CLIENT_SECRET: ${BuildConfig.SPOTIFY_CLIENT_SECRET}")
+        Log.d("ConfigTest", "SPOTIFY_AUTH_URL: ${BuildConfig.SPOTIFY_AUTH_URL}")
         setupButtonListeners()
         handleRedirect(intent)
     }

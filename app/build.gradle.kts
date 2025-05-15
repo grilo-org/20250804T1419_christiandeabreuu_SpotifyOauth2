@@ -1,7 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
+}
+
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    properties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -26,6 +34,18 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            buildConfigField("String", "SPOTIFY_CLIENT_ID", "\"${properties["spotifyClientId"]}\"")
+            buildConfigField("String", "SPOTIFY_CLIENT_SECRET", "\"${properties["spotifyClientSecret"]}\"")
+            buildConfigField("String", "SPOTIFY_AUTH_URL", "\"${properties["spotifyAuthUrl"]}\"")
+        }
+        release {
+            buildConfigField("String", "SPOTIFY_CLIENT_ID", "\"${properties["spotifyClientId"]}\"")
+            buildConfigField("String", "SPOTIFY_CLIENT_SECRET", "\"${properties["spotifyClientSecret"]}\"")
+            buildConfigField("String", "SPOTIFY_AUTH_URL", "\"${properties["spotifyAuthUrl"]}\"")
+
+        }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

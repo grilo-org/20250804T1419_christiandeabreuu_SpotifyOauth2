@@ -9,7 +9,8 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.spotify.utils.Constants
+import com.example.spotifyapi.BuildConfig
+import com.example.spotifyapi.utils.Constants
 import com.example.spotifyapi.oauth2.data.repository.TokenRepository
 import com.example.spotifyapi.oauth2.domain.usecase.GetAccessTokenUseCase
 import kotlinx.coroutines.Dispatchers
@@ -44,8 +45,16 @@ class LoginViewModel(
         }
     }
 
+//    fun startAuthentication(): Intent {
+//        Log.d("AuthTest", "SPOTIFY_AUTH_URL: ${BuildConfig.SPOTIFY_AUTH_URL}")
+//        val authUrl = BuildConfig.SPOTIFY_AUTH_URL.ifEmpty {
+//            "https://accounts.spotify.com/authorize?client_id=SEU_CLIENT_ID&response_type=code&redirect_uri=meuapp://callback&scope=user-read-private%20user-read-email%20playlist-modify-public%20playlist-modify-private%20user-top-read"
+//        }
+//        return Intent(Intent.ACTION_VIEW, Uri.parse(authUrl))
+//    }
+
     fun startAuthentication(): Intent {
-        return Intent(Intent.ACTION_VIEW, Uri.parse(Constants.AUTH_URL))
+        return Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.SPOTIFY_AUTH_URL))
     }
 
     @SuppressLint("ServiceCast")
