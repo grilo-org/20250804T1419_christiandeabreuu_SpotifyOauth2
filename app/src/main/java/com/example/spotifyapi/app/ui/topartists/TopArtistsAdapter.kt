@@ -3,6 +3,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.databinding.ItemTopArtistsBinding
 
@@ -16,7 +17,9 @@ class TopArtistsAdapter : ListAdapter<Artist, TopArtistsAdapter.ArtistViewHolder
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artist = getItem(position)
         holder.binding.tvArtist.text = artist.name
-        holder.binding.imageArtist.load(artist.images.firstOrNull()?.url)
+        holder.binding.imageArtist.load(artist.images.firstOrNull()?.url){
+            transformations(CircleCropTransformation())
+        }
     }
 
     class ArtistViewHolder(val binding: ItemTopArtistsBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root)
