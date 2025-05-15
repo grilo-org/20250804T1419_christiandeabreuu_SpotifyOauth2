@@ -1,11 +1,14 @@
 package com.example.spotifyapi.app.ui.topartists
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.ui.playlist.PlaylistActivity
 import com.example.spotifyapi.app.ui.playlist.ProfileActivity
@@ -39,6 +42,21 @@ class TopArtistsActivity : AppCompatActivity() {
         }
 
         binding.artistasRecyclerView.layoutManager = LinearLayoutManager(this)
+
+                    viewModel.getUserProfile(accessToken).observe(this@TopArtistsActivity) { profile ->
+                profile?.let {
+                    imageProfile(it.images.firstOrNull()?.url)
+                } ?: run {
+                    Log.e("ArtistActivity", "❌ Erro ao obter perfil do usuário, tentando refresh...")
+                    viewModel.refreshToken(accessToken).observe(this@TopArtistsActivity) { newTokens ->
+                        newTokens?.let {
+                            saveAccessToken(it.accessToken, it.refreshToken)
+                            viewModel.getUserProfile(it.accessToken)
+                        } ?: navigateToLogin()
+                    }
+                }
+            }
+
 
         // 🔹 Apenas observe `LiveData`, sem precisar de `lifecycleScope.launch`
         viewModel.artistsLiveData.observe(this) { artists ->
@@ -93,17 +111,29 @@ class TopArtistsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun imageProfile(imageUrl: String?) {
+        imageUrl?.let {
+            binding.profileImageView.load(it) {
+                transformations(CircleCropTransformation())
+                placeholder(R.drawable.ic_launcher_background)
+                error(R.drawable.ic_launcher_foreground)
+            }
+        }
+    }
+
+
+    private fun saveAccessToken(accessToken: String, refreshToken: String) {
+        val sharedPreferences = getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("ACCESS_TOKEN", accessToken)
+        editor.putString("REFRESH_TOKEN", refreshToken)
+        editor.apply()
+    }
+
 
 
 }
 
 
-//
-//    private fun saveAccessToken(accessToken: String, refreshToken: String) {
-//        val sharedPreferences = getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//        editor.putString("ACCESS_TOKEN", accessToken)
-//        editor.putString("REFRESH_TOKEN", refreshToken)
-//        editor.apply()
-//    }
+
 

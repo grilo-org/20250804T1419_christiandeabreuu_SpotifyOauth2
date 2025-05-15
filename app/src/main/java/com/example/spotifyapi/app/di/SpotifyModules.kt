@@ -14,7 +14,7 @@ val spotifyModules = module {
 
     single { TokenRepository() }
     single { SpotifyAuthHelper(get()) }
-    viewModel { TopArtistsViewModel(get())  }
+    viewModel { TopArtistsViewModel(get(), get(), get())  }
 
     factory { GetTopArtistsUseCase(get()) }
     factory { TopArtistsRepository(get()) }
