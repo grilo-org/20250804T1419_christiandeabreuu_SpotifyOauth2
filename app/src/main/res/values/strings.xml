@@ -4,4 +4,10 @@
     //login
     <string name="enter_account_spotify">Entre com sua conta Spotify</string>
     <string name="entrar_button">Entrar</string>
+
+    //top artists
+    <string name="top_artistas">Top Artistas</string>
+    <string name="foto_profile">foto do perfil</string>
+    <string name="artist_name">Nome do Artista</string>
+    <string name="artist_image">imagem do artista</string>
 </resources>
