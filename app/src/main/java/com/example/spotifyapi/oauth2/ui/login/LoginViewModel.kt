@@ -76,15 +76,22 @@ class LoginViewModel(
         Log.d("LoginViewModel", "✅ Código de autorização recebido: $authorizationCode")
 
         try {
-            val tokens = getAccessTokenUseCase.execute(authorizationCode, redirectUri)
-            Log.d("LoginViewModel", "✅ Token gerado: ${tokens.accessToken}")
+            val tokensResult = getAccessTokenUseCase.execute(authorizationCode, redirectUri)
+            val tokens = tokensResult.getOrNull()
 
-            val isSaved = tokenRepository.saveTokens(tokens.accessToken, tokens.refreshToken)
-            if (isSaved) {
-                emit(Result.success(TokenState(tokens, TokenStateEvent.GetToken)))
+            if (tokens != null) {
+                Log.d("LoginViewModel", "✅ Token gerado: ${tokens.accessToken}")
+
+                val isSaved = tokenRepository.saveTokens(tokens.accessToken, tokens.refreshToken)
+                if (isSaved) {
+                    emit(Result.success(tokens)) // 🔥 Agora passamos apenas SpotifyTokens diretamente!
+                } else {
+                    Log.e("LoginViewModel", "❌ Erro ao salvar tokens")
+                    emit(Result.failure(Exception("Erro ao salvar tokens")))
+                }
             } else {
-                Log.e("LoginViewModel", "❌ Erro ao salvar tokens")
-                emit(Result.failure(Exception("Erro ao salvar tokens")))
+                Log.e("LoginViewModel", "❌ Erro ao obter token")
+                emit(Result.failure(Exception("Erro ao obter token")))
             }
         } catch (e: Exception) {
             Log.e("LoginViewModel", "Erro ao trocar código pelos tokens: ${e.message}")

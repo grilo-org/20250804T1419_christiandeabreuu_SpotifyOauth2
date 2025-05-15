@@ -76,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
             if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
                     result?.onSuccess {
-                        val accessToken = it.token?.accessToken ?: ""
+                        val accessToken = it.accessToken ?: ""
                         Log.d("LoginActivity", "✅ Token pronto para navegação: $accessToken")
                         navigateToTopArtistsActivity(accessToken)
                     }?.onFailure {
