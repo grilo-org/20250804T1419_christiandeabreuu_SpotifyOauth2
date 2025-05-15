@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.spotifyapi.app.ui.topartists.ArtistActivity
+import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotify.utils.Constants
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -65,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToTopArtistsActivity(accessToken: String) {
-        val intent = Intent(this, ArtistActivity::class.java).apply {
+        val intent = Intent(this, TopArtistsActivity::class.java).apply {
             putExtra("ACCESS_TOKEN", accessToken)
         }
         startActivity(intent)

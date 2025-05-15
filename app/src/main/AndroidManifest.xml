@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
         <activity
+            android:name=".app.ui.playlist.PlaylistActivity"
+            android:exported="false" />
+        <activity
+            android:name=".app.ui.playlist.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".oauth2.ui.login.LoginActivity"
             android:exported="true">
             <intent-filter tools:ignore="AppLinkUrlError">
@@ -36,9 +42,9 @@
         <activity
             android:name=".oauth2.ui.MainActivity"
             android:exported="false" />
-        <activity android:name=".app.ui.topartists.ArtistActivity"
+        <activity
+            android:name=".app.ui.topartists.TopArtistsActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>

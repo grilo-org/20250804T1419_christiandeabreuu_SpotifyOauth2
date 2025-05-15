@@ -29,12 +29,28 @@
         android:layout_height="@dimen/margin_0"
         android:layout_marginTop="@dimen/margin_16"
         android:layout_marginBottom="@dimen/margin_8"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topArtistasTextView"
         tools:listitem="@layout/item_top_artists" />
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="@dimen/margin_0"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            app:itemIconTint="@color/bottom_nav_item_color"
+
+            app:itemTextColor="@color/bottom_nav_item_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_navigation_menu" />
+
+
+<!--    app:itemTextAppearanceActive="@style/BottomNavigationViewText"-->
+<!--    app:itemTextAppearanceInactive="@style/BottomNavigationViewText"-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

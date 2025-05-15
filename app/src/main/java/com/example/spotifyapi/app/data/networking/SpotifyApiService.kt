@@ -10,11 +10,11 @@ import retrofit2.http.Query
 interface SpotifyApiService {
 
     @GET("me/top/artists")
-    fun getTopArtists(
+    suspend fun getTopArtists(
         @Header("Authorization") accessToken: String,
         @Query("limit") limit: Int = 20,
         @Query("time_range") timeRange: String = "medium_term"
-    ): Call<TopArtistsResponse>
+    ): TopArtistsResponse
 }
 
 

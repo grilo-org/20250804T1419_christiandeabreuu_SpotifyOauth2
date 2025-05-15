@@ -8,9 +8,9 @@ import coil.load
 import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.databinding.ItemTopArtistsBinding
 
-class ArtistAdapter(
+class TopArtistsAdapter(
     private val artists: List<Artist>, private val context: Context, private val accessToken: String
-) : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
+) : RecyclerView.Adapter<TopArtistsAdapter.ArtistViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
         val binding =
