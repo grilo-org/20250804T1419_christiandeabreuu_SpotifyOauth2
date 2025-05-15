@@ -53,7 +53,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("LoginActivity", "onNewIntent chamado com URI: ${intent.data}")
-        handleRedirect(intent)
+        intent.data?.let { loginViewModel.processRedirect(it) }
     }
 
     private fun setupButtonListeners() {
@@ -77,11 +77,7 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
                     result?.onSuccess {
                         val accessToken = it.accessToken ?: ""
-                        Log.d("LoginActivity", "✅ Token pronto para navegação: $accessToken")
                         navigateToTopArtistsActivity(accessToken)
-                    }?.onFailure {
-                        Log.e("LoginActivity", "❌ Erro ao obter token: ${it.message}")
-                        Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
