@@ -1,11 +1,11 @@
-package com.example.spotifyapi.ui.topartists
+package com.example.spotifyapi.app.ui.topartists
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.spotifyapi.data.SpotifyAuthHelper
-import com.example.spotifyapi.data.networking.RetrofitInstance
-import com.example.spotifyapi.data.networking.SpotifyApiService
+import com.example.spotifyapi.app.data.SpotifyAuthHelper
+import com.example.spotifyapi.app.data.networking.RetrofitInstance
+import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import kotlinx.coroutines.Dispatchers
 import retrofit2.HttpException
 import retrofit2.awaitResponse

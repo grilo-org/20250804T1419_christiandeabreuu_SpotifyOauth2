@@ -1,4 +1,4 @@
-package com.example.spotifyapi.ui
+package com.example.spotifyapi.oauth2.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

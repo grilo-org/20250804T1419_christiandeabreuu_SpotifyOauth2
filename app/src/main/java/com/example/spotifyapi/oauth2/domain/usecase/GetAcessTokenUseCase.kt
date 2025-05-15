@@ -1,7 +1,7 @@
-package com.example.spotifyapi.domain.usecase
+package com.example.spotifyapi.oauth2.domain.usecase
 
-import com.example.spotifyapi.data.model.SpotifyTokens
-import com.example.spotifyapi.data.repository.AuthRepository
+import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
+import com.example.spotifyapi.oauth2.data.repository.AuthRepository
 
 class GetAccessTokenUseCase(private val repository: AuthRepository) {
     suspend fun execute(authorizationCode: String, redirectUri: String): SpotifyTokens {

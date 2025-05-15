@@ -1,6 +1,6 @@
-package com.example.spotifyapi.data.networking
+package com.example.spotifyapi.app.data.networking
 
-import com.example.spotifyapi.data.model.TopArtistsResponse
+import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

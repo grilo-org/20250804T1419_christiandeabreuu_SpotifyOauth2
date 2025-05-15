@@ -1,4 +1,4 @@
-package com.example.spotifyapi.ui.login
+package com.example.spotifyapi.oauth2.ui.login
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.spotify.utils.Constants
-import com.example.spotifyapi.data.repository.TokenRepository
-import com.example.spotifyapi.domain.usecase.GetAccessTokenUseCase
+import com.example.spotifyapi.oauth2.data.repository.TokenRepository
+import com.example.spotifyapi.oauth2.domain.usecase.GetAccessTokenUseCase
 import kotlinx.coroutines.Dispatchers
 
 class LoginViewModel(

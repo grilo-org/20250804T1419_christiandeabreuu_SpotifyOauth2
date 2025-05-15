@@ -1,4 +1,4 @@
-package com.example.spotifyapi.data
+package com.example.spotifyapi.app.data
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers

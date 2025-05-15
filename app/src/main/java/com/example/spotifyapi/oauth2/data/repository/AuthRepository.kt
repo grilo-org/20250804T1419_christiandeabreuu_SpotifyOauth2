@@ -1,7 +1,7 @@
-package com.example.spotifyapi.data.repository
+package com.example.spotifyapi.oauth2.data.repository
 
 
-import com.example.spotifyapi.data.model.SpotifyTokens
+import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
 
 interface AuthRepository {
     suspend fun getAccessToken(authorizationCode: String, redirectUri: String): SpotifyTokens

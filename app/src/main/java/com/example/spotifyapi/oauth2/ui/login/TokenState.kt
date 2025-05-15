@@ -1,6 +1,6 @@
-package com.example.spotifyapi.ui.login
+package com.example.spotifyapi.oauth2.ui.login
 
-import com.example.spotifyapi.data.model.SpotifyTokens
+import com.example.spotifyapi.oauth2.data.model.SpotifyTokens
 
 data class TokenState(
     val token: SpotifyTokens? = null,

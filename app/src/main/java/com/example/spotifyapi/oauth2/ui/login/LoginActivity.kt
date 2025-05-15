@@ -1,4 +1,4 @@
-package com.example.spotifyapi.ui.login
+package com.example.spotifyapi.oauth2.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.spotifyapi.ui.topartists.ArtistActivity
+import com.example.spotifyapi.app.ui.topartists.ArtistActivity
 import com.example.spotify.utils.Constants
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -1,4 +1,4 @@
-package com.example.spotifyapi.data.repository
+package com.example.spotifyapi.oauth2.data.repository
 
 
 import android.util.Log

@@ -1,4 +1,4 @@
-package com.example.spotifyapi.ui.topartists
+package com.example.spotifyapi.app.ui.topartists
 
 import android.content.Context
 import android.content.Intent
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyapi.databinding.ActivityTopArtistsBinding
-import com.example.spotifyapi.ui.login.LoginActivity
+import com.example.spotifyapi.oauth2.ui.login.LoginActivity
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

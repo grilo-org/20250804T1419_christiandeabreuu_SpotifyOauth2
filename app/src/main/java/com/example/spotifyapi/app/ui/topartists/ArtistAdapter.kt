@@ -1,11 +1,11 @@
-package com.example.spotifyapi.ui.topartists
+package com.example.spotifyapi.app.ui.topartists
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.spotifyapi.data.model.Artist
+import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.databinding.ItemTopArtistsBinding
 
 class ArtistAdapter(
