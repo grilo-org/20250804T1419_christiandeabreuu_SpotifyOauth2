@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 
 val authModules = module {
-    factory<AuthRepository> { AuthRepositoryImpl(get()) }
+    factory<AuthRepository> { AuthRepositoryImpl(get(), get()) }
     factory { GetAccessTokenUseCase(get()) }
     factory { AuthUseCase(get(), get()) }
     factory { ExtractTokensUseCase() }

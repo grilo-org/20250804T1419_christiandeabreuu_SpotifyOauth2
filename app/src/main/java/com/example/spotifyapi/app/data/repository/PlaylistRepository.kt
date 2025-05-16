@@ -1,7 +1,6 @@
 package com.example.spotifyapi.app.data.repository
 
 import android.util.Log
-import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
@@ -18,8 +17,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
-        enableEdgeToEdge()
         setContentView(binding.root)
+
         setupButtonListeners()
         handleRedirect(intent)
         observeNavigation()
@@ -33,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
                     "LoginActivity",
                     "✅ Token pronto para navegação: ${spotifyTokens.accessToken}"
                 )
-                loginViewModel.navigate(spotifyTokens.accessToken)
+                loginViewModel.updateAcessToken(spotifyTokens.accessToken)
             }?.onFailure {
                 Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
             }

@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.domain.usecase
 
-import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.repository.UserProfileRepository
 
