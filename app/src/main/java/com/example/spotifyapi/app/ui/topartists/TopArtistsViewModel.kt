@@ -8,22 +8,24 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.app.data.SpotifyAuthHelper
 import com.example.spotifyapi.app.data.model.Artist
+import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 
 class TopArtistsViewModel(
-    private val useCase: GetTopArtistsUseCase,
-    private val spotifyApiService: SpotifyApiService,
+    private val topArtistsUseCase: GetTopArtistsUseCase,
     private val spotifyAuthHelper: SpotifyAuthHelper,
-    private val topArtistsUseCase: GetTopArtistsUseCase
+    private val userProfileTopArtistsUseCase: GetUserProfileTopArtistsUseCase
 ) : ViewModel() {
 
     private val _artistsLiveData = MutableLiveData<List<Artist>>()
     val artistsLiveData: LiveData<List<Artist>> get() = _artistsLiveData
+
+    private val _userProfileLiveData = MutableLiveData<UserProfile?>()
+    val userProfileLiveData: LiveData<UserProfile?> get() = _userProfileLiveData
 
     init {
         getTopArtists(accessToken = "")
@@ -32,30 +34,17 @@ class TopArtistsViewModel(
 
     fun getTopArtists(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val artists = useCase.execute(accessToken)
+            val artists = topArtistsUseCase.execute(accessToken)
             _artistsLiveData.postValue(artists)
         }
     }
 
-    fun getUserProfile(accessToken: String) = liveData(Dispatchers.IO) {
-        try {
-            val userProfile = spotifyApiService.getUserProfile("Bearer $accessToken")
-            emit(userProfile)
-        } catch (e: HttpException) {
-            if (e.code() == 401) {
-                emit(null) // Emitir nulo em caso de erro 401
-            } else {
-                emit(null)
-            }
-        } catch (e: IOException) {
-            emit(null)
-        } catch (e: Exception) {
-            emit(null)
+    fun getUserProfile(accessToken: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userProfile = userProfileTopArtistsUseCase.execute(accessToken)
+            _userProfileLiveData.postValue(userProfile)
         }
     }
-
-
-
 
     fun loadTokens(context: Context) = liveData(Dispatchers.IO) {
         val sharedPreferences = context.getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
@@ -63,7 +52,6 @@ class TopArtistsViewModel(
         val refreshToken = sharedPreferences.getString("REFRESH_TOKEN", "") ?: ""
         emit(Pair(accessToken, refreshToken))
     }
-
 
     fun refreshToken(refreshToken: String) = liveData(Dispatchers.IO) {
         try {

@@ -2,8 +2,19 @@ package com.example.spotifyapi.app.di
 
 import com.example.spotifyapi.app.data.SpotifyAuthHelper
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository
+import com.example.spotifyapi.app.data.repository.PlaylistRepository
 import com.example.spotifyapi.app.data.repository.TopArtistsRepository
+import com.example.spotifyapi.app.data.repository.UserProfileRepository
+import com.example.spotifyapi.app.domain.usecase.CreatePlaylistUseCase
+import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfilePlaylistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
+import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistViewModel
+import com.example.spotifyapi.app.ui.playlist.PlaylistViewModel
+import com.example.spotifyapi.app.ui.profile.ProfileViewModel
 import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -14,10 +25,24 @@ val spotifyModules = module {
 
     single { TokenRepository(context = get()) }
     single { SpotifyAuthHelper(get()) }
-    viewModel { TopArtistsViewModel(get(), get(), get(), get())  }
+
+    viewModel { TopArtistsViewModel(get(), get(), get()) }
+    viewModel { ProfileViewModel(get(), get()) }
+    viewModel { PlaylistViewModel(get(), get()) }
+    viewModel { CreatePlaylistViewModel(get()) }
 
     factory { GetTopArtistsUseCase(get()) }
+    factory { GetUserProfileTopArtistsUseCase(get()) }
+    factory { GetUserProfileUseCase(get()) }
+    factory { GetUserProfilePlaylistsUseCase(get()) }
+    factory { GetPlaylistsUseCase(get()) }
+    factory { CreatePlaylistUseCase(get()) }
+
     factory { TopArtistsRepository(get()) }
+    factory { UserProfileRepository(get()) }
+    factory { PlaylistRepository(get()) }
+    factory { CreatePlaylistRepository(get()) }
+
 }
 
 val networkModule = module {
