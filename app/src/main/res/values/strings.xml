@@ -10,4 +10,10 @@
     <string name="foto_profile">foto do perfil</string>
     <string name="artist_name">Nome do Artista</string>
     <string name="artist_image">imagem do artista</string>
+
+
+    <string name="image_profile_perfil">imagem do perfil do usuario</string>
+    <string name="name_profile_spotify">Nome de Perfil</string>
+    <string name="close_app_button">Sair</string>
+
 </resources>

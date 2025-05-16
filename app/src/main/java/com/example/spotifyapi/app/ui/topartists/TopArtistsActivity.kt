@@ -32,16 +32,11 @@ class TopArtistsActivity : AppCompatActivity() {
         setupRecyclerView()
         observeUserProfile()
         observeArtists()
-//        setupObservers()
+        viewModel.getUserProfile(accessToken)
         viewModel.getTopArtists(accessToken)
         bottomNavigationView()
     }
 
-//    private fun setupObservers() {
-//        viewModel.accessToken.observe(this) { token ->
-//            if (token.isEmpty()) navigateToLogin()
-//        }
-//    }
 
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(this) { artists ->
@@ -57,11 +52,11 @@ class TopArtistsActivity : AppCompatActivity() {
     }
 
     private fun observeUserProfile() {
-        viewModel.userProfileLiveData.observe(this@TopArtistsActivity) { profile -> // ✅ Agora observamos corretamente!
+        viewModel.userProfileLiveData.observe(this@TopArtistsActivity) { profile ->
             profile?.let {
-                Log.d("UserProfileActivity", "👤 Perfil do usuário carregado!")
+                Log.d("UserProfileActivity", "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}") // 🔥 Teste no Logcat
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?: Log.e("UserProfileActivity", "❌ Erro ao carregar perfil do usuário!")
+            } ?: Log.e("UserProfileActivity", "❌ Perfil do usuário não carregado!")
         }
     }
 
@@ -140,31 +135,6 @@ class TopArtistsActivity : AppCompatActivity() {
     }
 }
 
-
-//    private fun setupObservers() {
-//
-//        viewModel.getUserProfile(accessToken).observe(this@TopArtistsActivity) { profile ->
-//            profile?.let {
-//                imageProfile(it.images.firstOrNull()?.url)
-//            } ?: run {
-//                Log.e("ArtistActivity", "❌ Erro ao obter perfil do usuário, tentando refresh...")
-//                viewModel.refreshToken(accessToken).observe(this@TopArtistsActivity) { newTokens ->
-//                    newTokens?.let {
-//                        saveAccessToken(it.accessToken, it.refreshToken)
-//                        viewModel.getUserProfile(it.accessToken)
-//                    } ?: navigateToLogin()
-//                }
-//            }
-//        }
-//
-//        viewModel.artistsLiveData.observe(this) { artists ->
-//            artists?.let {
-//                Log.d("ArtistActivity", "🎨 Total de artistas recebidos: ${artists.size}")
-//                topArtistsAdapter = TopArtistsAdapter(it, this@TopArtistsActivity, accessToken)
-//                binding.artistasRecyclerView.adapter = topArtistsAdapter
-//            } ?: Log.e("ArtistActivity", "❌ Nenhum artista encontrado!")
-//        }
-//    }
 
 
 

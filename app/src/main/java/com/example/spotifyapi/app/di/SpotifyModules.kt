@@ -6,6 +6,8 @@ import com.example.spotifyapi.app.data.repository.TopArtistsRepository
 import com.example.spotifyapi.app.data.repository.UserProfileRepository
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
+import com.example.spotifyapi.app.ui.profile.ProfileViewModel
 import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -16,10 +18,17 @@ val spotifyModules = module {
 
     single { TokenRepository(context = get()) }
     single { SpotifyAuthHelper(get()) }
-    viewModel { TopArtistsViewModel(get(), get(), get())  }
+
+    viewModel { TopArtistsViewModel(get(), get(), get()) }
+//    viewModel { ProfileViewModel(get(), get()) }
+    factory { (accessToken: String) -> ProfileViewModel(get(), accessToken) }
+
+
 
     factory { GetTopArtistsUseCase(get()) }
     factory { GetUserProfileTopArtistsUseCase(get()) }
+    factory { GetUserProfileUseCase(get()) }
+
     factory { TopArtistsRepository(get()) }
     factory { UserProfileRepository(get()) }
 }
