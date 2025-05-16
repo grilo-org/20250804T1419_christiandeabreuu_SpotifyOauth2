@@ -57,10 +57,11 @@ class TopArtistsActivity : AppCompatActivity() {
     }
 
     private fun observeUserProfile() {
-        viewModel.getUserProfile(accessToken).observe(this@TopArtistsActivity) { profile ->
+        viewModel.userProfileLiveData.observe(this@TopArtistsActivity) { profile -> // ✅ Agora observamos corretamente!
             profile?.let {
+                Log.d("UserProfileActivity", "👤 Perfil do usuário carregado!")
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?: refreshUserToken()
+            } ?: Log.e("UserProfileActivity", "❌ Erro ao carregar perfil do usuário!")
         }
     }
 
