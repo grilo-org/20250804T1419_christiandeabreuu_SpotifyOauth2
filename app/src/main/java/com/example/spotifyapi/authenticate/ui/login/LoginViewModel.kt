@@ -39,7 +39,7 @@ class LoginViewModel(
         _authError.postValue(message)
     }
 
-    fun navigate(accessToken: String) {
+    fun updateAcessToken(accessToken: String) {
         _navigateToArtists.postValue(accessToken)
     }
 
@@ -68,7 +68,7 @@ class LoginViewModel(
             val result = authUseCase.authenticate(authorizationCode, redirectUri)
             result.onSuccess {
                 _authResult.postValue(Result.success(it))
-                navigate(it.accessToken)
+                updateAcessToken(it.accessToken)
             }.onFailure {
                 _authError.postValue(it.message)
             }

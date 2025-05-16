@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val userProfileUseCase: GetUserProfileUseCase, private val accessToken: String
+    private val userProfileUseCase: GetUserProfileUseCase
 ) : ViewModel() {
 
     private val _userProfileLiveData = MutableLiveData<UserProfile?>()

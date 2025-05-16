@@ -78,7 +78,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    // Coil (para carregar imagens)
+    // Coil
     implementation(libs.coil)
 
     // Navigation

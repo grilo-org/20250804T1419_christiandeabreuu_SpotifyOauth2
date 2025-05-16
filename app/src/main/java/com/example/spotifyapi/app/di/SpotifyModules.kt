@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.di
 
-import com.example.spotifyapi.app.data.SpotifyAuthHelper
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository
 import com.example.spotifyapi.app.data.repository.PlaylistRepository
@@ -15,8 +14,9 @@ import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistViewModel
 import com.example.spotifyapi.app.ui.playlist.PlaylistViewModel
 import com.example.spotifyapi.app.ui.profile.ProfileViewModel
-import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
+import com.example.spotifyapi.authenticate.data.networking.AuthApiService
+import com.example.spotifyapi.authenticate.data.repository.TokenRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,10 +24,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 val spotifyModules = module {
 
     single { TokenRepository(context = get()) }
-    single { SpotifyAuthHelper(get()) }
 
-    viewModel { TopArtistsViewModel(get(), get(), get()) }
-    viewModel { ProfileViewModel(get(), get()) }
+    viewModel { TopArtistsViewModel(get(), get()) }
+    viewModel { ProfileViewModel(get()) }
     viewModel { PlaylistViewModel(get(), get()) }
     viewModel { CreatePlaylistViewModel(get()) }
 
@@ -50,5 +49,10 @@ val networkModule = module {
         retrofit2.Retrofit.Builder().baseUrl("https://api.spotify.com/v1/")
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(SpotifyApiService::class.java)
+    }
+    single {
+        retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/api/token/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(AuthApiService::class.java)
     }
 }

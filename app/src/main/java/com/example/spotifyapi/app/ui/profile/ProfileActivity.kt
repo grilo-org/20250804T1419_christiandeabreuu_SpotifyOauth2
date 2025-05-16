@@ -49,12 +49,12 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setupCloseButton() {
         binding.buttonClose.setOnClickListener {
-            finishAffinity()
+            finish()
         }
     }
 
     private fun setupBottomNavigationView() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_artistas -> {
                     navigateToActivity(TopArtistsActivity::class.java)
@@ -103,19 +103,4 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-//
-//    private fun updateProfileUI(userProfile: UserProfile) {
-//        Log.d(
-//            "ProfileActivity",
-//            "Atualizando UI com o nome: ${userProfile.displayName} e imagem: ${userProfile.images.firstOrNull()?.url}"
-//        )
-//        binding.profileTextView.text = userProfile.displayName
-//        userProfile.images.firstOrNull()?.let { image ->
-//            binding.profileImageView.load(image.url) {
-//                transformations(CircleCropTransformation())
-//                placeholder(R.drawable.ic_spotify_full)
-//                error(R.drawable.ic_spotify_full_black)
-//            }
-//        }
-//    }
 }

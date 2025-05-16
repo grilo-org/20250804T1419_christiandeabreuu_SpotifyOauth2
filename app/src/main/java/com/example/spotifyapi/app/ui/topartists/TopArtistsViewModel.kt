@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyapi.app.data.SpotifyAuthHelper
 import com.example.spotifyapi.app.data.model.Artist
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
@@ -17,7 +16,6 @@ import kotlinx.coroutines.launch
 
 class TopArtistsViewModel(
     private val topArtistsUseCase: GetTopArtistsUseCase,
-    private val spotifyAuthHelper: SpotifyAuthHelper,
     private val userProfileTopArtistsUseCase: GetUserProfileTopArtistsUseCase
 ) : ViewModel() {
 
@@ -43,22 +41,6 @@ class TopArtistsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val userProfile = userProfileTopArtistsUseCase.execute(accessToken)
             _userProfileLiveData.postValue(userProfile)
-        }
-    }
-
-    fun loadTokens(context: Context) = liveData(Dispatchers.IO) {
-        val sharedPreferences = context.getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
-        val accessToken = sharedPreferences.getString("ACCESS_TOKEN", "") ?: ""
-        val refreshToken = sharedPreferences.getString("REFRESH_TOKEN", "") ?: ""
-        emit(Pair(accessToken, refreshToken))
-    }
-
-    fun refreshToken(refreshToken: String) = liveData(Dispatchers.IO) {
-        try {
-            val tokens = spotifyAuthHelper.refreshAccessToken(refreshToken)
-            emit(tokens)
-        } catch (e: Exception) {
-            emit(null)
         }
     }
 }

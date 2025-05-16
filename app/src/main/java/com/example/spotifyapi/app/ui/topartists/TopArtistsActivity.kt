@@ -59,16 +59,6 @@ class TopArtistsActivity : AppCompatActivity() {
         }
     }
 
-//    private fun refreshUserToken() {
-//        Log.e("ArtistActivity", "❌ Erro ao obter perfil do usuário, tentando refresh...")
-//        viewModel.refreshToken(accessToken).observe(this@TopArtistsActivity) { newTokens ->
-//            newTokens?.let {
-//                saveAccessToken(it.accessToken, it.refreshToken)
-//                viewModel.getUserProfile(it.accessToken)
-//            } ?: navigateToLogin()
-//        }
-//    }
-
     private fun setupRecyclerView() {
         binding.artistasRecyclerView.layoutManager = LinearLayoutManager(this)
         topArtistsAdapter = TopArtistsAdapter()
@@ -110,7 +100,7 @@ class TopArtistsActivity : AppCompatActivity() {
 
     private fun navigateToActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)
-        intent.putExtra("ACCESS_TOKEN", accessToken)  // Passa o token de acesso
+        intent.putExtra("ACCESS_TOKEN", accessToken)
         startActivity(intent)
     }
 
@@ -122,15 +112,6 @@ class TopArtistsActivity : AppCompatActivity() {
                 error(R.drawable.ic_spotify_full_black)
             }
         }
-    }
-
-
-    private fun saveAccessToken(accessToken: String, refreshToken: String) {
-        val sharedPreferences = getSharedPreferences("SpotifyPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("ACCESS_TOKEN", accessToken)
-        editor.putString("REFRESH_TOKEN", refreshToken)
-        editor.apply()
     }
 }
 

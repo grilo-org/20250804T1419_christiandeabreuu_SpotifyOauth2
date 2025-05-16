@@ -91,7 +91,7 @@ class PlaylistActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigationView() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_artistas -> {
                     navigateToActivity(TopArtistsActivity::class.java)
