@@ -1,5 +1,6 @@
 package com.example.spotifyapi.app.data.networking
 
+import com.example.spotifyapi.app.data.model.PlaylistsResponse
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.model.UserProfile
 import retrofit2.http.GET
@@ -18,6 +19,9 @@ interface SpotifyApiService {
         @Query("limit") limit: Int = 20,
         @Query("time_range") timeRange: String = "medium_term"
     ): TopArtistsResponse
+
+    @GET("me/playlists")
+    suspend fun getPlaylists(@Header("Authorization") authorization: String): PlaylistsResponse
 }
 
 

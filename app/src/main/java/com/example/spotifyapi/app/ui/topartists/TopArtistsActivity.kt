@@ -37,7 +37,6 @@ class TopArtistsActivity : AppCompatActivity() {
         bottomNavigationView()
     }
 
-
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(this) { artists ->
             updateArtistsUI(artists)
@@ -60,15 +59,15 @@ class TopArtistsActivity : AppCompatActivity() {
         }
     }
 
-    private fun refreshUserToken() {
-        Log.e("ArtistActivity", "❌ Erro ao obter perfil do usuário, tentando refresh...")
-        viewModel.refreshToken(accessToken).observe(this@TopArtistsActivity) { newTokens ->
-            newTokens?.let {
-                saveAccessToken(it.accessToken, it.refreshToken)
-                viewModel.getUserProfile(it.accessToken)
-            } ?: navigateToLogin()
-        }
-    }
+//    private fun refreshUserToken() {
+//        Log.e("ArtistActivity", "❌ Erro ao obter perfil do usuário, tentando refresh...")
+//        viewModel.refreshToken(accessToken).observe(this@TopArtistsActivity) { newTokens ->
+//            newTokens?.let {
+//                saveAccessToken(it.accessToken, it.refreshToken)
+//                viewModel.getUserProfile(it.accessToken)
+//            } ?: navigateToLogin()
+//        }
+//    }
 
     private fun setupRecyclerView() {
         binding.artistasRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -119,8 +118,8 @@ class TopArtistsActivity : AppCompatActivity() {
         imageUrl?.let {
             binding.profileImageView.load(it) {
                 transformations(CircleCropTransformation())
-                placeholder(R.drawable.ic_launcher_background)
-                error(R.drawable.ic_launcher_foreground)
+                placeholder(R.drawable.ic_spotify_full)
+                error(R.drawable.ic_spotify_full_black)
             }
         }
     }

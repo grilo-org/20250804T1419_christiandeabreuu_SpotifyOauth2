@@ -24,9 +24,9 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         checkAccessToken()
         viewModel.getUserProfile(accessToken)
         observeUserProfile()
@@ -60,25 +60,20 @@ class ProfileActivity : AppCompatActivity() {
                     navigateToActivity(TopArtistsActivity::class.java)
                     true
                 }
-
                 R.id.navigation_playlists -> {
                     navigateToActivity(PlaylistActivity::class.java)
                     true
                 }
-
                 R.id.navigation_profile -> true
                 else -> false
             }
-
         }
     }
 
     private fun navigateToActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass).apply {
             putExtra("ACCESS_TOKEN", accessToken)
-//            addFlags(FLAG_ACTIVITY_NO_ANIMATION)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            //evita recriar a activity
         }
         startActivity(intent)
     }
@@ -108,19 +103,19 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun updateProfileUI(userProfile: UserProfile) {
-        Log.d(
-            "ProfileActivity",
-            "Atualizando UI com o nome: ${userProfile.displayName} e imagem: ${userProfile.images.firstOrNull()?.url}"
-        )
-        binding.profileTextView.text = userProfile.displayName
-        userProfile.images.firstOrNull()?.let { image ->
-            binding.profileImageView.load(image.url) {
-                transformations(CircleCropTransformation())
-                placeholder(R.drawable.ic_spotify_full)
-                error(R.drawable.ic_spotify_full_black)
-            }
-        }
-    }
+//
+//    private fun updateProfileUI(userProfile: UserProfile) {
+//        Log.d(
+//            "ProfileActivity",
+//            "Atualizando UI com o nome: ${userProfile.displayName} e imagem: ${userProfile.images.firstOrNull()?.url}"
+//        )
+//        binding.profileTextView.text = userProfile.displayName
+//        userProfile.images.firstOrNull()?.let { image ->
+//            binding.profileImageView.load(image.url) {
+//                transformations(CircleCropTransformation())
+//                placeholder(R.drawable.ic_spotify_full)
+//                error(R.drawable.ic_spotify_full_black)
+//            }
+//        }
+//    }
 }

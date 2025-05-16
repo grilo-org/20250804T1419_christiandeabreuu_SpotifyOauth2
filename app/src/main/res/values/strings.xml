@@ -16,4 +16,11 @@
     <string name="name_profile_spotify">Nome de Perfil</string>
     <string name="close_app_button">Sair</string>
 
+    <string name="create_playlist_button">Criar Playlist</string>
+    <string name="no_playlist_avaiable">Nenhuma playlist disponível</string>
+    <string name="my_playlists">Minhas Playlists</string>
+    <string name="image_playlist">imagem de capa da playlist</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="owner">Owner</string>
+
 </resources>
