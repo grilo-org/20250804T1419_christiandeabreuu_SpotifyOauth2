@@ -51,7 +51,7 @@ val networkModule = module {
             .create(SpotifyApiService::class.java)
     }
     single {
-        retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/api/token/")
+        retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AuthApiService::class.java)
     }
