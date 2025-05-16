@@ -1,10 +1,14 @@
 package com.example.spotifyapi.app.data.networking
 
+import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.model.UserProfile
+import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 
@@ -22,6 +26,12 @@ interface SpotifyApiService {
 
     @GET("me/playlists")
     suspend fun getPlaylists(@Header("Authorization") authorization: String): PlaylistsResponse
+
+    @POST("me/playlists")
+    suspend fun createPlaylist(
+        @Header("Authorization") accessToken: String,
+        @Body requestBody: CreatePlaylistRequest
+    ): Response<Unit>
 }
 
 

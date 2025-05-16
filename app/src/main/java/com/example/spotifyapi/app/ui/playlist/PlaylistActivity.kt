@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
+import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistActivity
 import com.example.spotifyapi.app.ui.profile.ProfileActivity
 import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.authenticate.ui.login.LoginActivity
@@ -32,6 +33,8 @@ class PlaylistActivity : AppCompatActivity() {
         viewModel.getPlaylists(accessToken)
         viewModel.getUserProfile(accessToken)
         setupUi()
+        setupCreatePlaylistButton()
+
     }
 
     private fun setupUi() {
@@ -48,7 +51,10 @@ class PlaylistActivity : AppCompatActivity() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(this@PlaylistActivity) { profile ->
             profile?.let {
-                Log.d("UserProfileActivity", "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}") // 🔥 Teste no Logcat
+                Log.d(
+                    "UserProfileActivity",
+                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
+                ) // 🔥 Teste no Logcat
                 imageProfile(it.images.firstOrNull()?.url)
             } ?: Log.e("UserProfileActivity", "❌ Perfil do usuário não carregado!")
         }
@@ -111,5 +117,13 @@ class PlaylistActivity : AppCompatActivity() {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         startActivity(intent)
+    }
+
+    private fun setupCreatePlaylistButton() {
+        binding.buttonToGoCreatePlaylist.setOnClickListener {
+            val intent = Intent(this, CreatePlaylistActivity::class.java)
+            intent.putExtra("ACCESS_TOKEN", accessToken)
+            startActivity(intent)
+        }
     }
 }

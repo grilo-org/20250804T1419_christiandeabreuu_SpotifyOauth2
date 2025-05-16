@@ -23,4 +23,9 @@
     <string name="playlist_name">Playlist Name</string>
     <string name="owner">Owner</string>
 
+    <string name="close_buttom">Fechar</string>
+    <string name="insert_name_your_playlist_title">Dê o nome a sua playlist</string>
+    <string name="insert_name_your_playlist">Minha Playlist #1</string>
+    <string name="creat_your_playlist_button">Criar</string>
+
 </resources>

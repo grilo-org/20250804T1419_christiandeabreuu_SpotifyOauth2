@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
         <activity
+            android:name=".app.ui.createplaylist.CreatePlaylistActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.ui.playlist.PlaylistActivity"
             android:exported="false" />
         <activity
