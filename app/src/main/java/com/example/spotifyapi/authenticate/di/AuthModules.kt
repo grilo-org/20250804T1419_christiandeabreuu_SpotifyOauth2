@@ -1,5 +1,7 @@
 package com.example.spotifyapi.authenticate.di
 
+import androidx.room.Room
+import com.example.spotifyapi.app.data.local.SpotifyDatabase
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.authenticate.data.networking.AuthApiService
 import com.example.spotifyapi.authenticate.domain.interfacies.AuthRepository
@@ -33,6 +35,17 @@ val networkAuthModule = module {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AuthApiService::class.java)
     }
+}
+
+val databaseModule = module {
+
+    single {
+        Room.databaseBuilder(
+            get(), SpotifyDatabase::class.java, "github_database"
+        ).fallbackToDestructiveMigration().build()
+    }
+
+    single { get<SpotifyDatabase>().spotifyDao() }
 }
 
 

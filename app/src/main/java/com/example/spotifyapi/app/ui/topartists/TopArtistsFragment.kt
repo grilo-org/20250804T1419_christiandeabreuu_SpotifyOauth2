@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -95,7 +96,7 @@ class TopArtistsFragment : Fragment() {
     private fun checkAccessToken() {
         accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
         if (accessToken.isEmpty()) {
-            navigateToLogin()
+            Toast.makeText(requireContext(), "Token de acesso não encontrado, modo offline ativado", Toast.LENGTH_SHORT).show()
             return
         }
     }

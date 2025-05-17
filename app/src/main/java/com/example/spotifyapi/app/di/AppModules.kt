@@ -41,9 +41,10 @@ val appModules = module {
 
     factory { TopArtistsRepository(get()) }
     factory { AlbumsRepository(get()) }
-    factory { UserProfileRepository(get()) }
+    factory { UserProfileRepository(get(), get()) }
     factory { PlaylistRepository(get()) }
     factory { CreatePlaylistRepository(get()) }
+
 
 }
 
@@ -53,9 +54,5 @@ val networkAppModule = module {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(SpotifyApiService::class.java)
     }
-    single {
-        retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/")
-            .addConverterFactory(GsonConverterFactory.create()).build()
-            .create(AuthApiService::class.java)
-    }
+
 }

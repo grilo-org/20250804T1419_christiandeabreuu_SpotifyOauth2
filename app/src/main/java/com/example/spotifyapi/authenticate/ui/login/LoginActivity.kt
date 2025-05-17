@@ -9,6 +9,7 @@ import com.example.spotifyapi.app.ui.AppActivity
 //import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import com.example.spotifyapi.utils.Constants
+import com.example.spotifyapi.utils.NetworkUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -56,18 +57,43 @@ class LoginActivity : AppCompatActivity() {
         intent.data?.let { loginViewModel.processRedirect(it) }
     }
 
+
     private fun setupButtonListeners() {
         binding.buttonStart.setOnClickListener {
-            loginViewModel.checkInternet(this)
-        }
-
-        loginViewModel.connectionStatus.observe(this) { isConnected ->
-            if (!isConnected) {
-                loginViewModel.notifyError("Sem conexão com a internet. Carregando offline.")
-            } else {
+            if (NetworkUtils.isInternetAvailable(this)) {
+                // Se houver internet, autentica
                 startActivity(loginViewModel.getAuthIntent())
+            } else {
+                // Se não houver internet, avança para a tela offline
+                Log.d("LoginActivity", "Sem internet! Indo para tela offline.")
+                navigateToOfflineMode()
             }
         }
+    }
+//    private fun setupButtonListeners() {
+//        binding.buttonStart.setOnClickListener {
+//            loginViewModel.checkInternet(this)
+//        }
+//
+//        loginViewModel.connectionStatus.observe(this) { isConnected ->
+//            if (!isConnected) {
+//                Log.d("LoginActivity", "Sem internet! Indo para tela offline.")
+//                navigateToOfflineMode() // Agora realmente navega para a próxima tela offline
+//            } else {
+//                startActivity(loginViewModel.getAuthIntent()) // Continua autenticando
+//            }
+//        }
+//    }
+
+    private fun navigateToOfflineMode() {
+        val intent = Intent(this, AppActivity::class.java) // Ou sua tela offline
+        startActivity(intent)
+
+    }
+
+    fun goToOfflineScreen() {
+        val intent = Intent(this, AppActivity::class.java)
+        startActivity(intent)
     }
 
     private fun handleRedirect(intent: Intent?) {
