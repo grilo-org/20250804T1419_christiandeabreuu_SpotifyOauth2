@@ -14,15 +14,7 @@
         android:roundIcon="@drawable/ic_spotify_full"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
-        <activity
-            android:name=".app.ui.createplaylist.CreatePlaylistActivity"
-            android:exported="false" />
-        <activity
-            android:name=".app.ui.playlist.PlaylistActivity"
-            android:exported="false" />
-        <activity
-            android:name=".app.ui.profile.ProfileActivity"
-            android:exported="false" />
+
         <activity
             android:name=".authenticate.ui.login.LoginActivity"
             android:exported="true">
@@ -46,7 +38,7 @@
             android:name=".app.ui.AppActivity"
             android:exported="false" />
         <activity
-            android:name=".app.ui.topartists.TopArtistsActivity"
+            android:name=".app.ui.createplaylist.CreatePlaylistActivity"
             android:exported="false" />
     </application>
 

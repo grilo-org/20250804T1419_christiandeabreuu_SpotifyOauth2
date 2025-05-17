@@ -14,7 +14,8 @@ import coil.load
 class PlaylistAdapter : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder>(PlaylistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val binding = ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPlaylistBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PlaylistViewHolder(binding)
     }
 
@@ -22,7 +23,8 @@ class PlaylistAdapter : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder
         holder.bind(getItem(position))
     }
 
-    class PlaylistViewHolder(private val binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
+    class PlaylistViewHolder(private val binding: ItemPlaylistBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(playlist: Playlist) {
             binding.playlistNameTextView.text = playlist.name
             binding.playlistOwnerTextView.text = playlist.owner.name
@@ -31,14 +33,16 @@ class PlaylistAdapter : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder
             binding.playlistImageView.load(imageUrl)
         }
     }
+
+
+    class PlaylistDiffCallback : DiffUtil.ItemCallback<Playlist>() {
+        override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
+            return oldItem == newItem
+        }
+    }
 }
 
-class PlaylistDiffCallback : DiffUtil.ItemCallback<Playlist>() {
-    override fun areItemsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: Playlist, newItem: Playlist): Boolean {
-        return oldItem == newItem
-    }
-}

@@ -63,7 +63,6 @@ class PlaylistFragment : Fragment() {
         } ?: Log.e("PlaylistFragment", "❌ Nenhuma playlist encontrada!")
     }
 
-
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
@@ -75,11 +74,9 @@ class PlaylistFragment : Fragment() {
 
     private fun setupRecyclerView() {
         playlistAdapter = PlaylistAdapter()
-
         binding.playlistsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistsRecyclerView.adapter = playlistAdapter
     }
-
 
     private fun setupCreatePlaylistButton() {
         binding.buttonToGoCreatePlaylist.setOnClickListener {
@@ -90,7 +87,6 @@ class PlaylistFragment : Fragment() {
         }
     }
 
-
     private fun imageProfile(imageUrl: String?) {
         imageUrl?.let {
             binding.playlistsProfileImageView.load(it) {
@@ -100,7 +96,4 @@ class PlaylistFragment : Fragment() {
             }
         }
     }
-
-
-
 }

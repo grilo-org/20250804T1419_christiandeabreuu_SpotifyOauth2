@@ -38,7 +38,6 @@ class ProfileFragment : Fragment() {
             Log.e("ProfileFragment", "❌ Token não recebido!")
         }
 
-
         observeUserProfile()
         viewModel.getUserProfile(accessToken)
     }

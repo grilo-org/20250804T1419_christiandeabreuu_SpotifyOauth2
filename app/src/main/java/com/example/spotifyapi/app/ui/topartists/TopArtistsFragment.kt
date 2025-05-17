@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -81,11 +82,13 @@ class TopArtistsFragment : Fragment() {
             putString("IMAGE_URL", artist.images.firstOrNull()?.url)
         }
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, AlbumsFragment().apply { arguments = bundle })
-            .addToBackStack(null)
-            .commit()
+        findNavController().navigate(R.id.albumsFragment, bundle) // 🔥 Agora usa `NavController` corretamente!
     }
+//        requireActivity().supportFragmentManager.beginTransaction()
+//            .replace(R.id.nav_host_fragment, AlbumsFragment().apply { arguments = bundle })
+//            .addToBackStack(null)
+//            .commit()
+
 
 
 
