@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.ui.topartists
 
-import TopArtistsAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +12,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Artist
+import com.example.spotifyapi.app.ui.album.AlbumsFragment
 import com.example.spotifyapi.authenticate.ui.login.LoginActivity
 import com.example.spotifyapi.databinding.FragmentTopArtistsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -65,10 +65,29 @@ class TopArtistsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
+        topArtistsAdapter = TopArtistsAdapter { artist ->
+            navigateToAlbumsFragment(artist)
+        }
+
         binding.artistasRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        topArtistsAdapter = TopArtistsAdapter()
         binding.artistasRecyclerView.adapter = topArtistsAdapter
     }
+
+    private fun navigateToAlbumsFragment(artist: Artist) {
+        val bundle = Bundle().apply {
+            putString("ACCESS_TOKEN", accessToken)
+            putString("ARTIST_ID", artist.id)
+            putString("ARTIST", artist.name)
+            putString("IMAGE_URL", artist.images.firstOrNull()?.url)
+        }
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment, AlbumsFragment().apply { arguments = bundle })
+            .addToBackStack(null)
+            .commit()
+    }
+
+
 
     private fun checkAccessToken() {
         accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""

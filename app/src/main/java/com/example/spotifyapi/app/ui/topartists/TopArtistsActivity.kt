@@ -1,7 +1,5 @@
 package com.example.spotifyapi.app.ui.topartists
 
-import TopArtistsAdapter
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +9,6 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Artist
-import com.example.spotifyapi.app.ui.playlist.PlaylistActivity
-import com.example.spotifyapi.app.ui.profile.ProfileActivity
 import com.example.spotifyapi.databinding.ActivityTopArtistsBinding
 import com.example.spotifyapi.authenticate.ui.login.LoginActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,12 +25,23 @@ class TopArtistsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         checkAccessToken()
-        setupRecyclerView()
+//        setupRecyclerView()
         observeUserProfile()
         observeArtists()
         viewModel.getUserProfile(accessToken)
         viewModel.getTopArtists(accessToken)
 //        bottomNavigationView()
+
+        //
+        //
+        //
+        //   nao to usando ESSA CLASSE
+
+        //
+
+        //
+
+        //
     }
 
     private fun observeArtists() {
@@ -59,11 +66,11 @@ class TopArtistsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupRecyclerView() {
-        binding.artistasRecyclerView.layoutManager = LinearLayoutManager(this)
-        topArtistsAdapter = TopArtistsAdapter()
-        binding.artistasRecyclerView.adapter = topArtistsAdapter
-    }
+//    private fun setupRecyclerView() {
+//        binding.artistasRecyclerView.layoutManager = LinearLayoutManager(this)
+//        topArtistsAdapter = TopArtistsAdapter()
+//        binding.artistasRecyclerView.adapter = topArtistsAdapter
+//    }
 
     private fun checkAccessToken() {
         accessToken = intent.getStringExtra("ACCESS_TOKEN") ?: ""

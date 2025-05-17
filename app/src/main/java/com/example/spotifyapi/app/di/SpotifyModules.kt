@@ -11,6 +11,7 @@ import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfilePlaylistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
+import com.example.spotifyapi.app.ui.album.AlbumsViewModel
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistViewModel
 import com.example.spotifyapi.app.ui.playlist.PlaylistViewModel
 import com.example.spotifyapi.app.ui.profile.ProfileViewModel
@@ -29,6 +30,7 @@ val spotifyModules = module {
     viewModel { ProfileViewModel(get()) }
     viewModel { PlaylistViewModel(get(), get()) }
     viewModel { CreatePlaylistViewModel(get()) }
+    viewModel { AlbumsViewModel(get()) }
 
     factory { GetTopArtistsUseCase(get()) }
     factory { GetUserProfileTopArtistsUseCase(get()) }
