@@ -34,7 +34,7 @@ class TopArtistsActivity : AppCompatActivity() {
         observeArtists()
         viewModel.getUserProfile(accessToken)
         viewModel.getTopArtists(accessToken)
-        bottomNavigationView()
+//        bottomNavigationView()
     }
 
     private fun observeArtists() {
@@ -79,30 +79,30 @@ class TopArtistsActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun bottomNavigationView() {
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_artistas -> true
-                R.id.navigation_playlists -> {
-                    navigateToActivity(PlaylistActivity::class.java)
-                    true
-                }
-
-                R.id.navigation_profile -> {
-                    navigateToActivity(ProfileActivity::class.java)
-                    true
-                }
-
-                else -> false
-            }
-        }
-    }
-
-    private fun navigateToActivity(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass)
-        intent.putExtra("ACCESS_TOKEN", accessToken)
-        startActivity(intent)
-    }
+//    private fun bottomNavigationView() {
+//        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.navigation_artistas -> true
+//                R.id.navigation_playlists -> {
+//                    navigateToActivity(PlaylistActivity::class.java)
+//                    true
+//                }
+//
+//                R.id.navigation_profile -> {
+//                    navigateToActivity(ProfileActivity::class.java)
+//                    true
+//                }
+//
+//                else -> false
+//            }
+//        }
+//    }
+//
+//    private fun navigateToActivity(activityClass: Class<*>) {
+//        val intent = Intent(this, activityClass)
+//        intent.putExtra("ACCESS_TOKEN", accessToken)
+//        startActivity(intent)
+//    }
 
     private fun imageProfile(imageUrl: String?) {
         imageUrl?.let {

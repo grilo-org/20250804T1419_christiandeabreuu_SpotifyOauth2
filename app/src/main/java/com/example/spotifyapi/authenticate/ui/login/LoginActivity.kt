@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
+import com.example.spotifyapi.app.ui.AppActivity
+//import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import com.example.spotifyapi.utils.Constants
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -41,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun observeNavigation() {
         loginViewModel.navigateToArtists.observe(this) { accessToken ->
-            val intent = Intent(this, TopArtistsActivity::class.java).apply {
+            val intent = Intent(this, AppActivity::class.java).apply {
                 putExtra("ACCESS_TOKEN", accessToken)
             }
             startActivity(intent)
@@ -84,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToTopArtistsActivity(accessToken: String) {
-        val intent = Intent(this, TopArtistsActivity::class.java).apply {
+        val intent = Intent(this, AppActivity::class.java).apply {
             putExtra("ACCESS_TOKEN", accessToken)
         }
         startActivity(intent)
