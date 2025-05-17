@@ -10,7 +10,7 @@ import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.ui.playlist.PlaylistActivity
-import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
+//import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.authenticate.ui.login.LoginActivity
 import com.example.spotifyapi.databinding.ActivityProfileBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,9 +42,9 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.bottomNavigationView.selectedItemId = R.id.navigation_profile
+//        binding.bottomNavigationView.selectedItemId = R.id.navigation_profile
         setupCloseButton()
-        setupBottomNavigationView()
+//        setupBottomNavigationView()
     }
 
     private fun setupCloseButton() {
@@ -53,30 +53,30 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupBottomNavigationView() {
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_artistas -> {
-                    navigateToActivity(TopArtistsActivity::class.java)
-                    true
-                }
-                R.id.navigation_playlists -> {
-                    navigateToActivity(PlaylistActivity::class.java)
-                    true
-                }
-                R.id.navigation_profile -> true
-                else -> false
-            }
-        }
-    }
-
-    private fun navigateToActivity(activityClass: Class<*>) {
-        val intent = Intent(this, activityClass).apply {
-            putExtra("ACCESS_TOKEN", accessToken)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        startActivity(intent)
-    }
+//    private fun setupBottomNavigationView() {
+//        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.navigation_artistas -> {
+//                    navigateToActivity(TopArtistsActivity::class.java)
+//                    true
+//                }
+//                R.id.navigation_playlists -> {
+//                    navigateToActivity(PlaylistActivity::class.java)
+//                    true
+//                }
+//                R.id.navigation_profile -> true
+//                else -> false
+//            }
+//        }
+//    }
+//
+//    private fun navigateToActivity(activityClass: Class<*>) {
+//        val intent = Intent(this, activityClass).apply {
+//            putExtra("ACCESS_TOKEN", accessToken)
+//            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        }
+//        startActivity(intent)
+//    }
 
     private fun navigateToLogin() {
         val intent = Intent(this, LoginActivity::class.java)

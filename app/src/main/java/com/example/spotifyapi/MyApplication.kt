@@ -2,8 +2,9 @@ package com.example.spotifyapi
 
 import android.app.Application
 import com.example.spotifyapi.authenticate.di.authModules
-import com.example.spotifyapi.app.di.networkModule
-import com.example.spotifyapi.app.di.spotifyModules
+import com.example.spotifyapi.app.di.networkAppModule
+import com.example.spotifyapi.app.di.appModules
+import com.example.spotifyapi.authenticate.di.networkAuthModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 
@@ -14,7 +15,7 @@ class MyApplication : Application() {
         startKoin {
             androidContext(this@MyApplication)
             modules(
-                authModules, spotifyModules, networkModule
+                authModules, networkAuthModule, appModules, networkAppModule
             )
         }
     }
