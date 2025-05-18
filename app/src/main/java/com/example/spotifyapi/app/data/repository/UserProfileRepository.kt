@@ -6,7 +6,10 @@ import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 
-class UserProfileRepository(private val apiService: SpotifyApiService, private val spotifyDAO: SpotifyDAO) {
+class UserProfileRepository(
+    private val apiService: SpotifyApiService,
+    private val spotifyDAO: SpotifyDAO
+) {
     suspend fun getUserProfileFromApi(accessToken: String): UserProfile? {
         return try {
             apiService.getUserProfile("Bearer $accessToken")
@@ -16,13 +19,13 @@ class UserProfileRepository(private val apiService: SpotifyApiService, private v
         }
     }
 
-    suspend fun insertUserProfile(userProfile: UserProfileDB) {
-        spotifyDAO.insertUserProfile(userProfile)
+    suspend fun insertLocalUserProfile(userProfile: UserProfileDB) {
+        spotifyDAO.insertLocalUserProfile(userProfile)
         Log.d("UserProfileRepository", "Perfil inserido no banco: $userProfile")
     }
 
-    suspend fun getUserProfileFromDB(): UserProfileDB? {
-        val userProfile = spotifyDAO.getUserProfile()
+    suspend fun getLocalUserProfile(): UserProfileDB? {
+        val userProfile = spotifyDAO.getLocalUserProfile()
         Log.d("UserProfileRepository", "Perfil recuperado do banco: $userProfile")
         return userProfile
     }

@@ -20,11 +20,11 @@ class PlaylistRepository(private val apiService: SpotifyApiService
     }
 
     suspend fun insertPlaylistsIntoDB(playlists: List<PlaylistDB>) {
-        spotifyDAO.insertPlaylists(playlists)
+        spotifyDAO.insertLocalPlaylists(playlists)
     }
 
     suspend fun getPlaylistsFromDB(): List<PlaylistDB> {
-        val playlists = spotifyDAO.getPlaylists()
+        val playlists = spotifyDAO.getLocalPlaylists()
         Log.d("PlaylistRepository", "📀 Playlists no banco antes da conversão: ${playlists.size}")
         Log.d("PlaylistRepository", "🖼️ URLs das imagens no banco: ${playlists.map { it.imageUrl }}")
         return playlists

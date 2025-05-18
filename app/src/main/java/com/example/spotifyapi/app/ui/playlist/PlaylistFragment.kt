@@ -3,10 +3,10 @@ package com.example.spotifyapi.app.ui.playlist
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -25,8 +25,7 @@ class PlaylistFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,9 +36,8 @@ class PlaylistFragment : Fragment() {
         accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
 
 
-            viewModel.getPlaylists(accessToken, requireContext())
-            viewModel.getUserProfile(accessToken)
-
+        viewModel.getPlaylists(accessToken)
+        viewModel.getUserProfile(accessToken)
 
         setupRecyclerView()
         observePlaylists()
@@ -64,7 +62,10 @@ class PlaylistFragment : Fragment() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d("PlaylistFragment", "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}")
+                Log.d(
+                    "PlaylistFragment",
+                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
+                )
                 imageProfile(it.images.firstOrNull()?.url)
             } ?: Log.e("PlaylistFragment", "❌ Perfil do usuário não carregado!")
         }

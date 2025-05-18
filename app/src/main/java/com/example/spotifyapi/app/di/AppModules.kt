@@ -39,12 +39,11 @@ val appModules = module {
     factory { GetPlaylistsUseCase(get()) }
     factory { CreatePlaylistUseCase(get()) }
 
-    factory { TopArtistsRepository(get()) }
+    factory { TopArtistsRepository(get(), get()) }
     factory { AlbumsRepository(get()) }
     factory { UserProfileRepository(get(), get()) }
     factory { PlaylistRepository(get(), get()) }
     factory { CreatePlaylistRepository(get()) }
-
 
 }
 

@@ -61,11 +61,9 @@ class LoginActivity : AppCompatActivity() {
     private fun setupButtonListeners() {
         binding.buttonStart.setOnClickListener {
             if (NetworkUtils.isInternetAvailable(this)) {
-                // Se houver internet, autentica
                 startActivity(loginViewModel.getAuthIntent())
             } else {
-                // Se não houver internet, avança para a tela offline
-                Log.d("LoginActivity", "Sem internet! Indo para tela offline.")
+                Log.d("LoginActivity", "Sem internet! Indo")
                 navigateToOfflineMode()
             }
         }
@@ -86,7 +84,8 @@ class LoginActivity : AppCompatActivity() {
 //    }
 
     private fun navigateToOfflineMode() {
-        val intent = Intent(this, AppActivity::class.java) // Ou sua tela offline
+        val intent = Intent(this, AppActivity::class.java)
+        Toast.makeText(this, "Modo offline", Toast.LENGTH_SHORT).show()
         startActivity(intent)
 
     }

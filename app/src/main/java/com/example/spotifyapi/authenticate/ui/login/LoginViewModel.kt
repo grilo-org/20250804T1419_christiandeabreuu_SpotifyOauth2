@@ -35,9 +35,9 @@ class LoginViewModel(
     private val _authError = MutableLiveData<String>()
     val authError: LiveData<String> get() = _authError
 
-    fun notifyError(message: String) {
-        _authError.postValue(message)
-    }
+//    fun notifyError(message: String) {
+//        _authError.postValue(message)
+//    }
 
     fun updateAcessToken(accessToken: String) {
         _navigateToArtists.postValue(accessToken)

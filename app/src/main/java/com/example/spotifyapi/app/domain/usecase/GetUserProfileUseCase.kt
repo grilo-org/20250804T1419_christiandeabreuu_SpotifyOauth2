@@ -17,7 +17,7 @@ class GetUserProfileUseCase(private val repository: UserProfileRepository) {
                 throw Exception("Resposta da API nula")
             }
         } catch (e: Exception) {
-            val userProfileDB = repository.getUserProfileFromDB()
+            val userProfileDB = repository.getLocalUserProfile()
             userProfileDB?.let { mapToUserProfile(it) }
         }
     }
@@ -29,7 +29,7 @@ class GetUserProfileUseCase(private val repository: UserProfileRepository) {
             imageUrl = response.images?.firstOrNull()?.url
         )
         Log.d("GetUserProfileUseCase", "Salvando perfil no banco local: $userProfileDB")
-        repository.insertUserProfile(userProfileDB)
+        repository.insertLocalUserProfile(userProfileDB)
     }
 
     private fun mapToUserProfile(userProfileDB: UserProfileDB): UserProfile {

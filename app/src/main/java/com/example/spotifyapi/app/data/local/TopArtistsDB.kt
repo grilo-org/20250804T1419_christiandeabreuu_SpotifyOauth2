@@ -1,10 +1,9 @@
 package com.example.spotifyapi.app.data.local
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 
 @Entity(tableName = "top_artists")
 data class TopArtistsDB(
@@ -19,34 +18,34 @@ data class TopArtistsDB(
     val timeRange: String
 )
 
-@Entity(tableName = "artist")
-data class ArtistDB( // Agora fica claro que esta versão representa o banco de dados
+
+
+@Entity(
+    tableName = "artist",
+    indices = [Index(value = ["id"], unique = true)] // 🔹 Torna 'id' único
+)
+data class ArtistDB(
     @PrimaryKey(autoGenerate = true)
-    val databaseId: Int = 0,
-    val id: String, // ID da API
+    val databaseId: Int = 0, // Chave primária autogerada
+
+    val id: String, // Agora será garantido que 'id' seja único
     val name: String,
     val popularity: Int,
-    val topArtistsId: Int // Relaciona com a tabela TopArtistsDB
+    val topArtistsId: Int
 )
 
 @Entity(
     tableName = "image_artist",
     foreignKeys = [ForeignKey(
         entity = ArtistDB::class,
-        parentColumns = ["databaseId"],
+        parentColumns = ["id"],  // Alterado para "id" ao invés de "databaseId"
         childColumns = ["artistId"],
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class ImageArtist(
+data class ImageArtistDB(
     @PrimaryKey(autoGenerate = true)
     val databaseId: Int = 0,
     val url: String,
-    val artistId: Int
-)
-
-data class ArtistWithImages(
-    @Embedded val artist: ArtistDB,
-    @Relation(parentColumn = "databaseId", entityColumn = "artistId")
-    val images: List<ImageArtist>
+    val artistId: String  // Alterado de Int para String
 )

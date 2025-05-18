@@ -8,27 +8,14 @@ import androidx.room.RoomDatabase
 @Database(
     entities = [
         UserProfileDB::class,
-        PlaylistDB::class
+        PlaylistDB::class,
+        ArtistDB::class,
+        ImageArtistDB::class
    ],
-    version = 2
+    version = 5
 )
 abstract class SpotifyDatabase : RoomDatabase() {
 
     abstract fun spotifyDao(): SpotifyDAO
 
-    companion object {
-        @Volatile private var INSTANCE: SpotifyDatabase? = null
-
-        fun getDatabase(context: Context): SpotifyDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    SpotifyDatabase::class.java,
-                    "spotify_db"
-                ).fallbackToDestructiveMigration().build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }
