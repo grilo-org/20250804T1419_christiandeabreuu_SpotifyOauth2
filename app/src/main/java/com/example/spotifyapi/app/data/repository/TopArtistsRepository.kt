@@ -10,7 +10,7 @@ class TopArtistsRepository(private val apiService: SpotifyApiService) {
             val response = apiService.getTopArtists("Bearer $accessToken")
             response.items
         } catch (e: Exception) {
-            Log.e("TopArtistsRepository", "❌ Erro ao buscar artistas: ${e.message}")
+            Log.e("TopArtistsRepository", "❌ Erro ao buscar artistassss: ${e.message}")
             emptyList()
         }
     }

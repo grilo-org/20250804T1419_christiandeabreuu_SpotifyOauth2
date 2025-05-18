@@ -42,7 +42,7 @@ val appModules = module {
     factory { TopArtistsRepository(get()) }
     factory { AlbumsRepository(get()) }
     factory { UserProfileRepository(get(), get()) }
-    factory { PlaylistRepository(get()) }
+    factory { PlaylistRepository(get(), get()) }
     factory { CreatePlaylistRepository(get()) }
 
 

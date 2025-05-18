@@ -5,8 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [UserProfileDB::class], version = 1)
+@Database(
+    entities = [
+        UserProfileDB::class,
+        PlaylistDB::class
+   ],
+    version = 2
+)
 abstract class SpotifyDatabase : RoomDatabase() {
+
     abstract fun spotifyDao(): SpotifyDAO
 
     companion object {

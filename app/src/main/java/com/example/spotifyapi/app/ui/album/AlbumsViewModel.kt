@@ -21,6 +21,7 @@ class AlbumsViewModel(private val getAlbumsUseCase: GetAlbumsUseCase) : ViewMode
                 _albumsLiveData.postValue(albums)
             } catch (e: Exception) {
                 Log.e("AlbumsViewModel", "❌ Erro ao buscar álbuns: ${e.message}")
+                // testar depois break point
             }
         }
     }

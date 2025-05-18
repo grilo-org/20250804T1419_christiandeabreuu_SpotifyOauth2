@@ -36,12 +36,10 @@ class PlaylistFragment : Fragment() {
 
         accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
 
-        if (accessToken.isNotEmpty()) {
-            viewModel.getPlaylists(accessToken)
+
+            viewModel.getPlaylists(accessToken, requireContext())
             viewModel.getUserProfile(accessToken)
-        } else {
-            Log.e("PlaylistFragment", "❌ Token não recebido!")
-        }
+
 
         setupRecyclerView()
         observePlaylists()
