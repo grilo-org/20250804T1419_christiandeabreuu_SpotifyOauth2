@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +37,7 @@ class TopArtistsFragment : Fragment() {
         setupRecyclerView()
         observeUserProfile()
         observeArtists()
+        observeError()
         viewModel.getUserProfile(accessToken)
         viewModel.getTopArtists(accessToken)
     }
@@ -43,6 +45,14 @@ class TopArtistsFragment : Fragment() {
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(viewLifecycleOwner) { artists ->
             updateArtistsUI(artists)
+        }
+    }
+
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

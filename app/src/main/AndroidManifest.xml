@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".app.ui.AppActivity"
+            android:name=".app.ui.app.AppActivity"
             android:exported="false" />
         <activity
             android:name=".app.ui.createplaylist.CreatePlaylistActivity"

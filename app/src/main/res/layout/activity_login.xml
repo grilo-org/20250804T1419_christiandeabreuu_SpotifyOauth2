@@ -29,7 +29,7 @@
         android:layout_marginTop="@dimen/margin_35"
         android:backgroundTint="@color/green"
         android:fontFamily="@font/rubik_bold"
-        android:text="@string/entrar_button"
+        android:text="@string/enter_button"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

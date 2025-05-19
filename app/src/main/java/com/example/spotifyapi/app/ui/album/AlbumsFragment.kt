@@ -12,7 +12,6 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentAlbumsBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -43,10 +42,18 @@ class AlbumsFragment : Fragment() {
 
         setupViews()
         observeAlbums()
+        observeError()
         setupBackButton()
-        viewModel.fetchAlbums(accessToken, artistId)
+        viewModel.getAlbums(accessToken, artistId)
     }
 
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun setupViews() {
         binding.albumTitleTextView.text = artistName

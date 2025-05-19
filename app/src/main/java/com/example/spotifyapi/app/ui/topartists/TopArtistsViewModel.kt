@@ -1,5 +1,6 @@
 package com.example.spotifyapi.app.ui.topartists
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,22 +23,28 @@ class TopArtistsViewModel(
     private val _userProfileLiveData = MutableLiveData<UserProfile?>()
     val userProfileLiveData: LiveData<UserProfile?> get() = _userProfileLiveData
 
-    init {
-        getTopArtists(accessToken = "")
-    }
-
+    private val _errorLiveData = MutableLiveData<String>()
+    val errorLiveData: LiveData<String> get() = _errorLiveData
 
     fun getTopArtists(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val artists = topArtistsUseCase.execute(accessToken)
-            _artistsLiveData.postValue(artists)
+            try {
+                val artists = topArtistsUseCase.execute(accessToken)
+                _artistsLiveData.postValue(artists)
+            } catch (e: Exception) {
+                _errorLiveData.postValue("Erro ao buscar artistas")
+            }
         }
     }
 
     fun getUserProfile(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val userProfile = userProfileUseCase.execute(accessToken)
-            _userProfileLiveData.postValue(userProfile)
+            try {
+                val userProfile = userProfileUseCase.execute(accessToken)
+                _userProfileLiveData.postValue(userProfile)
+            } catch (e: Exception) {
+                _errorLiveData.postValue("Erro ao buscar perfil do usuário")
+            }
         }
     }
 }

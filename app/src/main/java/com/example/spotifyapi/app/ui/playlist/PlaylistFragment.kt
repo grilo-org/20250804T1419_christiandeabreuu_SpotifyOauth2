@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -43,9 +44,18 @@ class PlaylistFragment : Fragment() {
 
         setupRecyclerView()
         observePlaylists()
+        observeError()
         observeUserProfile()
         setupCreatePlaylistButton()
 
+    }
+
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observePlaylists() {

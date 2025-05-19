@@ -1,14 +1,12 @@
-package com.example.spotifyapi.app.ui
+package com.example.spotifyapi.app.ui.app
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.ActivityAppBinding
-
 
 class AppActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAppBinding
@@ -32,21 +30,21 @@ class AppActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.topArtistsFragment -> {
-                    navController.navigate(R.id.topArtistsFragment) //  Não precisa token
+                    navController.navigate(R.id.topArtistsFragment)
                     true
                 }
                 R.id.profileFragment -> {
                     val bundle = Bundle().apply {
                         putString("ACCESS_TOKEN", accessToken)
                     }
-                    navController.navigate(R.id.profileFragment, bundle) // token
+                    navController.navigate(R.id.profileFragment, bundle)
                     true
                 }
                 R.id.navigation_playlists -> {
                     val bundle = Bundle().apply {
                         putString("ACCESS_TOKEN", accessToken)
                     }
-                    navController.navigate(R.id.playlistFragment, bundle) // token
+                    navController.navigate(R.id.playlistFragment, bundle)
                     true
                 }
                 else -> false

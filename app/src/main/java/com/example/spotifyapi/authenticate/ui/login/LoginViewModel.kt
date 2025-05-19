@@ -35,16 +35,8 @@ class LoginViewModel(
     private val _authError = MutableLiveData<String>()
     val authError: LiveData<String> get() = _authError
 
-//    fun notifyError(message: String) {
-//        _authError.postValue(message)
-//    }
-
     fun updateAcessToken(accessToken: String) {
         _navigateToArtists.postValue(accessToken)
-    }
-
-    fun checkInternet(context: Context) {
-        _connectionStatus.postValue(NetworkUtils.isInternetAvailable(context))
     }
 
     fun processRedirect(uri: Uri) {

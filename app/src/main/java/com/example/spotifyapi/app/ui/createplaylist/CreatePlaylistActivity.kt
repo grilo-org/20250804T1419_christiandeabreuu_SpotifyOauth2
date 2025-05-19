@@ -23,6 +23,15 @@ class CreatePlaylistActivity : AppCompatActivity() {
         setupCreateButton()
         setupCloseButton()
         observeCreatePlaylist()
+        observeError()
+    }
+
+    private fun observeError() {
+        viewModel.errorLiveData.observe(this) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observeCreatePlaylist() {
