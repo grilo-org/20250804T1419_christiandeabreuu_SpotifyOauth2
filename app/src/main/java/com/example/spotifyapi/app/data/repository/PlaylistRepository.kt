@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.data.repository
 
-import android.util.Log
 import com.example.spotifyapi.app.data.local.PlaylistDB
 import com.example.spotifyapi.app.data.local.SpotifyDAO
 import com.example.spotifyapi.app.data.model.Playlist
@@ -14,7 +13,6 @@ class PlaylistRepository(private val apiService: SpotifyApiService
             val response = apiService.getPlaylists("Bearer $accessToken")
             response.items
         } catch (e: Exception) {
-            Log.e("PlaylistRepository", "❌ Erro ao buscar playlists: ${e.message}")
             emptyList()
         }
     }
@@ -25,8 +23,6 @@ class PlaylistRepository(private val apiService: SpotifyApiService
 
     suspend fun getPlaylistsFromDB(): List<PlaylistDB> {
         val playlists = spotifyDAO.getLocalPlaylists()
-        Log.d("PlaylistRepository", "📀 Playlists no banco antes da conversão: ${playlists.size}")
-        Log.d("PlaylistRepository", "🖼️ URLs das imagens no banco: ${playlists.map { it.imageUrl }}")
         return playlists
     }
 }

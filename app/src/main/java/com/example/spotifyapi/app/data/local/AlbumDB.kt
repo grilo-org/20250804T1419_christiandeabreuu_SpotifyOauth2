@@ -5,10 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "albums")
 data class AlbumDB(
-    @PrimaryKey val databaseId: String, // ID único do álbum
+    @PrimaryKey val databaseId: String,
     val name: String,
-    val artist: String,
+    val artistId: String,
     val imageUrl: String?,
-    val releaseDate: String,
-
+    val releaseDate: String
 )

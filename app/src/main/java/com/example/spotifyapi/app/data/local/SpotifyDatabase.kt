@@ -1,8 +1,6 @@
 package com.example.spotifyapi.app.data.local
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
@@ -10,9 +8,9 @@ import androidx.room.RoomDatabase
         UserProfileDB::class,
         PlaylistDB::class,
         ArtistDB::class,
-        ImageArtistDB::class
-   ],
-    version = 5
+        ImageArtistDB::class,
+        AlbumDB::class],
+    version = 7
 )
 abstract class SpotifyDatabase : RoomDatabase() {
 

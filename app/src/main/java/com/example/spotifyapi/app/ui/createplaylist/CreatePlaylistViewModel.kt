@@ -3,7 +3,6 @@ package com.example.spotifyapi.app.ui.createplaylist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.app.domain.usecase.CreatePlaylistUseCase
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +23,9 @@ class CreatePlaylistViewModel(
                     _createPlaylistLiveData.postValue(Result.failure(Exception("Por favor, insira um nome para a playlist.")))
                     return@launch
                 }
+
                 val result = createPlaylistUseCase.execute(accessToken, playlistName)
-                _createPlaylistLiveData.postValue(result)
+                _createPlaylistLiveData.postValue(Result.success(result))
             } catch (e: Exception) {
                 _createPlaylistLiveData.postValue(Result.failure(e))
             }

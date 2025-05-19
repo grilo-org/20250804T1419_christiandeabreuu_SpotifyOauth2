@@ -44,7 +44,8 @@ class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
             description = this.description,
             ownerName = this.owner.name,
             tracksCount = this.tracksCount,
-            imageUrl = this.images.firstOrNull()?.url ?: ""
+
+            imageUrl = this.images?.firstOrNull()?.url ?: "" 
         )
     }
 

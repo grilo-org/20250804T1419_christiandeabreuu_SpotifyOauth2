@@ -41,21 +41,12 @@ class AlbumsFragment : Fragment() {
         artistName = arguments?.getString("ARTIST") ?: ""
         imageUrl = arguments?.getString("IMAGE_URL") ?: ""
 
-        if (accessToken.isEmpty() || artistId.isEmpty()) {
-            handleError("❌ Token ou ID do artista não encontrado!")
-            return
-        }
-
         setupViews()
         observeAlbums()
         setupBackButton()
         viewModel.fetchAlbums(accessToken, artistId)
     }
 
-    private fun handleError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-        requireActivity().supportFragmentManager.popBackStack()
-    }
 
     private fun setupViews() {
         binding.albumTitleTextView.text = artistName
