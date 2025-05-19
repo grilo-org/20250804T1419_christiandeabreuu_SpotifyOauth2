@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.app.data.model.TopArtistInfoResponse
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
-import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

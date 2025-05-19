@@ -14,11 +14,9 @@ class TopArtistsRepository(
     suspend fun getTopArtists(accessToken: String): List<TopArtistInfoResponse> {
         return try {
             val response = apiService.getTopArtists("Bearer $accessToken")
-            Log.d("API Response", "🎵 Artistas recebidos: ${response.items.size}")
             response.items
         } catch (e: Exception) {
-            Log.e("TopArtistsRepository", "❌ Erro ao buscar artistas: ${e.message}")
-            emptyList() // Evita falhas na inserção no banco
+            emptyList()
         }
     }
 

@@ -37,15 +37,6 @@ val networkAuthModule = module {
     }
 }
 
-val databaseModule = module {
 
-    single {
-        Room.databaseBuilder(
-            get(), SpotifyDatabase::class.java, "github_database"
-        ).fallbackToDestructiveMigration().build()
-    }
-
-    single { get<SpotifyDatabase>().spotifyDao() }
-}
 
 

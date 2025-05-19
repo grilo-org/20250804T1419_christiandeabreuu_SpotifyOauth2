@@ -1,5 +1,7 @@
 package com.example.spotifyapi.app.di
 
+import androidx.room.Room
+import com.example.spotifyapi.app.data.local.SpotifyDatabase
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.repository.AlbumsRepository
 import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository
@@ -10,15 +12,12 @@ import com.example.spotifyapi.app.domain.usecase.CreatePlaylistUseCase
 import com.example.spotifyapi.app.domain.usecase.GetAlbumsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
-import com.example.spotifyapi.app.domain.usecase.GetUserProfilePlaylistsUseCase
-import com.example.spotifyapi.app.domain.usecase.GetUserProfileTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import com.example.spotifyapi.app.ui.album.AlbumsViewModel
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistViewModel
 import com.example.spotifyapi.app.ui.playlist.PlaylistViewModel
 import com.example.spotifyapi.app.ui.profile.ProfileViewModel
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
-import com.example.spotifyapi.authenticate.data.networking.AuthApiService
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
@@ -33,9 +32,7 @@ val appModules = module {
 
     factory { GetTopArtistsUseCase(get()) }
     factory { GetAlbumsUseCase(get()) }
-    factory { GetUserProfileTopArtistsUseCase(get()) }
     factory { GetUserProfileUseCase(get()) }
-    factory { GetUserProfilePlaylistsUseCase(get()) }
     factory { GetPlaylistsUseCase(get()) }
     factory { CreatePlaylistUseCase(get()) }
 
@@ -54,4 +51,15 @@ val networkAppModule = module {
             .create(SpotifyApiService::class.java)
     }
 
+}
+
+val databaseModule = module {
+
+    single {
+        Room.databaseBuilder(
+            get(), SpotifyDatabase::class.java, "github_database"
+        ).fallbackToDestructiveMigration().build()
+    }
+
+    single { get<SpotifyDatabase>().spotifyDao() }
 }

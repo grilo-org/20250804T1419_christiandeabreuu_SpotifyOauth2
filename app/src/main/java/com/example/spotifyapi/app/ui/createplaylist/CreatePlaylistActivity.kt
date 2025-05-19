@@ -1,13 +1,10 @@
 package com.example.spotifyapi.app.ui.createplaylist
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.spotifyapi.authenticate.ui.login.LoginActivity
 import com.example.spotifyapi.databinding.ActivityCreatePlaylistBinding
+import com.example.spotifyapi.utils.NetworkUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreatePlaylistActivity : AppCompatActivity() {
@@ -20,24 +17,22 @@ class CreatePlaylistActivity : AppCompatActivity() {
         binding = ActivityCreatePlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        checkAccessToken()
+
+        accessToken = intent.getStringExtra("ACCESS_TOKEN") ?: ""
+
         setupCreateButton()
         setupCloseButton()
         observeCreatePlaylist()
     }
 
-    private fun checkAccessToken() {
-        accessToken = intent.getStringExtra("ACCESS_TOKEN") ?: ""
-        if (accessToken.isEmpty()) {
-            navigateToLogin()
-            return
+    private fun observeCreatePlaylist() {
+        viewModel.createPlaylistLiveData.observe(this) { result ->
+            result.onSuccess {
+                showSuccess()
+            }.onFailure {
+                showError(it.message ?: "Erro ao criar playlist")
+            }
         }
-    }
-
-    private fun navigateToLogin() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
     private fun setupCreateButton() {
@@ -45,22 +40,16 @@ class CreatePlaylistActivity : AppCompatActivity() {
             val playlistName = binding.playlistNameEditText.text.toString().trim()
 
             if (playlistName.isBlank()) {
-                showError("Por favor, insira um nome para a playlist.")
+                showError("Por favor, insira um nome para a playlist")
                 return@setOnClickListener
             }
 
-            Log.d("CreatePlaylistActivity", "PlaylistName: $playlistName")
-            viewModel.createPlaylist(accessToken, playlistName)
-        }
-    }
-
-    private fun observeCreatePlaylist() {
-        viewModel.createPlaylistLiveData.observe(this) { result ->
-            result.onSuccess { message ->
-                showSuccess(message)
-            }.onFailure { exception ->
-                showError(exception.message ?: "Erro desconhecido.")
+            if (!NetworkUtils.isInternetAvailable(this)) {
+                showError("Modo offline: Não é possível criar playlists")
+                return@setOnClickListener
             }
+
+            viewModel.createPlaylist(accessToken, playlistName)
         }
     }
 
@@ -70,14 +59,12 @@ class CreatePlaylistActivity : AppCompatActivity() {
         }
     }
 
-    private fun showSuccess(message: String) {
-        Log.d("CreatePlaylistActivity", "Success: $message")
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun showSuccess() {
+        Toast.makeText(this, "Playlist criada com sucesso!", Toast.LENGTH_SHORT).show()
         finish()
     }
 
-    private fun showError(message: String) {
-        Log.e("CreatePlaylistActivity", "Error: $message")
+    private fun showError(message : String ) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

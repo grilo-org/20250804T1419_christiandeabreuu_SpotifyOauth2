@@ -14,6 +14,7 @@ import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistActivity
 import com.example.spotifyapi.databinding.FragmentPlaylistBinding
+import com.example.spotifyapi.utils.NetworkUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -34,6 +35,7 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
+
 
 
         viewModel.getPlaylists(accessToken)
@@ -79,9 +81,15 @@ class PlaylistFragment : Fragment() {
 
     private fun setupCreatePlaylistButton() {
         binding.buttonToGoCreatePlaylist.setOnClickListener {
+            Log.d("PlaylistFragment", "🎯 Botão clicado!")
+
+            val isOnline = NetworkUtils.isInternetAvailable(requireContext())
+
             val intent = Intent(requireContext(), CreatePlaylistActivity::class.java).apply {
-                putExtra("ACCESS_TOKEN", accessToken) //  Passando o token para a Activity
+                putExtra("ACCESS_TOKEN", if (isOnline) accessToken else null)
             }
+
+            Log.d("PlaylistFragment", "🎯 Iniciando CreatePlaylistActivity - Token: $accessToken")
             startActivity(intent)
         }
     }

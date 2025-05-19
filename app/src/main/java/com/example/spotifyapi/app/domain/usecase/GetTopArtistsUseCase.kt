@@ -10,48 +10,40 @@ import com.example.spotifyapi.app.data.repository.TopArtistsRepository
 class GetTopArtistsUseCase(private val repository: TopArtistsRepository) {
 
     suspend fun execute(accessToken: String): List<TopArtistInfoResponse> {
-        return try {
-            val responseApi = repository.getTopArtists(accessToken)
-            if (responseApi.isNotEmpty()) {
-                Log.d("GetTopArtistsUseCase", "🎵 Artistas carregados da API: ${responseApi.size}")
+        val responseApi = repository.getTopArtists(accessToken)
 
-                val (artistsDB, imagesDB) = mapToArtistDB(responseApi)
+        if (responseApi.isEmpty()) {
+            return getLocalData()
+        }
 
-                repository.insertLocalTopArtists(artistsDB)
+        val success = insertData(responseApi)
+        return if (success) responseApi else getLocalData()
+    }
 
-                // Aguarde a inserção dos artistas
-                val insertedArtists = repository.getLocalTopArtists()
+    private suspend fun insertData(responseApi: List<TopArtistInfoResponse>): Boolean {
+        val (artistsDB, imagesDB) = mapToArtistDB(responseApi)
+        repository.insertLocalTopArtists(artistsDB)
 
-                if (insertedArtists.isNotEmpty()) {
-                    Log.d("Database", "📸 Agora inserindo ${imagesDB.size} imagens no banco")
+        val insertedArtists = repository.getLocalTopArtists()
+        if (insertedArtists.isEmpty()) {
+            return false
+        }
 
-                    // Verifique se os IDs dos artistas estão corretos
-                    imagesDB.forEach { image ->
-                        val exists = insertedArtists.any { it.id == image.artistId }
-                        if (!exists) {
-                            Log.e("Database", "❌ Imagem não pode ser inserida! Artista ${image.artistId} não encontrado.")
-                        }
-                    }
+        val validImages = imagesDB.filter { image ->
+            insertedArtists.any { it.id == image.artistId }
+        }
 
-                    repository.insertLocalImages(imagesDB)
-                } else {
-                    Log.e("Database", "❌ Nenhum artista foi inserido! Não podemos salvar imagens.")
-                }
+        repository.insertLocalImages(validImages)
+        return true
+    }
 
-                responseApi
-            } else {
-                throw Exception("Resposta da API está vazia")
-            }
-        } catch (e: Exception) {
-            Log.e("GetTopArtistsUseCase", "❌ Erro ao buscar artistas: ${e.message}")
+    private suspend fun getLocalData(): List<TopArtistInfoResponse> {
+        val localArtists = repository.getLocalTopArtists()
+        val images = repository.getLocalArtistImages()
 
-            val localArtists = repository.getLocalTopArtists()
-            val images = repository.getLocalArtistImages()
-
-            localArtists.map { artist ->
-                val filteredImages = images.filter { it.artistId == artist.id } // Agora ambas são Strings
-                artist.toArtist(filteredImages)
-            }
+        return localArtists.map { artist ->
+            val filteredImages = images.filter { it.artistId == artist.id }
+            artist.toArtist(filteredImages)
         }
     }
 
@@ -67,48 +59,19 @@ class GetTopArtistsUseCase(private val repository: TopArtistsRepository) {
 
         val imageArtistList = artists.flatMap { artistResponse ->
             artistResponse.images.map { imageUrl ->
-                Log.d("GetTopArtistsUseCase", "📸 Salvando imagem: ${imageUrl.url} para artista ${artistResponse.name}")
                 ImageArtistDB(
-                    url = imageUrl.url,
-                    artistId = artistResponse.id // Agora ambas são Strings
+                    url = imageUrl.url, artistId = artistResponse.id
                 )
             }
         }
 
-        return Pair(artistDBList, imageArtistList)
+        return artistDBList to imageArtistList
     }
 
     private fun ArtistDB.toArtist(images: List<ImageArtistDB>): TopArtistInfoResponse {
-        val imageUrls = images.map { it.url }
-
-        Log.d("GetTopArtistsUseCase", "🔍 Recuperando imagens para ${this.name}: $imageUrls")
-
-        return TopArtistInfoResponse(
-            id = this.id,
+        return TopArtistInfoResponse(id = this.id,
             name = this.name,
             popularity = this.popularity,
-            images = imageUrls.map { ImageArtist(url = it) }
-        )
+            images = images.map { ImageArtist(url = it.url) })
     }
 }
-
-    //    private fun ArtistDB.toArtist(images: List<ImageArtist>): TopArtistInfoResponse {
-//        return TopArtistInfoResponse(
-//            id = this.id,
-//            name = this.name,
-//            popularity = this.popularity,
-//            images = images.filter { it.artistId == this.databaseId }.map { it.url }
-//        )
-//    }
-//}
-
-//    private fun mapToArtistDB(artists: List<TopArtistInfoResponse>): List<ArtistDB> {
-//        return artists.map { artistResponse ->
-//            ArtistDB(
-//                id = artistResponse.id,
-//                name = artistResponse.name,
-//                popularity = artistResponse.popularity,
-//                topArtistsId = artistResponse.id.hashCode()
-//            )
-//        }
-//    }
