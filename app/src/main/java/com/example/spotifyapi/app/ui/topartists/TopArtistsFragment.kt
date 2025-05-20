@@ -7,20 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
-import com.example.spotifyapi.app.data.model.TopArtistInfoResponse
+import com.example.spotifyapi.app.ui.topartists.a.ArtistAdapter
+import com.example.spotifyapi.app.ui.topartists.a.ArtistViewModel
+import com.example.spotifyapi.app.ui.topartists.c.ArtistC
 import com.example.spotifyapi.databinding.FragmentTopArtistsBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TopArtistsFragment : Fragment() {
 
     private lateinit var binding: FragmentTopArtistsBinding
-    private val viewModel: TopArtistsViewModel by viewModel()
-    private lateinit var topArtistsAdapter: TopArtistsAdapter
+    private val viewModel: ArtistViewModel by viewModel()
+    private lateinit var artistsAdapter: ArtistAdapter
     private var accessToken: String = ""
 
     override fun onCreateView(
@@ -33,18 +38,38 @@ class TopArtistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        artistsAdapter = ArtistAdapter(accessToken) { artist ->
+            navigateToAlbumsFragment(artist)
+        }
         checkAccessToken()
+
+
         setupRecyclerView()
         observeUserProfile()
         observeArtists()
         observeError()
+        observePagingData()
+
+
         viewModel.getUserProfile(accessToken)
-        viewModel.getTopArtists(accessToken)
+    }
+
+    private fun observePagingData() {
+        lifecycleScope.launch {
+            viewModel.getArtistsPagingData(accessToken)
+                .collectLatest { pagingData ->
+                    Log.d("Fragment", "🔄 Dados recebidos: $pagingData")
+                    artistsAdapter.submitData(pagingData) // 🔹 Verifique se está sendo chamado!
+                }
+        }
     }
 
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(viewLifecycleOwner) { artists ->
-            updateArtistsUI(artists)
+           artists?.let {
+            Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
+           }
         }
     }
 
@@ -54,13 +79,6 @@ class TopArtistsFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun updateArtistsUI(artists: List<TopArtistInfoResponse>?) {
-        artists?.let {
-            Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
-            topArtistsAdapter.submitList(it)
-        } ?: Log.e("TopArtistsFragment", "❌ Nenhum artista encontrado!")
     }
 
     private fun observeUserProfile() {
@@ -76,15 +94,11 @@ class TopArtistsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        topArtistsAdapter = TopArtistsAdapter { artist ->
-            navigateToAlbumsFragment(artist)
-        }
-
         binding.artistasRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.artistasRecyclerView.adapter = topArtistsAdapter
+        binding.artistasRecyclerView.adapter = artistsAdapter
     }
 
-    private fun navigateToAlbumsFragment(artist: TopArtistInfoResponse) {
+    private fun navigateToAlbumsFragment(artist: ArtistC) {
         val bundle = Bundle().apply {
             putString("ACCESS_TOKEN", accessToken)
             putString("ARTIST_ID", artist.id)
@@ -115,4 +129,11 @@ class TopArtistsFragment : Fragment() {
             }
         }
     }
+
+    //    private fun updateArtistsUI(artists: List<ArtistResponse>?) {
+//        artists?.let {
+//            Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
+//            topArtistsAdapter.submitData(it)
+//        } ?: Log.e("TopArtistsFragment", "❌ Nenhum artista encontrado!")
+//    }
 }

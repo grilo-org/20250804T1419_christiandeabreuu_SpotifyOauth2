@@ -3,8 +3,8 @@ package com.example.spotifyapi.app.data.networking
 import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
-import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.model.UserProfile
+import com.example.spotifyapi.app.ui.topartists.c.TopArtistsResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -22,9 +22,10 @@ interface SpotifyApiService {
     @GET("me/top/artists")
     suspend fun getTopArtists(
         @Header("Authorization") accessToken: String,
-        @Query("limit") limit: Int = 20,
-        @Query("time_range") timeRange: String = "medium_term"
-    ): TopArtistsResponse
+        @Query("limit") limit: Int = 10,
+        @Query("time_range") timeRange: String = "short_term",
+        @Query("offset") offset: Int = 0
+    ): TopArtistsResponse  ///igual
 
     @GET("artists/{id}/albums")
     suspend fun getAlbums(

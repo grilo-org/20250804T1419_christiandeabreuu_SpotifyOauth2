@@ -1,5 +1,6 @@
 package com.example.spotifyapi.app.data.model
 
+import com.example.spotifyapi.app.ui.topartists.b.ImageArtist
 import com.google.gson.annotations.SerializedName
 
 data class AlbumsResponse(
