@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
-import com.example.spotifyapi.app.ui.topartists.a.ArtistAdapter
-import com.example.spotifyapi.app.ui.topartists.a.ArtistViewModel
-import com.example.spotifyapi.app.ui.topartists.c.ArtistC
+import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.databinding.FragmentTopArtistsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,8 +22,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class TopArtistsFragment : Fragment() {
 
     private lateinit var binding: FragmentTopArtistsBinding
-    private val viewModel: ArtistViewModel by viewModel()
-    private lateinit var artistsAdapter: ArtistAdapter
+    private val viewModel: TopArtistsViewModel by viewModel()
+    private lateinit var artistsAdapter: TopArtistsAdapter
     private var accessToken: String = ""
 
     override fun onCreateView(
@@ -39,18 +37,15 @@ class TopArtistsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        artistsAdapter = ArtistAdapter(accessToken) { artist ->
+        artistsAdapter = TopArtistsAdapter { artist ->
             navigateToAlbumsFragment(artist)
         }
         checkAccessToken()
-
-
         setupRecyclerView()
         observeUserProfile()
         observeArtists()
         observeError()
         observePagingData()
-
 
         viewModel.getUserProfile(accessToken)
     }
@@ -60,7 +55,7 @@ class TopArtistsFragment : Fragment() {
             viewModel.getArtistsPagingData(accessToken)
                 .collectLatest { pagingData ->
                     Log.d("Fragment", "🔄 Dados recebidos: $pagingData")
-                    artistsAdapter.submitData(pagingData) // 🔹 Verifique se está sendo chamado!
+                    artistsAdapter.submitData(pagingData)
                 }
         }
     }
@@ -84,12 +79,9 @@ class TopArtistsFragment : Fragment() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d(
-                    "TopArtistsFragment",
-                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
-                )
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?: Log.e("TopArtistsFragment", "❌ Perfil do usuário não carregado!")
+            } ?:
+            Log.e("TopArtistsFragment", "❌ Perfil do usuário não carregado!")
         }
     }
 
@@ -98,7 +90,7 @@ class TopArtistsFragment : Fragment() {
         binding.artistasRecyclerView.adapter = artistsAdapter
     }
 
-    private fun navigateToAlbumsFragment(artist: ArtistC) {
+    private fun navigateToAlbumsFragment(artist: ArtistResponse) {
         val bundle = Bundle().apply {
             putString("ACCESS_TOKEN", accessToken)
             putString("ARTIST_ID", artist.id)
@@ -115,7 +107,6 @@ class TopArtistsFragment : Fragment() {
     private fun checkAccessToken() {
         accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
         if (accessToken.isEmpty()) {
-            Log.d("TopArtistsFragment", "⚠️ Access token nulo ou vazio. Indo para LoginActivity.")
             return
         }
     }
@@ -129,11 +120,4 @@ class TopArtistsFragment : Fragment() {
             }
         }
     }
-
-    //    private fun updateArtistsUI(artists: List<ArtistResponse>?) {
-//        artists?.let {
-//            Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
-//            topArtistsAdapter.submitData(it)
-//        } ?: Log.e("TopArtistsFragment", "❌ Nenhum artista encontrado!")
-//    }
 }

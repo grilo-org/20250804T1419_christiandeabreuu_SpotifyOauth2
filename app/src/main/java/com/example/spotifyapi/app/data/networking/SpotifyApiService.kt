@@ -4,7 +4,7 @@ import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
 import com.example.spotifyapi.app.data.model.UserProfile
-import com.example.spotifyapi.app.ui.topartists.c.TopArtistsResponse
+import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,7 +12,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-
 
 interface SpotifyApiService {
 

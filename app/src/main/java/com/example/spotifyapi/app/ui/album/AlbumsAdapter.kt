@@ -21,7 +21,6 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffC
         holder.bind(getItem(position))
     }
 
-
     class AlbumViewHolder(private val binding: ItemAlbumsBinding) :
         androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 

@@ -5,10 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.spotifyapi.app.ui.topartists.b.ArtistDB
 import com.example.spotify.data.local.ArtistWithImages
-import com.example.spotifyapi.app.ui.topartists.b.ImageArtist
-import com.example.spotifyapi.app.ui.topartists.b.TopArtistsDB
 import com.example.spotify.data.local.TopArtistsWithArtistsAndImages
 
 @Dao

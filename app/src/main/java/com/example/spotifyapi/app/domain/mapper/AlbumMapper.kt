@@ -3,7 +3,7 @@ package com.example.spotifyapi.app.domain.mapper
 
 import com.example.spotifyapi.app.data.local.AlbumDB
 import com.example.spotifyapi.app.data.model.Album
-import com.example.spotifyapi.app.ui.topartists.b.ImageArtist
+import com.example.spotifyapi.app.data.local.ImageArtist
 
 object AlbumMapper {
 
