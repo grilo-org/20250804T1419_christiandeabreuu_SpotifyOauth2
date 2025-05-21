@@ -16,10 +16,17 @@ class ProfileViewModel(
     private val _userProfileLiveData = MutableLiveData<UserProfile?>()
     val userProfileLiveData: LiveData<UserProfile?> get() = _userProfileLiveData
 
+    private val _errorLiveData = MutableLiveData<String>()
+    val errorLiveData: LiveData<String> get() = _errorLiveData
+
     fun getUserProfile(accessToken: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val userProfile = userProfileUseCase.execute(accessToken)
-            _userProfileLiveData.postValue(userProfile)
+            try {
+                val userProfile = userProfileUseCase.execute(accessToken)
+                _userProfileLiveData.postValue(userProfile)
+            } catch (e: Exception) {
+                _errorLiveData.postValue("Erro ao buscar perfil do usuário")
+            }
         }
     }
 }

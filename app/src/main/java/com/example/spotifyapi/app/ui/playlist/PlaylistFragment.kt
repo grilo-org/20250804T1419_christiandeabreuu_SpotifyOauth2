@@ -3,10 +3,11 @@ package com.example.spotifyapi.app.ui.playlist
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -14,6 +15,7 @@ import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistActivity
 import com.example.spotifyapi.databinding.FragmentPlaylistBinding
+import com.example.spotifyapi.utils.NetworkUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -25,8 +27,7 @@ class PlaylistFragment : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         return binding.root
@@ -36,18 +37,25 @@ class PlaylistFragment : Fragment() {
 
         accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
 
-        if (accessToken.isNotEmpty()) {
-            viewModel.getPlaylists(accessToken)
-            viewModel.getUserProfile(accessToken)
-        } else {
-            Log.e("PlaylistFragment", "❌ Token não recebido!")
-        }
+
+
+        viewModel.getPlaylists(accessToken)
+        viewModel.getUserProfile(accessToken)
 
         setupRecyclerView()
         observePlaylists()
+        observeError()
         observeUserProfile()
         setupCreatePlaylistButton()
 
+    }
+
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observePlaylists() {
@@ -63,11 +71,13 @@ class PlaylistFragment : Fragment() {
         } ?: Log.e("PlaylistFragment", "❌ Nenhuma playlist encontrada!")
     }
 
-
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d("PlaylistFragment", "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}")
+                Log.d(
+                    "PlaylistFragment",
+                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
+                )
                 imageProfile(it.images.firstOrNull()?.url)
             } ?: Log.e("PlaylistFragment", "❌ Perfil do usuário não carregado!")
         }
@@ -75,21 +85,24 @@ class PlaylistFragment : Fragment() {
 
     private fun setupRecyclerView() {
         playlistAdapter = PlaylistAdapter()
-
         binding.playlistsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.playlistsRecyclerView.adapter = playlistAdapter
     }
 
-
     private fun setupCreatePlaylistButton() {
         binding.buttonToGoCreatePlaylist.setOnClickListener {
+            Log.d("PlaylistFragment", "🎯 Botão clicado!")
+
+            val isOnline = NetworkUtils.isInternetAvailable(requireContext())
+
             val intent = Intent(requireContext(), CreatePlaylistActivity::class.java).apply {
-                putExtra("ACCESS_TOKEN", accessToken) //  Passando o token para a Activity
+                putExtra("ACCESS_TOKEN", if (isOnline) accessToken else null)
             }
+
+            Log.d("PlaylistFragment", "🎯 Iniciando CreatePlaylistActivity - Token: $accessToken")
             startActivity(intent)
         }
     }
-
 
     private fun imageProfile(imageUrl: String?) {
         imageUrl?.let {
@@ -100,7 +113,4 @@ class PlaylistFragment : Fragment() {
             }
         }
     }
-
-
-
 }

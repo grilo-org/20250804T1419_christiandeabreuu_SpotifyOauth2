@@ -1,6 +1,5 @@
 package com.example.spotifyapi.authenticate.ui.login
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -12,13 +11,11 @@ import com.example.spotifyapi.BuildConfig
 import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
 import com.example.spotifyapi.authenticate.domain.usecase.AuthUseCase
 import com.example.spotifyapi.authenticate.domain.usecase.ExtractTokensUseCase
-import com.example.spotifyapi.utils.NetworkUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authUseCase: AuthUseCase,
-    private val extractTokensUseCase: ExtractTokensUseCase
+    private val authUseCase: AuthUseCase, private val extractTokensUseCase: ExtractTokensUseCase
 
 ) : ViewModel() {
 
@@ -35,16 +32,8 @@ class LoginViewModel(
     private val _authError = MutableLiveData<String>()
     val authError: LiveData<String> get() = _authError
 
-    fun notifyError(message: String) {
-        _authError.postValue(message)
-    }
-
-    fun updateAcessToken(accessToken: String) {
+    fun updateAccessToken(accessToken: String) {
         _navigateToArtists.postValue(accessToken)
-    }
-
-    fun checkInternet(context: Context) {
-        _connectionStatus.postValue(NetworkUtils.isInternetAvailable(context))
     }
 
     fun processRedirect(uri: Uri) {
@@ -68,9 +57,9 @@ class LoginViewModel(
             val result = authUseCase.authenticate(authorizationCode, redirectUri)
             result.onSuccess {
                 _authResult.postValue(Result.success(it))
-                updateAcessToken(it.accessToken)
+                updateAccessToken(it.accessToken)
             }.onFailure {
                 _authError.postValue(it.message)
-            }
         }
+    }
 }

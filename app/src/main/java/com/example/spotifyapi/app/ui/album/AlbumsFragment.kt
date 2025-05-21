@@ -40,21 +40,19 @@ class AlbumsFragment : Fragment() {
         artistName = arguments?.getString("ARTIST") ?: ""
         imageUrl = arguments?.getString("IMAGE_URL") ?: ""
 
-        if (accessToken.isEmpty() || artistId.isEmpty()) {
-            handleError("❌ Token ou ID do artista não encontrado!")
-            return
-        }
-
         setupViews()
         observeAlbums()
+        observeError()
         setupBackButton()
-        viewModel.fetchAlbums(accessToken, artistId)
+        viewModel.getAlbums(accessToken, artistId)
     }
 
-
-    private fun handleError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-        requireActivity().supportFragmentManager.popBackStack() // 🔥 Fechar o Fragment em caso de erro
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupViews() {
@@ -75,34 +73,15 @@ class AlbumsFragment : Fragment() {
 
     private fun setupBackButton() {
         binding.backButton.setOnClickListener {
-            requireActivity().supportFragmentManager.popBackStack() // 🔥 Fecha o Fragment ao clicar no botão
+            requireActivity().supportFragmentManager.popBackStack()
         }
     }
-
-
 
     private fun observeAlbums() {
         viewModel.albumsLiveData.observe(viewLifecycleOwner) { albums ->
             albums?.let {
-                albumAdapter.submitList(it) // 🔥 Agora a RecyclerView será atualizada automaticamente!
+                albumAdapter.submitList(it)
             } ?: Log.e("AlbumsFragment", "❌ Nenhum álbum recebido!")
         }
     }
-
 }
-//
-//private fun observeViewModel() {
-//    viewModel.fetchAlbums(accessToken, artistId).observe(viewLifecycleOwner) { result ->
-//        result.onSuccess { albums ->
-//            albums?.let {
-//                if (it.isNotEmpty()) {
-//                    albumAdapter.submitList(it)
-//                } else {
-//                    Toast.makeText(requireContext(), "Nenhum álbum encontrado.", Toast.LENGTH_SHORT).show()
-//                }
-//            } ?: Log.e("AlbumsFragment", "Resposta da API retornou nula.")
-//        }.onFailure {
-//            Toast.makeText(requireContext(), "Erro ao carregar álbuns.", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//}

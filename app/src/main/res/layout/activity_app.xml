@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:padding="@dimen/margin_10"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".app.ui.AppActivity">
+    tools:context=".app.ui.app.AppActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

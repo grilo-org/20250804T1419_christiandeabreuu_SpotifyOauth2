@@ -1,8 +1,6 @@
 package com.example.spotifyapi.authenticate.data.repository
 
-
 import android.content.Context
-import android.util.Log
 
 class TokenRepository(context: Context) {
     private val sharedPreferences =
@@ -14,13 +12,8 @@ class TokenRepository(context: Context) {
                 putString("ACCESS_TOKEN", accessToken)
                 putString("REFRESH_TOKEN", refreshToken)
             }.commit()
-            Log.d(
-                "TokenRepository",
-                if (success) "Tokens salvos com sucesso!" else "Erro ao salvar tokens"
-            )
             success
         } catch (e: Exception) {
-            Log.e("TokenRepository", "Erro ao salvar tokens: ${e.message}")
             false
         }
     }

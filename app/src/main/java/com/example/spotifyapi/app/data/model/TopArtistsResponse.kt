@@ -1,9 +1,10 @@
 package com.example.spotifyapi.app.data.model
 
+
 import com.google.gson.annotations.SerializedName
 
 data class TopArtistsResponse(
-    @SerializedName("items") val items: List<Artist>,
+    @SerializedName("items") val items: List<ArtistResponse>,
     @SerializedName("total") val total: Int,
     @SerializedName("limit") val limit: Int,
     @SerializedName("offset") val offset: Int,
@@ -12,13 +13,13 @@ data class TopArtistsResponse(
     @SerializedName("previous") val previous: String?
 )
 
-data class Artist(
+data class ArtistResponse(
     @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
     @SerializedName("popularity") val popularity: Int,
-    @SerializedName("images") val images: List<ImageArtist>
+    @SerializedName("images") val images: List<ImageArtistResponse>
 )
 
-data class ImageArtist(
+data class ImageArtistResponse(
     @SerializedName("url") val url: String
 )

@@ -2,45 +2,50 @@ package com.example.spotifyapi.app.ui.topartists
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import coil.transform.CircleCropTransformation
-import com.example.spotifyapi.app.data.model.Artist
+import com.example.spotifyapi.R
+import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.databinding.ItemTopArtistsBinding
 
-class TopArtistsAdapter(private val onArtistClick: (Artist) -> Unit) :
-    ListAdapter<Artist, TopArtistsAdapter.ArtistViewHolder>(DIFF_CALLBACK) {
+class TopArtistsAdapter(
+    private val onClick: (ArtistResponse) -> Unit
+) : PagingDataAdapter<ArtistResponse, TopArtistsAdapter.ArtistViewHolder>(ArtistDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
-        val binding = ItemTopArtistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ArtistViewHolder(binding, onArtistClick)
+        val binding =
+            ItemTopArtistsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ArtistViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artist = getItem(position)
-        holder.bind(artist)
-    }
 
-    class ArtistViewHolder(private val binding: ItemTopArtistsBinding, private val onArtistClick: (Artist) -> Unit) :
-        androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(artist: Artist) {
-            binding.tvArtist.text = artist.name
-            binding.imageArtist.load(artist.images.firstOrNull()?.url) {
-                transformations(CircleCropTransformation())
+        artist?.let {
+            holder.binding.tvArtist.text = it.name
+            holder.binding.imageArtist.load(artist.images.firstOrNull()?.url) {
+                transformations(coil.transform.CircleCropTransformation())
+                placeholder(R.drawable.ic_spotify_full)
+                error(R.drawable.ic_spotify_full)
             }
-
-            binding.root.setOnClickListener {
-                onArtistClick(artist) // 🔥 Captura o clique no artista e passa os dados
+            holder.binding.root.setOnClickListener {
+                onClick(artist)
             }
         }
     }
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Artist>() {
-            override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean = oldItem.id == newItem.id
-            override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean = oldItem == newItem
+    class ArtistViewHolder(val binding: ItemTopArtistsBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    class ArtistDiffCallback : DiffUtil.ItemCallback<ArtistResponse>() {
+        override fun areItemsTheSame(oldItem: ArtistResponse, newItem: ArtistResponse): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: ArtistResponse, newItem: ArtistResponse): Boolean {
+            return oldItem == newItem
         }
     }
 }

@@ -3,9 +3,8 @@ package com.example.spotifyapi.app.data.networking
 import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
-import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.model.UserProfile
-import retrofit2.Call
+import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -13,7 +12,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
-
 
 interface SpotifyApiService {
 
@@ -23,22 +21,24 @@ interface SpotifyApiService {
     @GET("me/top/artists")
     suspend fun getTopArtists(
         @Header("Authorization") accessToken: String,
-        @Query("limit") limit: Int = 20,
-        @Query("time_range") timeRange: String = "medium_term"
-    ): TopArtistsResponse
+        @Query("limit") limit: Int = 10,
+        @Query("time_range") timeRange: String = "short_term",
+        @Query("offset") offset: Int = 0
+    ): TopArtistsResponse  ///igual
 
     @GET("artists/{id}/albums")
-    suspend fun getAlbums(@Header("Authorization") authorization: String, @Path("id") artistId: String): AlbumsResponse
+    suspend fun getAlbums(
+        @Header("Authorization") authorization: String,
+        @Path("id") artistId: String
+    ): AlbumsResponse
 
     @GET("me/playlists")
     suspend fun getPlaylists(@Header("Authorization") authorization: String): PlaylistsResponse
 
     @POST("me/playlists")
     suspend fun createPlaylist(
-        @Header("Authorization") accessToken: String,
-        @Body requestBody: CreatePlaylistRequest
+        @Header("Authorization") accessToken: String, @Body requestBody: CreatePlaylistRequest
     ): Response<Unit>
-
 
 }
 

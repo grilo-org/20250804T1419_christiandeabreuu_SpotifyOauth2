@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/black"
+    tools:context=".app.ui.topartists.TopArtistsFragment">
 
     <TextView
         android:id="@+id/topArtistasTextView"
@@ -14,7 +15,7 @@
         android:layout_marginStart="@dimen/margin_24"
         android:layout_marginTop="@dimen/margin_34"
         android:fontFamily="@font/rubik_bold"
-        android:text="@string/top_artistas"
+        android:text="@string/top_artists"
         android:textColor="@color/white"
         android:textSize="@dimen/text_16"
         android:textStyle="bold"
@@ -28,7 +29,7 @@
         android:layout_marginTop="@dimen/margin_34"
         android:layout_marginEnd="@dimen/margin_24"
         android:background="@drawable/circle_background"
-        android:contentDescription="@string/foto_profile"
+        android:contentDescription="@string/photo_profile"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_spotify_full"
         app:layout_constraintEnd_toEndOf="parent"

@@ -8,20 +8,20 @@ data class PlaylistsResponse(
 )
 
 data class Playlist(
-    val id: String,
-    val name: String,
-    val description: String?,
+    @SerializedName("id") val id: String,
+    @SerializedName("name") val name: String,
+    @SerializedName ("description") val description: String?,
     @SerializedName("owner") val owner: Owner,
-    val tracksCount: Int,
-    val images: List<Image>
+    @SerializedName("trackCount") val tracksCount: Int,
+    @SerializedName("images") val images: List<Image>
 )
 
 data class Owner(
-    val id: String,
+    @SerializedName("id") val id: String,
     @SerializedName("display_name") val name: String
 )
 
-data class ImagePlaylist(
-    val url: String
-)
+//data class ImagePlaylist(
+//    @SerializedName("url") val url: String
+//)
 

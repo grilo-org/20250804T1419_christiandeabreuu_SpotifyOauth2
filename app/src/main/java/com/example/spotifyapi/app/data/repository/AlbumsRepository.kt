@@ -1,17 +1,29 @@
 package com.example.spotifyapi.app.data.repository
 
-import android.util.Log
-import com.example.spotifyapi.app.data.model.Album
+import com.example.spotifyapi.app.data.local.AlbumDB
+import com.example.spotifyapi.app.data.local.SpotifyDAO
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.app.data.model.AlbumsResponse
 
-class AlbumsRepository(private val apiService: SpotifyApiService) {
-    suspend fun getAlbums(accessToken: String, artistId: String): List<Album> {
+class AlbumsRepository(
+    private val apiService: SpotifyApiService,
+    private val spotifyDAO: SpotifyDAO
+) {
+
+
+    suspend fun getAlbumsFromApi(accessToken: String, artistId: String): AlbumsResponse? {
         return try {
-            val response = apiService.getAlbums("Bearer $accessToken", artistId)
-            response.items
+            apiService.getAlbums("Bearer $accessToken", artistId)
         } catch (e: Exception) {
-            Log.e("AlbumsRepository", "❌ Erro ao buscar álbuns: ${e.message}")
-            emptyList()
+            null
         }
+    }
+
+    suspend fun getAlbumsFromDB(artistId: String): List<AlbumDB> {
+        return spotifyDAO.getLocalAlbumsByArtist(artistId)
+    }
+
+    suspend fun insertLocalAlbums(albums: List<AlbumDB>) {
+        spotifyDAO.insertLocalAlbums(albums)
     }
 }

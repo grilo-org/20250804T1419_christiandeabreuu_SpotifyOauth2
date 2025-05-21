@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
@@ -38,9 +39,17 @@ class ProfileFragment : Fragment() {
             Log.e("ProfileFragment", "❌ Token não recebido!")
         }
 
-
         observeUserProfile()
+        observeError()
         viewModel.getUserProfile(accessToken)
+    }
+
+    private fun observeError() {
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
+            errorMessage?.let {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun observeUserProfile() {

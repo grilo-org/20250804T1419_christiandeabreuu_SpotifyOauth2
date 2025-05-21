@@ -3,13 +3,14 @@
     <item
         android:id="@+id/topArtistsFragment"
         android:icon="@drawable/ic_artists"
-        android:title="Artistas" />
+        android:title="@string/artists" />
     <item
         android:id="@+id/navigation_playlists"
         android:icon="@drawable/ic_playlists"
-         android:title="Playlists" />
+         android:title="@string/playlists" />
     <item
         android:id="@+id/profileFragment"
         android:icon="@drawable/ic_user"
-        android:title="Perfil" />
+        android:title="@string/profile" />
+
 </menu>

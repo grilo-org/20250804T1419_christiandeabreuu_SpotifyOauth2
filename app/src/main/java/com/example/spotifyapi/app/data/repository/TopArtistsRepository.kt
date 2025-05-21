@@ -1,17 +1,33 @@
 package com.example.spotifyapi.app.data.repository
 
-import android.util.Log
-import com.example.spotifyapi.app.data.model.Artist
+import com.example.spotifyapi.app.data.local.ArtistDB
+import com.example.spotifyapi.app.data.local.ImageArtist
+import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.local.TopArtistsDB
+import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 
-class TopArtistsRepository(private val apiService: SpotifyApiService) {
-    suspend fun getTopArtists(accessToken: String): List<Artist> {
-        return try {
-            val response = apiService.getTopArtists("Bearer $accessToken")
-            response.items
-        } catch (e: Exception) {
-            Log.e("TopArtistsRepository", "❌ Erro ao buscar artistas: ${e.message}")
-            emptyList()
-        }
+class TopArtistsRepository(
+    private val apiService: SpotifyApiService, private val spotifyDAO: SpotifyDAO
+) {
+    suspend fun getTopArtistsApi(
+        accessToken: String, offset: Int = 0, timeRange: String = "medium_term"
+    ): TopArtistsResponse {
+        return apiService.getTopArtists(
+            accessToken = "Bearer $accessToken", limit = 20, timeRange = timeRange, offset = offset
+        )
     }
+
+    suspend fun insertTopArtistsDB(topArtists: TopArtistsDB): Long {
+        return spotifyDAO.insertTopArtistsDB(topArtists)
+    }
+
+    suspend fun insertArtists(artists: List<ArtistDB>): List<Long> {
+        return spotifyDAO.insertArtists(artists)
+    }
+
+    suspend fun insertImageArtists(imageArtists: List<ImageArtist>) {
+        spotifyDAO.insertImageArtists(imageArtists)
+    }
+
 }
