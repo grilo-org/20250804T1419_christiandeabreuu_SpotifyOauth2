@@ -16,12 +16,4 @@ interface AuthApiService {
         @Field("client_secret") clientSecret: String
     ): Response<SpotifyTokens>
 
-    @FormUrlEncoded
-    @POST("api/token")
-    suspend fun refreshAccessToken(
-        @Field("grant_type") grantType: String = "refresh_token",
-        @Field("refresh_token") refreshToken: String,
-        @Field("client_id") clientId: String,
-        @Field("client_secret") clientSecret: String
-    ): Response<SpotifyTokens>
 }

@@ -1,14 +1,11 @@
 package com.example.spotifyapi.app.data.paging
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.ImageArtistResponse
-import com.example.spotifyapi.utils.NetworkUtils
+import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 
 class ArtistPagingSource(
     private val useCaseTopArtists: GetTopArtistsUseCase,
@@ -29,17 +26,14 @@ class ArtistPagingSource(
             val finalResponse = response.ifEmpty {
                 Log.d("ArtistPagingSource", "Buscando artistas no banco de dados")
                 useCaseTopArtists.getFromDBWithOffsetAndLimit(
-                    20,
-                    nextPageNumber
+                    20, nextPageNumber
                 ).artists.map { artistWithImages ->
-                    ArtistResponse(
-                        id = artistWithImages.artist.id,
+                    ArtistResponse(id = artistWithImages.artist.id,
                         name = artistWithImages.artist.name,
                         popularity = artistWithImages.artist.popularity,
                         images = artistWithImages.images.map { image ->
                             ImageArtistResponse(url = image.url)
-                        }
-                    )
+                        })
                 }
             }
 

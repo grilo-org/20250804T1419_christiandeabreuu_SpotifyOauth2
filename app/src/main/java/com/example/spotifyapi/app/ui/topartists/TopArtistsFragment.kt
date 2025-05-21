@@ -103,7 +103,6 @@ class TopArtistsFragment : Fragment() {
         )
     }
 
-
     private fun checkAccessToken() {
         accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
         if (accessToken.isEmpty()) {

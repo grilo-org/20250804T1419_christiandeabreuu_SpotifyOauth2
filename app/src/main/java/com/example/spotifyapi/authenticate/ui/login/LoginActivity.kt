@@ -29,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
     private fun observeAuthResult() {
         loginViewModel.authResult.observe(this) { result ->
             result?.onSuccess { spotifyTokens ->
-                loginViewModel.updateAcessToken(spotifyTokens.accessToken)
+                loginViewModel.updateAccessToken(spotifyTokens.accessToken)
             }?.onFailure {
                 Toast.makeText(this, "Falha na autenticação", Toast.LENGTH_SHORT).show()
             }

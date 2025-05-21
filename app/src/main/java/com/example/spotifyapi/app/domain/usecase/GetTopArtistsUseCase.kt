@@ -9,12 +9,14 @@ import com.example.spotifyapi.app.data.local.ImageArtist
 import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.repository.TopArtistsRepository
+import com.example.spotifyapi.app.domain.mapper.TopArtistsMapper
 
 class GetTopArtistsUseCase(
     private val spotifyDAO: SpotifyDAO,
     private val apiService: SpotifyApiService,
     private val repository: TopArtistsRepository = TopArtistsRepository(apiService, spotifyDAO),
 ) {
+
     suspend fun getFromApi(
         accessToken: String,
         offset: Int = 0,
@@ -25,40 +27,18 @@ class GetTopArtistsUseCase(
             "Chamada API com: accessToken=Bearer $accessToken, offset=$offset, timeRange=$timeRange"
         )
         val responseApi = repository.getTopArtistsApi(accessToken, offset, timeRange)
-        mapToTopArtistsDB(responseApi, timeRange)
+        saveToDatabase(responseApi, timeRange)
         return responseApi
     }
 
-    private suspend fun mapToTopArtistsDB(response: TopArtistsResponse, timeRange: String) {
-        val topArtistsDB = TopArtistsDB(
-            total = response.total,
-            limit = response.limit,
-            offset = response.offset,
-            href = response.href ?: "",
-            next = response.next,
-            previous = response.previous,
-            timeRange = timeRange
-        )
+    private suspend fun saveToDatabase(response: TopArtistsResponse, timeRange: String) {
+        val topArtistsDB = TopArtistsMapper.toTopArtistsDB(response, timeRange)
         val topArtistsId = repository.insertTopArtistsDB(topArtistsDB).toInt()
 
-        val artistsDB = response.items.map { artist ->
-            ArtistDB(
-                id = artist.id,
-                name = artist.name,
-                popularity = artist.popularity,
-                topArtistsId = topArtistsId
-            )
-        }
+        val artistsDB = TopArtistsMapper.toArtistsDB(response, topArtistsId)
         val artistsIds = repository.insertArtists(artistsDB)
 
-        val imageArtistsDB = response.items.flatMapIndexed { index, artist ->
-            artist.images.map { image ->
-                ImageArtist(
-                    url = image.url,
-                    artistId = artistsIds.get(index).toInt()
-                )
-            }
-        }
+        val imageArtistsDB = TopArtistsMapper.toImageArtistsDB(response, artistsIds)
         repository.insertImageArtists(imageArtistsDB)
     }
 
@@ -73,6 +53,5 @@ class GetTopArtistsUseCase(
             "Artista: ${dbResponse.artists.map { it.artist.name }}, Imagens: ${dbResponse.artists.map { it.images.size }}"
         )
         return dbResponse
-
     }
 }

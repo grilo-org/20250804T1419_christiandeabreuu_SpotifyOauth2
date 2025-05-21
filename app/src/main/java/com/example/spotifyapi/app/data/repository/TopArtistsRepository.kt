@@ -1,27 +1,18 @@
 package com.example.spotifyapi.app.data.repository
 
-import android.util.Log
-import com.example.spotify.data.local.TopArtistsWithArtistsAndImages
-import com.example.spotifyapi.app.data.local.SpotifyDAO
-import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.local.ArtistDB
 import com.example.spotifyapi.app.data.local.ImageArtist
+import com.example.spotifyapi.app.data.local.SpotifyDAO
 import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
+import com.example.spotifyapi.app.data.networking.SpotifyApiService
 
 class TopArtistsRepository(
-    private val apiService: SpotifyApiService,
-    private val spotifyDAO: SpotifyDAO
+    private val apiService: SpotifyApiService, private val spotifyDAO: SpotifyDAO
 ) {
     suspend fun getTopArtistsApi(
-        accessToken: String,
-        offset: Int = 0,
-        timeRange: String = "medium_term"
+        accessToken: String, offset: Int = 0, timeRange: String = "medium_term"
     ): TopArtistsResponse {
-        Log.d(
-            "TopArtistsRepository",
-            "Chamada API com: accessToken=Bearer $accessToken, offset=$offset, timeRange=$timeRange"
-        )
         return apiService.getTopArtists(
             accessToken = "Bearer $accessToken", limit = 20, timeRange = timeRange, offset = offset
         )
@@ -39,15 +30,4 @@ class TopArtistsRepository(
         spotifyDAO.insertImageArtists(imageArtists)
     }
 
-    suspend fun getTopArtistsDBWithOffsetAndLimit(
-        limit: Int,
-        offset: Int,
-        timeRange: String
-    ): TopArtistsWithArtistsAndImages {
-        Log.d(
-            "TopArtistsRepository",
-            "getTopArtistsDBWithOffsetAndLimit() chamado com limit: $limit, offset: $offset, timeRange: $timeRange"
-        )
-        return spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
-    }
 }

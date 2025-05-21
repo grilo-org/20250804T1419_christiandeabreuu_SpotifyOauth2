@@ -9,9 +9,7 @@ class AlbumsRepository(
     private val apiService: SpotifyApiService,
     private val spotifyDAO: SpotifyDAO
 ) {
-    suspend fun getAlbumsFromDB(artistId: String): List<AlbumDB> {
-        return spotifyDAO.getLocalAlbumsByArtist(artistId)
-    }
+
 
     suspend fun getAlbumsFromApi(accessToken: String, artistId: String): AlbumsResponse? {
         return try {
@@ -19,6 +17,10 @@ class AlbumsRepository(
         } catch (e: Exception) {
             null
         }
+    }
+
+    suspend fun getAlbumsFromDB(artistId: String): List<AlbumDB> {
+        return spotifyDAO.getLocalAlbumsByArtist(artistId)
     }
 
     suspend fun insertLocalAlbums(albums: List<AlbumDB>) {
