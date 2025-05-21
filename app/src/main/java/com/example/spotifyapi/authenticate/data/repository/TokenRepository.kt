@@ -1,6 +1,5 @@
 package com.example.spotifyapi.authenticate.data.repository
 
-
 import android.content.Context
 
 class TokenRepository(context: Context) {

@@ -26,6 +26,7 @@ pagingCommonAndroid = "3.3.6"
 pagingRuntimeKtx = "3.3.6"
 roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
+protoliteWellKnownTypes = "18.0.1"
 
 
 [libraries]
@@ -61,6 +62,7 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
 
 
 [plugins]

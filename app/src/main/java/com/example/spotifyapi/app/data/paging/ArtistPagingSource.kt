@@ -14,17 +14,14 @@ class ArtistPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArtistResponse> {
         return try {
             val nextPageNumber = params.key ?: 0
-            Log.d("ArtistPagingSource", "Carregando artistas com offset: $nextPageNumber")
 
             val response: List<ArtistResponse> = try {
                 useCaseTopArtists.getFromApi(accessToken, nextPageNumber).items
             } catch (apiException: Exception) {
-                Log.e("ArtistPagingSource", "Erro ao carregar da API: ${apiException.message}")
                 emptyList()
             }
 
             val finalResponse = response.ifEmpty {
-                Log.d("ArtistPagingSource", "Buscando artistas no banco de dados")
                 useCaseTopArtists.getFromDBWithOffsetAndLimit(
                     20, nextPageNumber
                 ).artists.map { artistWithImages ->
@@ -43,7 +40,6 @@ class ArtistPagingSource(
                 nextKey = if (finalResponse.isEmpty()) null else nextPageNumber + 20
             )
         } catch (e: Exception) {
-            Log.e("ArtistPagingSource", "Erro ao carregar artistas: ${e.message}")
             LoadResult.Error(e)
         }
     }
