@@ -23,7 +23,6 @@ val authModules = module {
     factory { AuthUseCase(get(), get(), get()) }
     factory { ExtractTokensUseCase() }
     factory<ResourcesPlugin> { ResourcesPluginImpl(get()) }
-
 }
 
 val networkAuthModule = module {

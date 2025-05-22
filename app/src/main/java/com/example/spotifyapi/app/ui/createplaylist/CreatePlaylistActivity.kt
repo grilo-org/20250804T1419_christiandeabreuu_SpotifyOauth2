@@ -1,11 +1,11 @@
 package com.example.spotifyapi.app.ui.createplaylist
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.ActivityCreatePlaylistBinding
 import com.example.spotifyapi.utils.NetworkUtils
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreatePlaylistActivity : AppCompatActivity() {
@@ -17,16 +17,16 @@ class CreatePlaylistActivity : AppCompatActivity() {
         binding = ActivityCreatePlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupCreateButton()
-        setupCloseButton()
         observeCreatePlaylist()
         observeError()
+        setupCreateButton()
+        setupCloseButton()
     }
 
     private fun observeError() {
         viewModel.errorLiveData.observe(this) { errorMessage ->
             errorMessage?.let {
-                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                toast(it)
             }
         }
     }
@@ -34,15 +34,10 @@ class CreatePlaylistActivity : AppCompatActivity() {
     private fun observeCreatePlaylist() {
         viewModel.createPlaylistLiveData.observe(this) { result ->
             result.onSuccess {
-                Toast.makeText(
-                    this,
-                    getString(R.string.playlist_created_success),
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast(getString(R.string.playlist_created_success))
                 finish()
             }.onFailure {
-                Toast.makeText(this, getString(R.string.error_create_playlist), Toast.LENGTH_SHORT)
-                    .show()
+                toast(getString(R.string.error_create_playlist))
             }
         }
     }
@@ -51,16 +46,12 @@ class CreatePlaylistActivity : AppCompatActivity() {
         binding.createButton.setOnClickListener {
             val playlistName = binding.playlistNameEditText.text.toString().trim()
             if (playlistName.isBlank()) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.insert_name_your_playlist_title),
-                    Toast.LENGTH_SHORT
-                ).show()
+                toast(getString(R.string.insert_name_your_playlist_title))
                 return@setOnClickListener
             }
 
             if (!NetworkUtils.isInternetAvailable(this)) {
-                Toast.makeText(this, getString(R.string.error_internet), Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.error_internet))
                 return@setOnClickListener
             }
             viewModel.createPlaylist(playlistName)

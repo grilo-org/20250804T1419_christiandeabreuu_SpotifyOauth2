@@ -2,14 +2,13 @@ package com.example.spotifyapi.auth.ui.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.ui.app.AppActivity
-//import com.example.spotifyapi.app.ui.topartists.TopArtistsActivity
 import com.example.spotifyapi.databinding.ActivityLoginBinding
 import com.example.spotifyapi.utils.Constants
 import com.example.spotifyapi.utils.NetworkUtils
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -32,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
             result?.onSuccess { spotifyTokens ->
                 loginViewModel.updateAccessToken(spotifyTokens.accessToken)
             }?.onFailure {
-                Toast.makeText(this, getString(R.string.auth_error), Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.auth_error))
             }
         }
     }
@@ -63,9 +62,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateToOfflineMode() {
         val intent = Intent(this, AppActivity::class.java)
-        Toast.makeText(this, getString(R.string.offline_mode), Toast.LENGTH_SHORT).show()
+        toast(getString(R.string.offline_mode))
         startActivity(intent)
-
     }
 
     private fun handleRedirect(intent: Intent?) {
@@ -73,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
             if (uri.toString().startsWith(Constants.REDIRECT_URI)) {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
                     result?.onSuccess {
-
                         navigateToTopAppActivity()
                     }
                 }

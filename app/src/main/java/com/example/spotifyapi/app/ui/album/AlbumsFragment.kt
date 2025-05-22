@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentAlbumsBinding
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlbumsFragment : Fragment() {
@@ -32,25 +32,21 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         artistId = arguments?.getString("ARTIST_ID") ?: ""
         artistName = arguments?.getString("ARTIST") ?: ""
         imageUrl = arguments?.getString("IMAGE_URL") ?: ""
-
 
         setupViews()
         observeAlbums()
         observeError()
         setupBackButton()
-
         viewModel.getAlbums(artistId)
-
     }
 
     private fun observeError() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                toast(it)
             }
         }
     }

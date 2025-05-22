@@ -31,7 +31,6 @@ class LoginViewModel(
     private val _authResult = MutableLiveData<Result<SpotifyTokens>>()
     val authResult: LiveData<Result<SpotifyTokens>> get() = _authResult
 
-
     private val _authError = MutableLiveData<String>()
     val authError: LiveData<String> get() = _authError
 

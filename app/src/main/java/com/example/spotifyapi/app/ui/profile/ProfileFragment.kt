@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentProfileBinding
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment() {
@@ -34,14 +34,14 @@ class ProfileFragment : Fragment() {
 
     private fun setupCloseButton() {
         binding.buttonClose.setOnClickListener {
-            requireActivity().finish()
+            requireActivity().finishAffinity()
         }
     }
 
     private fun observeError() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                toast(it)
             }
         }
     }
