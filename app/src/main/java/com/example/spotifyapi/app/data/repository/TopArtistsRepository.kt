@@ -2,7 +2,7 @@ package com.example.spotifyapi.app.data.repository
 
 import com.example.spotifyapi.app.data.local.ArtistDB
 import com.example.spotifyapi.app.data.local.ImageArtist
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService

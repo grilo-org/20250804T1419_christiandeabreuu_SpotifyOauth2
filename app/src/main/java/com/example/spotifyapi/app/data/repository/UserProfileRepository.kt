@@ -1,6 +1,6 @@
 package com.example.spotifyapi.app.data.repository
 
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService

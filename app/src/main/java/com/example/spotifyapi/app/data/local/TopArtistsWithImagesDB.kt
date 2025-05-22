@@ -1,10 +1,7 @@
-package com.example.spotify.data.local
+package com.example.spotifyapi.app.data.local
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.spotifyapi.app.data.local.ArtistDB
-import com.example.spotifyapi.app.data.local.ImageArtist
-import com.example.spotifyapi.app.data.local.TopArtistsDB
 
 data class TopArtistsWithArtistsAndImages(
     @Embedded val topArtists: TopArtistsDB,

@@ -1,12 +1,9 @@
 package com.example.spotifyapi.app.domain.usecase
 
 import android.util.Log
-import com.example.spotify.data.local.TopArtistsWithArtistsAndImages
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.local.TopArtistsWithArtistsAndImages
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import com.example.spotifyapi.app.data.local.ArtistDB
-import com.example.spotifyapi.app.data.local.ImageArtist
-import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.repository.TopArtistsRepository
 import com.example.spotifyapi.app.domain.mapper.TopArtistsMapper

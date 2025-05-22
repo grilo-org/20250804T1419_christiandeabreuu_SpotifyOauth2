@@ -24,7 +24,7 @@ class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
         return responseApi
     }
 
-    suspend fun savePlaylistsToDB(playlists: List<Playlist>) {
+    private suspend fun savePlaylistsToDB(playlists: List<Playlist>) {
         val existingPlaylists = repository.getPlaylistsFromDB().map { it.id }.toSet()
 
         val filteredPlaylists = playlists.filter { it.id !in existingPlaylists } // 🔹 Remove duplicatas antes de salvar

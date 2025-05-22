@@ -14,7 +14,6 @@ import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentAlbumsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class AlbumsFragment : Fragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private val viewModel: AlbumsViewModel by viewModel()
