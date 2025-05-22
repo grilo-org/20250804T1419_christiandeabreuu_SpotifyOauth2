@@ -1,25 +1,24 @@
 package com.example.spotifyapi.app.data.repository
 
 import com.example.spotifyapi.app.data.local.AlbumDB
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import io.mockk.*
-import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 
 class AlbumsRepositoryTest {
 
-
     private var apiService: SpotifyApiService = mockk(relaxed = true)
-
-
     private var spotifyDAO: SpotifyDAO = mockk(relaxed = true)
-
-    private  var repository: AlbumsRepository = mockk(relaxed = true)
+    private var repository: AlbumsRepository = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -30,8 +29,10 @@ class AlbumsRepositoryTest {
     @Test
     fun `getAlbumsFromDB should return albums from local database`() = runBlocking {
         // Given
-        val fakeAlbums = listOf(AlbumDB("databaseId", "name", "artistId", "imageUrl", "releaseDate", ),
-            AlbumDB("databaseId2", "name2", "artistId2", "imageUrl2", "releaseDate2",))
+        val fakeAlbums = listOf(
+            AlbumDB("databaseId", "name", "artistId", "imageUrl", "releaseDate"),
+            AlbumDB("databaseId2", "name2", "artistId2", "imageUrl2", "releaseDate2")
+        )
         coEvery { spotifyDAO.getLocalAlbumsByArtist("123") } returns fakeAlbums
 
         // When
@@ -59,7 +60,8 @@ class AlbumsRepositoryTest {
     @Test
     fun `insertLocalAlbums should insert albums into local database`() = runBlocking {
         // Given
-        val fakeAlbums = listOf(AlbumDB("databaseId", "name", "artistId", "imageUrl", "releaseDate"))
+        val fakeAlbums =
+            listOf(AlbumDB("databaseId", "name", "artistId", "imageUrl", "releaseDate"))
 
         // When
         repository.insertLocalAlbums(fakeAlbums)

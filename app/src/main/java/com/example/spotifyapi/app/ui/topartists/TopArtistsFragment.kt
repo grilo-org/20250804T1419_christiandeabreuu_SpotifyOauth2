@@ -36,7 +36,6 @@ class TopArtistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         artistsAdapter = TopArtistsAdapter { artist ->
             navigateToAlbumsFragment(artist)
         }
@@ -52,8 +51,7 @@ class TopArtistsFragment : Fragment() {
 
     private fun observePagingData() {
         lifecycleScope.launch {
-            viewModel.getArtistsPagingData(accessToken)
-                .collectLatest { pagingData ->
+            viewModel.getArtistsPagingData(accessToken).collectLatest { pagingData ->
                     Log.d("Fragment", "🔄 Dados recebidos: $pagingData")
                     artistsAdapter.submitData(pagingData)
                 }
@@ -62,9 +60,9 @@ class TopArtistsFragment : Fragment() {
 
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(viewLifecycleOwner) { artists ->
-           artists?.let {
-            Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
-           }
+            artists?.let {
+                Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
+            }
         }
     }
 
@@ -80,8 +78,7 @@ class TopArtistsFragment : Fragment() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?:
-            Log.e("TopArtistsFragment", "❌ Perfil do usuário não carregado!")
+            } ?: Log.e("TopArtistsFragment", "❌ Perfil do usuário não carregado!")
         }
     }
 

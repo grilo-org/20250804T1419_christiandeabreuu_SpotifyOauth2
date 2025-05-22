@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 class AlbumsViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule() // 🔹 Garante execução síncrona do LiveData
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AlbumsViewModel
@@ -25,7 +25,7 @@ class AlbumsViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // 🔹 Configura Dispatcher para testes
+        Dispatchers.setMain(testDispatcher)
         viewModel = AlbumsViewModel(getAlbumsUseCase)
         viewModel.albumsLiveData.observeForever(albumsObserver)
         viewModel.errorLiveData.observeForever(errorObserver)
@@ -36,31 +36,34 @@ class AlbumsViewModelTest {
         Dispatchers.resetMain()
     }
 
-    // 🔹 Testando busca bem-sucedida de álbuns
     @Test
     fun `getAlbums should update albumsLiveData when use case returns data`() = runTest {
+        //Given
         val fakeAlbums = listOf(
             Album("1", "Album 1", "release_date", emptyList(), "artist123"),
             Album("2", "Album 2", "release_date", emptyList(), "artist123")
         )
-
         coEvery { getAlbumsUseCase.execute(any(), any()) } returns fakeAlbums
 
+        //When
         viewModel.getAlbums("token123", "artist123")
         advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
 
+        //Then - Testando busca bem-sucedida de álbuns
         verify { albumsObserver.onChanged(fakeAlbums) }
         coVerify(exactly = 1) { getAlbumsUseCase.execute("token123", "artist123") }
     }
 
-    // 🔹 Testando erro na busca de álbuns
     @Test
     fun `getAlbums should update errorLiveData when use case throws exception`() = runTest {
+        //Given
         coEvery { getAlbumsUseCase.execute(any(), any()) } throws Exception("Erro ao buscar álbuns")
 
+        //When
         viewModel.getAlbums("token123", "artist123")
-        advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
+        advanceUntilIdle()
 
+        //Then -  Testando erro na busca de álbuns
         verify { errorObserver.onChanged("Erro ao buscar álbuns") }
         coVerify(exactly = 1) { getAlbumsUseCase.execute("token123", "artist123") }
     }

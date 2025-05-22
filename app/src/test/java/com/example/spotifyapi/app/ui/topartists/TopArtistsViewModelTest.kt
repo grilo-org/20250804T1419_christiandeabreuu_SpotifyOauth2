@@ -23,19 +23,18 @@ import kotlinx.coroutines.flow.collectLatest
 class TopArtistsViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule() // 🔹 Garante execução síncrona do LiveData
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: TopArtistsViewModel
     private val getUserProfileUseCase: GetUserProfileUseCase = mockk()
     private val getTopArtistsUseCase: GetTopArtistsUseCase = mockk()
-
     private val userProfileObserver: Observer<UserProfile?> = mockk(relaxed = true)
     private val errorObserver: Observer<String> = mockk(relaxed = true)
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // 🔹 Configura Dispatcher para testes
+        Dispatchers.setMain(testDispatcher)
         viewModel = TopArtistsViewModel(getUserProfileUseCase, getTopArtistsUseCase)
         viewModel.userProfileLiveData.observeForever(userProfileObserver)
         viewModel.errorLiveData.observeForever(errorObserver)
@@ -49,47 +48,51 @@ class TopArtistsViewModelTest {
     // 🔹 Testando busca bem-sucedida do perfil do usuário
     @Test
     fun `getUserProfile should update userProfileLiveData when use case returns data`() = runTest {
+        //Given
         val mockkListImages: List<Image> =
             listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-
         val fakeUserProfile = UserProfile("1", "User Name", mockkListImages)
-
-
         coEvery { getUserProfileUseCase.execute(any()) } returns fakeUserProfile
 
+        //When
         viewModel.getUserProfile("token123")
-        advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
+        advanceUntilIdle()
 
+        //Then - Teste de busca bem-sucedida do perfil do usuário
         verify { userProfileObserver.onChanged(fakeUserProfile) }
         coVerify(exactly = 1) { getUserProfileUseCase.execute("token123") }
     }
 
-    // 🔹 Testando erro na busca do perfil do usuário
     @Test
     fun `getUserProfile should update errorLiveData when use case throws exception`() = runTest {
+        //Given
         coEvery { getUserProfileUseCase.execute(any()) } throws Exception("Erro ao buscar perfil do usuário")
 
+        //When
         viewModel.getUserProfile("token123")
         advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
 
+        //Then - teste de erro na busca do perfil do usuário
         verify { errorObserver.onChanged("Erro ao buscar perfil do usuário") }
         coVerify(exactly = 1) { getUserProfileUseCase.execute("token123") }
     }
 
     @Test
     fun `getArtistsPagingData should return valid PagingData`() = runTest {
+        //Given
         val fakeArtists = listOf(
             ArtistResponse("1", "Artist 1", 90, emptyList()),
             ArtistResponse("2", "Artist 2", 80, emptyList())
         )
 
-
         coEvery { getTopArtistsUseCase.getFromApi(any(), any(), any()) } returns TopArtistsResponse(
             items = fakeArtists, total = 2, limit = 20, offset = 0, href = "href", next = "next", previous = "previous"
         )
+        //When
 
         val result = viewModel.getArtistsPagingData("token123")
 
-        assertNotNull(result) // verificamos se o fluxo não é nulo
+        //Then - Verifica se o valor nao é nulo
+        assertNotNull(result)
     }
 }

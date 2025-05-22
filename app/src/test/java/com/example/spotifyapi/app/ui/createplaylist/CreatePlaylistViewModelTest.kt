@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 class CreatePlaylistViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule() // 🔹 Garante execução síncrona do LiveData
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: CreatePlaylistViewModel
@@ -24,7 +24,7 @@ class CreatePlaylistViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher) // 🔹 Configura Dispatcher para testes
+        Dispatchers.setMain(testDispatcher)
         viewModel = CreatePlaylistViewModel(createPlaylistUseCase)
         viewModel.createPlaylistLiveData.observeForever(successObserver)
         viewModel.errorLiveData.observeForever(errorObserver)
@@ -38,25 +38,29 @@ class CreatePlaylistViewModelTest {
     // 🔹 Testando criação bem-sucedida da playlist
     @Test
     fun `createPlaylist should update createPlaylistLiveData when use case returns success`() = runTest {
+        // Given
         val fakeResponse = "Playlist 'Minha Playlist' criada com sucesso!"
-
         coEvery { createPlaylistUseCase.execute(any(), any()) } returns fakeResponse
 
+        // When
         viewModel.createPlaylist("token123", "Minha Playlist")
-        advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
+        advanceUntilIdle()
 
+        // Then
         verify { successObserver.onChanged(Result.success(fakeResponse)) }
         coVerify(exactly = 1) { createPlaylistUseCase.execute("token123", "Minha Playlist") }
     }
 
-    // 🔹 Testando erro na criação de playlist
     @Test
     fun `createPlaylist should update errorLiveData when use case throws exception`() = runTest {
+        // Given
         coEvery { createPlaylistUseCase.execute(any(), any()) } throws Exception("Erro ao criar playlist")
 
+        // When
         viewModel.createPlaylist("token123", "Minha Playlist")
-        advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
+        advanceUntilIdle()
 
+        // Then - Teste de erro na criação de playlist
         verify { errorObserver.onChanged("Erro ao criar playlist") }
         coVerify(exactly = 1) { createPlaylistUseCase.execute("token123", "Minha Playlist") }
     }

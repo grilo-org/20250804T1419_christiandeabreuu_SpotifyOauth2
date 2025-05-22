@@ -1,12 +1,12 @@
 package com.example.spotifyapi.app.ui.album
 
-import com.example.spotifyapi.R
-import com.example.spotifyapi.app.data.model.Album
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import coil.load
+import com.example.spotifyapi.R
+import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.databinding.ItemAlbumsBinding
 import com.example.spotifyapi.utils.DateUtils
 

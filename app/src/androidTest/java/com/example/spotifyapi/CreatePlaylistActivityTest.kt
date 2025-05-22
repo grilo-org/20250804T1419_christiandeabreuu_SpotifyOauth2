@@ -1,9 +1,16 @@
 package com.example.spotifyapi
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistActivity
@@ -71,7 +78,6 @@ class CreatePlaylistActivityTest {
     fun testCloseButtonClickFinishesActivity() {
         // Verifica se ao clicar no botão de fechar, a Activity é finalizada
         onView(withId(R.id.closeButton)).perform(click())
-        // Não há uma verificação direta, mas se não der erro/crash, está ok
     }
 
     @Test
@@ -79,7 +85,5 @@ class CreatePlaylistActivityTest {
         // Verifica se ao clicar em criar com nome vazio, mostra erro (Toast)
         onView(withId(R.id.playlistNameEditText)).perform(replaceText(""))
         onView(withId(R.id.createButton)).perform(click())
-        // Aqui seria ideal usar Espresso-Intents ou ToastMatcher customizado para verificar o Toast
-        // Mas pelo menos garante que o app não crasha
     }
 }

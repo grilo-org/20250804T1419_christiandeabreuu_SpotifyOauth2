@@ -7,8 +7,7 @@ import com.example.spotifyapi.authenticate.data.networking.AuthApiService
 class AuthRepository(private val apiService: AuthApiService) {
 
     suspend fun getAccessToken(
-        authorizationCode: String,
-        redirectUri: String
+        authorizationCode: String, redirectUri: String
     ): Result<SpotifyTokens> {
         return try {
             val response = apiService.getAccessToken(

@@ -7,7 +7,6 @@ import java.util.Locale
 object DateUtils {
     fun formatDateFromIsoToBr(dateString: String?): String {
         if (dateString.isNullOrBlank()) return ""
-        // Tenta tratar datas apenas com ano ou ano-mês (alguns álbuns do Spotify podem vir como "2024" ou "2024-05")
         return try {
             val inputFormat = when {
                 dateString.length == 10 -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -24,7 +23,7 @@ object DateUtils {
             val date = inputFormat.parse(dateString)
             if (date != null) outputFormat.format(date) else dateString
         } catch (e: Exception) {
-            dateString // retorna a string original se falhar
+            dateString
         }
     }
 }

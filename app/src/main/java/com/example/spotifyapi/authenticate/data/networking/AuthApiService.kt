@@ -1,9 +1,10 @@
 package com.example.spotifyapi.authenticate.data.networking
 
-
 import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
 
 interface AuthApiService {
     @FormUrlEncoded
