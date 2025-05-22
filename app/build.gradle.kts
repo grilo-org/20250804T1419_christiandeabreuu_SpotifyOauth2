@@ -3,6 +3,8 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
     id("com.google.devtools.ksp")
 }
 
@@ -68,10 +70,16 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.protolite.well.known.types)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
+
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.roboelectric)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.espresso.intents)
+    androidTestImplementation(libs.fragment.test)
 
     //Room Database
     implementation(libs.androidx.room.runtime)
@@ -105,7 +113,7 @@ dependencies {
     testImplementation(libs.mockk)
 
     // MockK para testes instrumentados (Android)
-    androidTestImplementation(libs.mockk.android)
+//    /**/androidTestImplementation(libs.mockk.android)/**/
 
     // Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
@@ -127,4 +135,10 @@ dependencies {
     //pagination
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.paging.runtime.ktx)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+
+
 }

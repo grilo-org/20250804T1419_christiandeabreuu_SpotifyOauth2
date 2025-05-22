@@ -75,14 +75,14 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.handleRedirect(uri, Constants.REDIRECT_URI).observe(this) { result ->
                     result?.onSuccess {
                         val accessToken = it.accessToken ?: ""
-                        navigateToTopArtistsActivity(accessToken)
+                        navigateToTopAppActivity(accessToken)
                     }
                 }
             }
         }
     }
 
-    private fun navigateToTopArtistsActivity(accessToken: String) {
+    private fun navigateToTopAppActivity(accessToken: String) {
         val intent = Intent(this, AppActivity::class.java).apply {
             putExtra("ACCESS_TOKEN", accessToken)
         }

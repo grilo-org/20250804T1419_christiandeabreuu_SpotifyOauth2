@@ -8,11 +8,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import com.example.spotifyapi.app.data.paging.ArtistPagingSource
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
-import com.google.api.Page
 
 class ArtistPagingSourceTest {
 

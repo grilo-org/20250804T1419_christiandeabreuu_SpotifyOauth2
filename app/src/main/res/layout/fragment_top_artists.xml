@@ -48,5 +48,4 @@
         app:layout_constraintTop_toBottomOf="@id/topArtistasTextView"
         tools:listitem="@layout/item_top_artists" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
