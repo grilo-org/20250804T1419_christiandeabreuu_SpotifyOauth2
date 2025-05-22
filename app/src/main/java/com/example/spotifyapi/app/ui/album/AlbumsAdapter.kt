@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import coil.load
 import com.example.spotifyapi.databinding.ItemAlbumsBinding
+import com.example.spotifyapi.utils.DateUtils
 
 
 class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
@@ -26,7 +27,7 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffC
 
         fun bind(album: Album) {
             binding.albumName.text = album.name
-            binding.albumReleaseDate.text = album.releaseDate
+            binding.albumReleaseDate.text = DateUtils.formatDateFromIsoToBr(album.releaseDate)
             binding.albumCover.load(album.images.firstOrNull()?.url) {
                 placeholder(R.drawable.ic_spotify_full)
                 error(R.drawable.ic_spotify_full_black)
