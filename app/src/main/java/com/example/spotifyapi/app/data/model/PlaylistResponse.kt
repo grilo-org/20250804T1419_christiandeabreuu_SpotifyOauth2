@@ -2,7 +2,6 @@ package com.example.spotifyapi.app.data.model
 
 import com.google.gson.annotations.SerializedName
 
-
 data class PlaylistsResponse(
     @SerializedName("items") val items: List<Playlist>
 )
@@ -21,7 +20,4 @@ data class Owner(
     @SerializedName("display_name") val name: String
 )
 
-//data class ImagePlaylist(
-//    @SerializedName("url") val url: String
-//)
 

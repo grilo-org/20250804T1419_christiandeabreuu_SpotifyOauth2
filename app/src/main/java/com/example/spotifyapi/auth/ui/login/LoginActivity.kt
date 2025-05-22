@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateToOfflineMode() {
         val intent = Intent(this, AppActivity::class.java)
-        Toast.makeText(this, "Modo offline", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.offline_mode), Toast.LENGTH_SHORT).show()
         startActivity(intent)
 
     }

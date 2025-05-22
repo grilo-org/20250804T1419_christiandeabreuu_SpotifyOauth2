@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.spotifyapi.app.data.database.SpotifyDAO
@@ -53,15 +52,9 @@ class ArtistPagingSource(
     }
 
     private suspend fun getFromDBWithOffsetAndLimit(
-        limit: Int,
-        offset: Int,
-        timeRange: String = "medium_term"
+        limit: Int, offset: Int, timeRange: String = "medium_term"
     ): TopArtistsWithArtistsAndImages {
         val dbResponse = spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
-        Log.d(
-            "GetTopArtistsUseCase",
-            "Artista: ${dbResponse.artists.map { it.artist.name }}, Imagens: ${dbResponse.artists.map { it.images.size }}"
-        )
         return dbResponse
     }
 }

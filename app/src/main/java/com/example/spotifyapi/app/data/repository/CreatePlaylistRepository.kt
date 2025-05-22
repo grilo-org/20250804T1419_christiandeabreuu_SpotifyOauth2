@@ -3,10 +3,9 @@ package com.example.spotifyapi.app.data.repository
 import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.auth.data.repository.TokenRepository
-import retrofit2.Response
 
-class CreatePlaylistRepository(private val apiService: SpotifyApiService,
-    private val tokenRepository: TokenRepository
+class CreatePlaylistRepository(
+    private val apiService: SpotifyApiService, private val tokenRepository: TokenRepository
 ) {
 
     suspend fun createPlaylist(playlistName: String): Boolean {

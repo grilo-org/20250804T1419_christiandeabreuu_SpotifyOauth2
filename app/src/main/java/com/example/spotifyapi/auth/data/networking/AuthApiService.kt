@@ -16,5 +16,4 @@ interface AuthApiService {
         @Field("client_id") clientId: String,
         @Field("client_secret") clientSecret: String
     ): Response<SpotifyTokens>
-
 }

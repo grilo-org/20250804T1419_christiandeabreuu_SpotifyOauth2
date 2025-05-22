@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.app.domain.usecase.GetAlbumsUseCase
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,7 @@ class AlbumsViewModel(private val getAlbumsUseCase: GetAlbumsUseCase) : ViewMode
                 val albums = getAlbumsUseCase.execute(artistId)
                 _albumsLiveData.postValue(albums)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar álbuns")
+                _errorLiveData.postValue(R.string.error_msg_search_albums.toString())
             }
         }
     }

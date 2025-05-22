@@ -17,10 +17,10 @@ val authModules = module {
     factory { AuthRepository(apiService = get(), resourcesPlugin = get()) }
     factory { TokenRepository(context = get()) }
 
-    viewModel { LoginViewModel(get(), get()) }
+    viewModel { LoginViewModel(get(), get(), get()) }
 
     factory { GetAccessTokenUseCase(get()) }
-    factory { AuthUseCase(get(), get()) }
+    factory { AuthUseCase(get(), get(), get()) }
     factory { ExtractTokensUseCase() }
     factory<ResourcesPlugin> { ResourcesPluginImpl(get()) }
 

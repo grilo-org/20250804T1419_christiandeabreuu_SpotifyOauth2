@@ -1,7 +1,6 @@
 package com.example.spotifyapi.app.ui.album
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -82,7 +81,7 @@ class AlbumsFragment : Fragment() {
         viewModel.albumsLiveData.observe(viewLifecycleOwner) { albums ->
             albums?.let {
                 albumAdapter.submitList(it)
-            } ?: Log.e("AlbumsFragment", "❌ Nenhum álbum recebido!")
+            }
         }
     }
 }

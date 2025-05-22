@@ -9,14 +9,17 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.BuildConfig
 import com.example.spotifyapi.auth.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import com.example.spotifyapi.auth.domain.usecase.AuthUseCase
 import com.example.spotifyapi.auth.domain.usecase.ExtractTokensUseCase
+import com.example.spotifyapi.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val authUseCase: AuthUseCase,
-    private val extractTokensUseCase: ExtractTokensUseCase
+    private val extractTokensUseCase: ExtractTokensUseCase,
+    private val resourcesPlugin: ResourcesPlugin
 ) : ViewModel() {
 
     private val _connectionStatus = MutableLiveData<Boolean>()
@@ -49,8 +52,8 @@ class LoginViewModel(
 
     fun handleRedirect(uri: Uri, redirectUri: String): LiveData<Result<SpotifyTokens>> =
         liveData(Dispatchers.IO) {
-            val authorizationCode = uri.getQueryParameter("code") ?: run {
-                _authError.postValue("Código de autorização não encontrado")
+            val authorizationCode = uri.getQueryParameter(Constants.CODE) ?: run {
+                _authError.postValue(resourcesPlugin.handleDirectCodeNotFound())
                 return@liveData
             }
 

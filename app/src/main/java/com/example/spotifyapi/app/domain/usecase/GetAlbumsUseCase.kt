@@ -4,7 +4,6 @@ import com.example.spotifyapi.app.data.local.AlbumDB
 import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.app.data.repository.AlbumsRepository
 import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbum
-//import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbum
 import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbumDB
 
 class GetAlbumsUseCase(private val repository: AlbumsRepository) {

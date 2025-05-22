@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
@@ -31,7 +32,7 @@ class PlaylistViewModel(
                 val playlists = playlistsUseCase.getPlaylists()
                 _playlistsLiveData.postValue(playlists)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar playlists")
+                _errorLiveData.postValue(R.string.error_message_search_playlists.toString())
             }
         }
     }
@@ -42,7 +43,7 @@ class PlaylistViewModel(
                 val userProfile = userProfileUseCase.execute()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar perfil do usuário")
+                _errorLiveData.postValue(R.string.error_message_search_profile.toString())
             }
         }
     }

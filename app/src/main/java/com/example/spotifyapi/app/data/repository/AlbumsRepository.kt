@@ -12,7 +12,6 @@ class AlbumsRepository(
     private val tokenRepository: TokenRepository
 ) {
 
-
     suspend fun getAlbumsFromApi(artistId: String): AlbumsResponse? {
         return try {
             val token = tokenRepository.getAccessToken().orEmpty()

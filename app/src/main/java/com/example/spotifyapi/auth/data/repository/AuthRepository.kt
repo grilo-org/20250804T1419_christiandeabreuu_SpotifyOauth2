@@ -24,7 +24,6 @@ class AuthRepository(
             if (!response.isSuccessful || response.body() == null) {
                 return Result.failure(Exception(resourcesPlugin.getRequestTokenErrorMessage(response.code().toString(), response.message())))
             }
-
             Result.success(response.body()!!)
         } catch (e: Exception) {
             Result.failure(e)

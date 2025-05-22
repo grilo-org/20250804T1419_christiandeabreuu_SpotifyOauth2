@@ -1,7 +1,6 @@
 package com.example.spotifyapi.app.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +29,13 @@ class ProfileFragment : Fragment() {
         observeUserProfile()
         observeError()
         viewModel.getUserProfile()
+        setupCloseButton()
+    }
+
+    private fun setupCloseButton() {
+        binding.buttonClose.setOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     private fun observeError() {
@@ -45,7 +51,7 @@ class ProfileFragment : Fragment() {
             profile?.let {
                 imageProfile(it.images.firstOrNull()?.url)
                 binding.profileTextView.text = it.displayName
-            } ?: Log.e("ProfileFragment", "❌ Perfil do usuário não carregado!")
+            }
         }
     }
 

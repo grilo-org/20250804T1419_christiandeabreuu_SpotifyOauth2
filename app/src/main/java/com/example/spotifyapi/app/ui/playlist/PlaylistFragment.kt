@@ -2,7 +2,6 @@ package com.example.spotifyapi.app.ui.playlist
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,20 +57,15 @@ class PlaylistFragment : Fragment() {
 
     private fun updatePlaylistsUI(playlists: List<Playlist>?) {
         playlists?.let {
-            Log.d("PlaylistFragment", "🎶 Total de playlists recebidas: ${playlists.size}")
             playlistAdapter.submitList(it)
-        } ?: Log.e("PlaylistFragment", "❌ Nenhuma playlist encontrada!")
+        }
     }
 
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d(
-                    "PlaylistFragment",
-                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
-                )
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?: Log.e("PlaylistFragment", "❌ Perfil do usuário não carregado!")
+            }
         }
     }
 
@@ -83,10 +77,8 @@ class PlaylistFragment : Fragment() {
 
     private fun setupCreatePlaylistButton() {
         binding.buttonToGoCreatePlaylist.setOnClickListener {
-            val isOnline = NetworkUtils.isInternetAvailable(requireContext())
-
+            NetworkUtils.isInternetAvailable(requireContext())
             val intent = Intent(requireContext(), CreatePlaylistActivity::class.java)
-
             startActivity(intent)
         }
     }

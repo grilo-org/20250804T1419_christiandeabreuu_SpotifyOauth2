@@ -1,7 +1,6 @@
 package com.example.spotifyapi.app.ui.topartists
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.ArtistResponse
-import com.example.spotifyapi.auth.data.repository.TokenRepository
 import com.example.spotifyapi.databinding.FragmentTopArtistsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -39,15 +37,12 @@ class TopArtistsFragment : Fragment() {
         artistsAdapter = TopArtistsAdapter { artist ->
             navigateToAlbumsFragment(artist)
         }
-        checkAccessToken()
-        setupRecyclerView()
         observeUserProfile()
         observeArtists()
         observeError()
         observePagingData()
-
+        setupRecyclerView()
         viewModel.getUserProfile()
-
     }
 
     private fun observePagingData() {
@@ -77,7 +72,7 @@ class TopArtistsFragment : Fragment() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 imageProfile(it.images.firstOrNull()?.url)
-            } ?: Log.e("TopArtistsFragment", "❌ Perfil do usuário não carregado!")
+            }
         }
     }
 
@@ -88,24 +83,12 @@ class TopArtistsFragment : Fragment() {
 
     private fun navigateToAlbumsFragment(artist: ArtistResponse) {
         val bundle = Bundle().apply {
-//            putString("ACCESS_TOKEN", accessToken)
             putString("ARTIST_ID", artist.id)
             putString("ARTIST", artist.name)
             putString("IMAGE_URL", artist.images.firstOrNull()?.url)
         }
 
         findNavController().navigate(R.id.albumsFragment, bundle)
-    }
-
-    private fun checkAccessToken() {
-
-        val tokenRepo = context?.let { TokenRepository(it) }
-        val accessToken = tokenRepo?.getAccessToken()
-        return
-//        accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
-//        if (accessToken.isEmpty()) {
-//            return
-//        }
     }
 
     private fun imageProfile(imageUrl: String?) {
