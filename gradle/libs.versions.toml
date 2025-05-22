@@ -26,8 +26,11 @@ pagingCommonAndroid = "3.3.6"
 pagingRuntimeKtx = "3.3.6"
 roomCompiler = "2.6.1"
 roomRuntime = "2.6.1"
-protoliteWellKnownTypes = "18.0.1"
-
+fragmentTesting = "1.6.1"
+roboelectric = "4.10.3"
+firebaseBom = "33.1.1"
+service = "4.4.2"
+crashlytics = "3.0.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +38,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+roboelectric = { module = "org.robolectric:robolectric", version.ref = "roboelectric" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -62,10 +66,17 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomCompiler" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
-protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
-
+androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoCore" }
+androidx-rules = { group = "androidx.test", name = "rules", version.ref = "junitVersion" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "junitVersion" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoCore" }
+fragment-test = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
+firebase-bom = {module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom"}
+firebase-crashlytics = {module = "com.google.firebase:firebase-crashlytics-ktx"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "service" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 
