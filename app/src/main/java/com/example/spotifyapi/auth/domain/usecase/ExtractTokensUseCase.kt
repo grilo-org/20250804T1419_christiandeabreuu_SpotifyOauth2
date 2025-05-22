@@ -1,7 +1,7 @@
-package com.example.spotifyapi.authenticate.domain.usecase
+package com.example.spotifyapi.auth.domain.usecase
 
 import android.net.Uri
-import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.model.SpotifyTokens
 
 class ExtractTokensUseCase {
     fun execute(uri: Uri): SpotifyTokens {

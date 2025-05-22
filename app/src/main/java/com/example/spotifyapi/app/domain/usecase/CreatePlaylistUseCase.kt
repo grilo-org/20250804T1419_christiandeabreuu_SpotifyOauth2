@@ -4,10 +4,10 @@ import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository
 
 class CreatePlaylistUseCase(private val repository: CreatePlaylistRepository) {
 
-    suspend fun execute(accessToken: String, playlistName: String): String {
+    suspend fun execute(playlistName: String): String {
         validatePlaylistName(playlistName)
 
-        return createPlaylist(accessToken, playlistName)
+        return createPlaylist(playlistName)
     }
 
     private fun validatePlaylistName(playlistName: String) {
@@ -16,8 +16,8 @@ class CreatePlaylistUseCase(private val repository: CreatePlaylistRepository) {
         }
     }
 
-    private suspend fun createPlaylist(accessToken: String, playlistName: String): String {
-        return if (repository.createPlaylist(accessToken, playlistName)) {
+    private suspend fun createPlaylist(playlistName: String): String {
+        return if (repository.createPlaylist(playlistName)) {
             "Playlist '${playlistName}' criada com sucesso!"
         } else {
             throw Exception("Erro ao criar playlist.")

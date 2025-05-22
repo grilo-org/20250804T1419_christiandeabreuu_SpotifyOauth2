@@ -26,9 +26,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModules = module {
 
-    viewModel { TopArtistsViewModel(get(), get(),) }
+    viewModel { TopArtistsViewModel(get(), get()) }
     viewModel { AlbumsViewModel(get()) }
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
     viewModel { PlaylistViewModel(get(), get()) }
     viewModel { CreatePlaylistViewModel(get()) }
 
@@ -36,16 +36,17 @@ val appModules = module {
     factory { GetUserProfileUseCase(get()) }
     factory { GetPlaylistsUseCase(get()) }
     factory { CreatePlaylistUseCase(get()) }
-    factory { GetTopArtistsUseCase(get(), get()) }
+    factory { GetTopArtistsUseCase(get()) }
 
-    factory { AlbumsRepository(get(), get()) }
-    factory { UserProfileRepository(get(), get()) }
-    factory { PlaylistRepository(get(), get()) }
-    factory { CreatePlaylistRepository(get()) }
-    factory { TopArtistsRepository(get(), get()) }
+    factory { AlbumsRepository(get(), get(), get()) }
+    factory { UserProfileRepository(get(), get(), get()) }
+    factory { PlaylistRepository(get(), get(), get()) }
+    factory { CreatePlaylistRepository(get(), get()) }
+    factory { TopArtistsRepository(get(), get(), get()) }
 
     factory { ArtistPagingSource(get(), get(),) }
     factory { TopArtistsAdapter(get()) }
+
 }
 
 val networkAppModule = module {

@@ -18,10 +18,10 @@ class CreatePlaylistViewModel(
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun createPlaylist(accessToken: String, playlistName: String) {
+    fun createPlaylist(playlistName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = createPlaylistUseCase.execute(accessToken, playlistName)
+                val result = createPlaylistUseCase.execute(playlistName)
                 _createPlaylistLiveData.postValue(Result.success(result))
             } catch (e: Exception) {
                 _errorLiveData.postValue("Erro ao criar playlist")

@@ -13,7 +13,6 @@ import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentProfileBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileViewModel by viewModel()
@@ -28,17 +27,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
-
-        if (accessToken.isNotEmpty()) {
-            viewModel.getUserProfile(accessToken)
-        } else {
-            Log.e("ProfileFragment", "❌ Token não recebido!")
-        }
-
         observeUserProfile()
         observeError()
-        viewModel.getUserProfile(accessToken)
+        viewModel.getUserProfile()
     }
 
     private fun observeError() {
@@ -52,10 +43,6 @@ class ProfileFragment : Fragment() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d(
-                    "ProfileFragment",
-                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
-                )
                 imageProfile(it.images.firstOrNull()?.url)
                 binding.profileTextView.text = it.displayName
             } ?: Log.e("ProfileFragment", "❌ Perfil do usuário não carregado!")

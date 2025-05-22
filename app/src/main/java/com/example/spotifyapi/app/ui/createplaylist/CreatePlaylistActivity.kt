@@ -9,16 +9,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreatePlaylistActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreatePlaylistBinding
-    private lateinit var accessToken: String
     private val viewModel: CreatePlaylistViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreatePlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        accessToken = intent.getStringExtra("ACCESS_TOKEN") ?: ""
 
         setupCreateButton()
         setupCloseButton()
@@ -58,7 +54,7 @@ class CreatePlaylistActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            viewModel.createPlaylist(accessToken, playlistName)
+            viewModel.createPlaylist(playlistName)
         }
     }
 

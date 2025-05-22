@@ -18,12 +18,10 @@ import com.example.spotifyapi.databinding.FragmentPlaylistBinding
 import com.example.spotifyapi.utils.NetworkUtils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class PlaylistFragment : Fragment() {
     private lateinit var binding: FragmentPlaylistBinding
     private val viewModel: PlaylistViewModel by viewModel()
     private lateinit var playlistAdapter: PlaylistAdapter
-    private var accessToken: String = ""
 
 
     override fun onCreateView(
@@ -34,17 +32,14 @@ class PlaylistFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
-        viewModel.getPlaylists(accessToken)
-        viewModel.getUserProfile(accessToken)
-
-        setupRecyclerView()
         observePlaylists()
         observeError()
         observeUserProfile()
-        setupCreatePlaylistButton()
 
+        viewModel.getPlaylists()
+        viewModel.getUserProfile()
+        setupRecyclerView()
+        setupCreatePlaylistButton()
     }
 
     private fun observeError() {
@@ -88,13 +83,9 @@ class PlaylistFragment : Fragment() {
 
     private fun setupCreatePlaylistButton() {
         binding.buttonToGoCreatePlaylist.setOnClickListener {
-            Log.d("PlaylistFragment", "🎯 Botão clicado!")
-
             val isOnline = NetworkUtils.isInternetAvailable(requireContext())
 
-            val intent = Intent(requireContext(), CreatePlaylistActivity::class.java).apply {
-                putExtra("ACCESS_TOKEN", if (isOnline) accessToken else null)
-            }
+            val intent = Intent(requireContext(), CreatePlaylistActivity::class.java)
 
             startActivity(intent)
         }

@@ -18,7 +18,7 @@ class AlbumsFragment : Fragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private val viewModel: AlbumsViewModel by viewModel()
     private lateinit var albumAdapter: AlbumAdapter
-    private var accessToken: String = ""
+
     private var artistId: String = ""
     private var artistName: String = ""
     private var imageUrl: String = ""
@@ -34,16 +34,18 @@ class AlbumsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
         artistId = arguments?.getString("ARTIST_ID") ?: ""
         artistName = arguments?.getString("ARTIST") ?: ""
         imageUrl = arguments?.getString("IMAGE_URL") ?: ""
+
 
         setupViews()
         observeAlbums()
         observeError()
         setupBackButton()
-        viewModel.getAlbums(accessToken, artistId)
+
+        viewModel.getAlbums(artistId)
+
     }
 
     private fun observeError() {

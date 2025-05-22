@@ -17,10 +17,10 @@ class AlbumsViewModel(private val getAlbumsUseCase: GetAlbumsUseCase) : ViewMode
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun getAlbums(accessToken: String, artistId: String) {
+    fun getAlbums(artistId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val albums = getAlbumsUseCase.execute(accessToken, artistId)
+                val albums = getAlbumsUseCase.execute(artistId)
                 _albumsLiveData.postValue(albums)
             } catch (e: Exception) {
                 _errorLiveData.postValue("Erro ao buscar álbuns")

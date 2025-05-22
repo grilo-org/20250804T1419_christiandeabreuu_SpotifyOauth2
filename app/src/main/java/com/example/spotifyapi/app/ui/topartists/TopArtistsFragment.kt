@@ -14,6 +14,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.ArtistResponse
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import com.example.spotifyapi.databinding.FragmentTopArtistsBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,7 +25,6 @@ class TopArtistsFragment : Fragment() {
     private lateinit var binding: FragmentTopArtistsBinding
     private val viewModel: TopArtistsViewModel by viewModel()
     private lateinit var artistsAdapter: TopArtistsAdapter
-    private var accessToken: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,23 +46,22 @@ class TopArtistsFragment : Fragment() {
         observeError()
         observePagingData()
 
-        viewModel.getUserProfile(accessToken)
+        viewModel.getUserProfile()
+
     }
 
     private fun observePagingData() {
+
         lifecycleScope.launch {
-            viewModel.getArtistsPagingData(accessToken).collectLatest { pagingData ->
-                    Log.d("Fragment", "🔄 Dados recebidos: $pagingData")
-                    artistsAdapter.submitData(pagingData)
-                }
+            viewModel.getArtistsPagingData().collectLatest { pagingData ->
+                artistsAdapter.submitData(pagingData)
+            }
         }
     }
 
     private fun observeArtists() {
         viewModel.artistsLiveData.observe(viewLifecycleOwner) { artists ->
-            artists?.let {
-                Log.d("TopArtistsFragment", "🎨 Total de artistas recebidos: ${artists.size}")
-            }
+            artists?.let {}
         }
     }
 
@@ -89,22 +88,24 @@ class TopArtistsFragment : Fragment() {
 
     private fun navigateToAlbumsFragment(artist: ArtistResponse) {
         val bundle = Bundle().apply {
-            putString("ACCESS_TOKEN", accessToken)
+//            putString("ACCESS_TOKEN", accessToken)
             putString("ARTIST_ID", artist.id)
             putString("ARTIST", artist.name)
             putString("IMAGE_URL", artist.images.firstOrNull()?.url)
         }
 
-        findNavController().navigate(
-            R.id.albumsFragment, bundle
-        )
+        findNavController().navigate(R.id.albumsFragment, bundle)
     }
 
     private fun checkAccessToken() {
-        accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
-        if (accessToken.isEmpty()) {
-            return
-        }
+
+        val tokenRepo = context?.let { TokenRepository(it) }
+        val accessToken = tokenRepo?.getAccessToken()
+        return
+//        accessToken = requireActivity().intent.getStringExtra("ACCESS_TOKEN") ?: ""
+//        if (accessToken.isEmpty()) {
+//            return
+//        }
     }
 
     private fun imageProfile(imageUrl: String?) {

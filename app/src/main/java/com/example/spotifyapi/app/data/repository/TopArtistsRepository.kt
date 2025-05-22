@@ -6,15 +6,19 @@ import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 
 class TopArtistsRepository(
-    private val apiService: SpotifyApiService, private val spotifyDAO: SpotifyDAO
+    private val apiService: SpotifyApiService,
+    private val spotifyDAO: SpotifyDAO,
+    private val tokenRepository: TokenRepository
 ) {
-    suspend fun getTopArtistsApi(
-        accessToken: String, offset: Int = 0, timeRange: String = "medium_term"
+    suspend fun getTopArtistsApi(offset: Int = 0,
+                                 timeRange: String = "medium_term"
     ): TopArtistsResponse {
+        val token = tokenRepository.getAccessToken().orEmpty()
         return apiService.getTopArtists(
-            accessToken = "Bearer $accessToken", limit = 20, timeRange = timeRange, offset = offset
+            accessToken = "Bearer $token", limit = 20, timeRange = timeRange, offset = offset
         )
     }
 

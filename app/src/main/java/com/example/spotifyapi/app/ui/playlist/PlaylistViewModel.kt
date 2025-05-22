@@ -25,10 +25,10 @@ class PlaylistViewModel(
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun getPlaylists(accessToken: String) {
+    fun getPlaylists() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val playlists = playlistsUseCase.getPlaylists(accessToken)
+                val playlists = playlistsUseCase.getPlaylists()
                 _playlistsLiveData.postValue(playlists)
             } catch (e: Exception) {
                 _errorLiveData.postValue("Erro ao buscar playlists")
@@ -36,10 +36,10 @@ class PlaylistViewModel(
         }
     }
 
-    fun getUserProfile(accessToken: String) {
+    fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userProfile = userProfileUseCase.execute(accessToken)
+                val userProfile = userProfileUseCase.execute()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
                 _errorLiveData.postValue("Erro ao buscar perfil do usuário")
