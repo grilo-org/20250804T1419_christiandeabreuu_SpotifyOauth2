@@ -1,7 +1,7 @@
 package com.example.spotifyapi.app.di
 
 import androidx.room.Room
-import com.example.spotifyapi.app.data.local.SpotifyDatabase
+import com.example.spotifyapi.app.data.database.SpotifyDatabase
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.repository.AlbumsRepository
 import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository

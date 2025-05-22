@@ -13,7 +13,6 @@ class GetUserProfileUseCase(private val repository: UserProfileRepository) {
 
     private suspend fun fetchUserProfile(accessToken: String): UserProfile? {
         val responseApi = repository.getUserProfileFromApi(accessToken) ?: return null
-
         repository.insertLocalUserProfile(responseApi.toUserProfileDB())
         return responseApi
     }

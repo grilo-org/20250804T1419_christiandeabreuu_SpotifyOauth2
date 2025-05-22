@@ -2,11 +2,11 @@ package com.example.spotifyapi.app.ui.profile
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
@@ -17,12 +17,9 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private val viewModel: ProfileViewModel by viewModel()
-    private var accessToken: String = ""
-
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -55,7 +52,10 @@ class ProfileFragment : Fragment() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d("ProfileFragment", "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}")
+                Log.d(
+                    "ProfileFragment",
+                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
+                )
                 imageProfile(it.images.firstOrNull()?.url)
                 binding.profileTextView.text = it.displayName
             } ?: Log.e("ProfileFragment", "❌ Perfil do usuário não carregado!")

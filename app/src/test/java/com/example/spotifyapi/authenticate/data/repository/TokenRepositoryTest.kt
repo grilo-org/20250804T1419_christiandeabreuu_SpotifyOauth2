@@ -19,8 +19,7 @@ class TokenRepositoryTest {
         every { mockContext.getSharedPreferences(any(), any()) } returns mockSharedPreferences
         every { mockSharedPreferences.edit() } returns mockEditor
         every { mockEditor.putString(any(), any()) } returns mockEditor
-        every { mockEditor.commit() } returns true // 🔹 Simulando sucesso ao salvar
-
+        every { mockEditor.commit() } returns true
         tokenRepository = TokenRepository(mockContext)
     }
 
@@ -28,6 +27,7 @@ class TokenRepositoryTest {
     fun `saveTokens should save access and refresh tokens correctly`() {
         val success = tokenRepository.saveTokens("access123", "refresh456")
 
+        //Then -  sucesso ao salvar tokens
         assertTrue(success)
         verify { mockEditor.putString("ACCESS_TOKEN", "access123") }
         verify { mockEditor.putString("REFRESH_TOKEN", "refresh456") }
@@ -36,10 +36,13 @@ class TokenRepositoryTest {
 
     @Test
     fun `saveTokens should return false when commit fails`() {
-        every { mockEditor.commit() } returns false // 🔹 Simulando falha ao salvar
+        //Given
+        every { mockEditor.commit() } returns false
 
+        //When
         val success = tokenRepository.saveTokens("access123", "refresh456")
 
+        //Then -  falha ao salvar tokens
         assertFalse(success)
         verify { mockEditor.commit() }
     }

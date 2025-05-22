@@ -36,9 +36,6 @@ class PlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
-
-
-
         viewModel.getPlaylists(accessToken)
         viewModel.getUserProfile(accessToken)
 
@@ -99,7 +96,6 @@ class PlaylistFragment : Fragment() {
                 putExtra("ACCESS_TOKEN", if (isOnline) accessToken else null)
             }
 
-            Log.d("PlaylistFragment", "🎯 Iniciando CreatePlaylistActivity - Token: $accessToken")
             startActivity(intent)
         }
     }

@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.ui.topartists
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,12 +8,11 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.UserProfile
-import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import com.example.spotifyapi.app.data.paging.ArtistPagingSource
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
-import com.example.spotifyapi.app.data.model.ArtistResponse
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -36,14 +34,13 @@ class TopArtistsViewModel(
     fun getArtistsPagingData(accessToken: String): Flow<PagingData<ArtistResponse>> {
         return Pager(config = PagingConfig(
             pageSize = 20, enablePlaceholders = false
-        ),
-            pagingSourceFactory = {
-                ArtistPagingSource(
-                    getTopArtistsUseCase,
-                    accessToken,
+        ), pagingSourceFactory = {
+            ArtistPagingSource(
+                getTopArtistsUseCase,
+                accessToken,
 
                 )
-            }).flow.cachedIn(viewModelScope)
+        }).flow.cachedIn(viewModelScope)
     }
 
     fun getUserProfile(accessToken: String) {

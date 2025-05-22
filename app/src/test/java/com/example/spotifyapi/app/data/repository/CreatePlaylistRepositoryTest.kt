@@ -1,10 +1,15 @@
-import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
+package com.example.spotifyapi.app.data.repository
+
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import com.example.spotifyapi.app.data.repository.CreatePlaylistRepository
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -13,7 +18,6 @@ class CreatePlaylistRepositoryTest {
 
     @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
-
     private lateinit var repository: CreatePlaylistRepository
 
     @Before
@@ -28,7 +32,6 @@ class CreatePlaylistRepositoryTest {
         val fakeResponse = mockk<Response<Unit>> {
             every { isSuccessful } returns true
         }
-
         coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
 
         // When
@@ -45,7 +48,6 @@ class CreatePlaylistRepositoryTest {
         val fakeResponse = mockk<Response<Unit>> {
             every { isSuccessful } returns false
         }
-
         coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
 
         // When

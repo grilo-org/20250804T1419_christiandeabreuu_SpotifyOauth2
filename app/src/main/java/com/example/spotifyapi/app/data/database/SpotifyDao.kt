@@ -1,17 +1,22 @@
-package com.example.spotifyapi.app.data.local
+package com.example.spotifyapi.app.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.spotify.data.local.ArtistWithImages
-import com.example.spotify.data.local.TopArtistsWithArtistsAndImages
+import com.example.spotifyapi.app.data.local.ArtistWithImages
+import com.example.spotifyapi.app.data.local.TopArtistsWithArtistsAndImages
+import com.example.spotifyapi.app.data.local.AlbumDB
+import com.example.spotifyapi.app.data.local.ArtistDB
+import com.example.spotifyapi.app.data.local.ImageArtist
+import com.example.spotifyapi.app.data.local.PlaylistDB
+import com.example.spotifyapi.app.data.local.TopArtistsDB
+import com.example.spotifyapi.app.data.local.UserProfileDB
 
 @Dao
 interface SpotifyDAO {
 
-    //iguais
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTopArtistsDB(topArtistsDB: TopArtistsDB): Long
 
@@ -31,25 +36,6 @@ interface SpotifyDAO {
     @Query("SELECT * FROM artist WHERE topArtistsId = :topArtistsId LIMIT :limit OFFSET :offset")
     fun getTopArtistsWithImages(topArtistsId: Int, limit: Int, offset: Int): List<ArtistWithImages>
 
-
-
-
-
-
-
-
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertLocalTopArtistsInfo(artists: List<ArtistDB>)
-//
-//    @Query("SELECT * FROM artist")
-//    suspend fun getLocalTopArtistsInfo(): List<ArtistDB>
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertLocalTopArtistsImages(images: List<ImageArtistDB>)
-//
-//    @Query("SELECT * FROM image_artist")
-//    suspend fun getLocalTopArtistImages(): List<ImageArtistDB>
-
     @Query("SELECT * FROM albums WHERE artistId = :artistId")
     suspend fun getLocalAlbumsByArtist(artistId: String): List<AlbumDB>
 
@@ -67,11 +53,4 @@ interface SpotifyDAO {
 
     @Query("SELECT * FROM playlist")
     suspend fun getLocalPlaylists(): List<PlaylistDB>
-
-
-
-
-
-
-
 }

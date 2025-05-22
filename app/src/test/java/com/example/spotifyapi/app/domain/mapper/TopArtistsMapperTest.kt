@@ -13,6 +13,7 @@ class TopArtistsMapperTest {
 
     @Test
     fun `toTopArtistsDB should correctly map TopArtistsResponse to TopArtistsDB`() {
+        // Given
         val response = TopArtistsResponse(
             items = listOf(),
             total = 100,
@@ -22,9 +23,10 @@ class TopArtistsMapperTest {
             next = null,
             previous = null
         )
-
+        // When
         val result = toTopArtistsDB(response, "medium_term")
 
+        // Then
         assertEquals(response.total, result.total)
         assertEquals(response.limit, result.limit)
         assertEquals(response.offset, result.offset)
@@ -36,6 +38,7 @@ class TopArtistsMapperTest {
 
     @Test
     fun `toArtistsDB should correctly map TopArtistsResponse to List ArtistDB`() {
+        // Given
         val response = TopArtistsResponse(
             items = listOf(
                 ArtistResponse("1", "Artist 1", 90, listOf(ImageArtistResponse("url1"))),
@@ -48,9 +51,10 @@ class TopArtistsMapperTest {
             next = null,
             previous = null
         )
-
+        // When
         val result = toArtistsDB(response, 101)
 
+        // Then - Verificando se os atributos estão corretos
         assertEquals(2, result.size)
         assertEquals("1", result[0].id)
         assertEquals("Artist 1", result[0].name)
@@ -64,6 +68,7 @@ class TopArtistsMapperTest {
 
     @Test
     fun `toImageArtistsDB should correctly map TopArtistsResponse to List ImageArtist`() {
+        // Given
         val response = TopArtistsResponse(
             items = listOf(
                 ArtistResponse("1", "Artist 1", 90, listOf(ImageArtistResponse("url1"), ImageArtistResponse("url3"))),
@@ -76,10 +81,12 @@ class TopArtistsMapperTest {
             next = null,
             previous = null
         )
-
         val artistsIds = listOf(10L, 20L)
+
+        // When
         val result = toImageArtistsDB(response, artistsIds)
 
+        // Then - Verificando se os atributos estão corretos
         assertEquals(3, result.size)
         assertEquals("url1", result[0].url)
         assertEquals(10, result[0].artistId)

@@ -112,9 +112,6 @@ dependencies {
     // MockK para testes unitários
     testImplementation(libs.mockk)
 
-    // MockK para testes instrumentados (Android)
-//    /**/androidTestImplementation(libs.mockk.android)/**/
-
     // Coroutines Test
     testImplementation(libs.kotlinx.coroutines.test)
 

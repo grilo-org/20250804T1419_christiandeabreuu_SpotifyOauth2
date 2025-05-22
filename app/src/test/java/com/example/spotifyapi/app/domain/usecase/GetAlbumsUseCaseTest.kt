@@ -1,7 +1,6 @@
 package com.example.spotifyapi.app.domain.usecase
 
 import com.example.spotifyapi.app.data.local.AlbumDB
-import com.example.spotifyapi.app.data.local.ImageArtist
 import com.example.spotifyapi.app.data.repository.AlbumsRepository
 import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbum
 import io.mockk.coEvery
@@ -26,39 +25,38 @@ class GetAlbumsUseCaseTest {
     // 🔹 Teste quando há álbuns no banco de dados
     @Test
     fun `execute should return albums from database when available`() = runBlocking {
+        //Given
         val fakeAlbumsDb = listOf(
             AlbumDB(
                 "databaseId",
                 "name",
-                "releaseDate",
+                "artistId",
                 "imageUrl",
-                "artistId"
-            ) // 🔹 Certifique-se da ordem correta dos parâmetros
+                "releaseDate",
+            )
         )
-
-        val mockkListAlbum: List<ImageArtist> = listOf(
-            ImageArtist(1, "a,", 1), ImageArtist(1, "a,", 1), ImageArtist(1, "a,", 1)
-        )
-
-        val fakeAlbums =
-            fakeAlbumsDb.map { it.toAlbum() } // 🔹 Converte `AlbumDB` para `Album` antes da comparação
-
+        val fakeAlbums = fakeAlbumsDb.map { it.toAlbum() }
         coEvery { repository.getAlbumsFromDB(any()) } returns fakeAlbumsDb
 
+        //When
         val result = useCase.execute("token123", "artist123")
 
+        //Then
         assertEquals(fakeAlbums, result) // 🔹 Agora a comparação será entre objetos do mesmo tipo
         coVerify(exactly = 1) { repository.getAlbumsFromDB("artist123") }
     }
 
-    // 🔹 Teste quando API e banco de dados estão vazios
+
     @Test
     fun `execute should return empty list when API and database have no albums`() = runBlocking {
+        // Given
         coEvery { repository.getAlbumsFromDB(any()) } returns emptyList()
         coEvery { repository.getAlbumsFromApi(any(), any()) } returns null
 
+        // When
         val result = useCase.execute("token123", "artist123")
 
+        // Then - Teste quando API e banco de dados estão vazios
         assertTrue(result.isEmpty())
         coVerify(exactly = 1) { repository.getAlbumsFromDB("artist123") }
         coVerify(exactly = 1) { repository.getAlbumsFromApi("token123", "artist123") }

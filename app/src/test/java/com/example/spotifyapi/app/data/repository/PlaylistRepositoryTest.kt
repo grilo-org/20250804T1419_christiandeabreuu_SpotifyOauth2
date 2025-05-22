@@ -1,15 +1,20 @@
+package com.example.spotifyapi.app.data.repository
+
 import com.example.spotifyapi.app.data.local.PlaylistDB
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.Owner
 import com.example.spotifyapi.app.data.model.Playlist
-import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import com.example.spotifyapi.app.data.repository.PlaylistRepository
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
-import io.mockk.*
+import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -17,10 +22,8 @@ class PlaylistRepositoryTest {
 
     @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
-
     @RelaxedMockK
     private lateinit var spotifyDAO: SpotifyDAO
-
     private lateinit var repository: PlaylistRepository
 
     @Before
@@ -31,11 +34,12 @@ class PlaylistRepositoryTest {
 
     @Test
     fun `getPlaylistsFromApi should return playlists when API call is successful`() = runBlocking {
-        val mockkListImages: List<Image> = listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-        val mockOwner : Owner = mockk(relaxed = true)
-        val fakePlaylists = listOf(Playlist("id" , "name", "description", mockOwner, 0, mockkListImages))
-
         // Given
+        val mockkListImages: List<Image> =
+            listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
+        val mockOwner: Owner = mockk(relaxed = true)
+        val fakePlaylists =
+            listOf(Playlist("id", "name", "description", mockOwner, 0, mockkListImages))
         coEvery { apiService.getPlaylists(any()) } returns PlaylistsResponse(fakePlaylists)
 
         // When
@@ -61,7 +65,10 @@ class PlaylistRepositoryTest {
     @Test
     fun `insertPlaylistsIntoDB should insert playlists into local database`() = runBlocking {
         // Given
-        val fakePlaylistsDB = listOf(PlaylistDB(0, "id", "name", "imageUrl", "ownerNAme", 0, "href"), PlaylistDB(1, "id1", "name1", "imageUrl1", "ownerNAme1", 1, "href1"))
+        val fakePlaylistsDB = listOf(
+            PlaylistDB(0, "id", "name", "imageUrl", "ownerNAme", 0, "href"),
+            PlaylistDB(1, "id1", "name1", "imageUrl1", "ownerNAme1", 1, "href1")
+        )
 
         // When
         repository.insertPlaylistsIntoDB(fakePlaylistsDB)
@@ -72,9 +79,9 @@ class PlaylistRepositoryTest {
 
     @Test
     fun `getPlaylistsFromDB should return playlists from local database`() = runBlocking {
-        val fakePlaylistsDB = listOf(PlaylistDB(0, "id", "name", "imageUrl", "ownerNAme", 0, "href"),)
-
         // Given
+        val fakePlaylistsDB =
+            listOf(PlaylistDB(0, "id", "name", "imageUrl", "ownerNAme", 0, "href"))
         coEvery { spotifyDAO.getLocalPlaylists() } returns fakePlaylistsDB
 
         // When

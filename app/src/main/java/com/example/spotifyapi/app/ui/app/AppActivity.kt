@@ -33,6 +33,7 @@ class AppActivity : AppCompatActivity() {
                     navController.navigate(R.id.topArtistsFragment)
                     true
                 }
+
                 R.id.profileFragment -> {
                     val bundle = Bundle().apply {
                         putString("ACCESS_TOKEN", accessToken)
@@ -40,6 +41,7 @@ class AppActivity : AppCompatActivity() {
                     navController.navigate(R.id.profileFragment, bundle)
                     true
                 }
+
                 R.id.navigation_playlists -> {
                     val bundle = Bundle().apply {
                         putString("ACCESS_TOKEN", accessToken)
@@ -47,6 +49,7 @@ class AppActivity : AppCompatActivity() {
                     navController.navigate(R.id.playlistFragment, bundle)
                     true
                 }
+
                 else -> false
             }
         }

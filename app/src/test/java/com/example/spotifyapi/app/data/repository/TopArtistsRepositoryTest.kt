@@ -1,18 +1,19 @@
 package com.example.spotifyapi.app.data.repository
 
-import com.example.spotifyapi.app.data.local.SpotifyDAO
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
 class TopArtistsRepositoryTest {
 
-    private  var repository: TopArtistsRepository = mockk(relaxed = true)
+    private var repository: TopArtistsRepository = mockk(relaxed = true)
     private val apiService: SpotifyApiService = mockk(relaxed = true)
     private val spotifyDAO: SpotifyDAO = mockk(relaxed = true)
 
@@ -21,18 +22,23 @@ class TopArtistsRepositoryTest {
         repository = TopArtistsRepository(apiService, spotifyDAO)
     }
 
-
-
     @Test
     fun `getTopArtists should return empty list when API call fails`(): Unit = runBlocking {
         // Given
         coEvery { apiService.getTopArtists(any()) } throws Exception("API Error")
 
         // When
-        val result = repository.getTopArtistsApi("token123")
+         repository.getTopArtistsApi("token123")
 
         // Then - Verificando que retorna uma lista vazia
-        coEvery { apiService.getTopArtists("Bearer token123", 20, "medium_term", 0, ) } throws Exception("API Error")
+        coEvery {
+            apiService.getTopArtists(
+                "Bearer token123",
+                20,
+                "medium_term",
+                0,
+            )
+        } throws Exception("API Error")
     }
 
     @Test

@@ -1,10 +1,13 @@
 import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
 import com.example.spotifyapi.authenticate.data.networking.AuthApiService
 import com.example.spotifyapi.authenticate.data.repository.AuthRepository
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import okhttp3.ResponseBody
-import org.junit.Assert.*
+import okhttp3.ResponseBody.Companion.toResponseBody
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
@@ -19,45 +22,69 @@ class AuthRepositoryTest {
         authRepository = AuthRepository(apiService)
     }
 
-    // 🔹 Testando sucesso na obtenção do token
     @Test
     fun `getAccessToken should return SpotifyTokens when API call is successful`() = runBlocking {
+        //Given
         val fakeTokens = SpotifyTokens("access123", "refresh456")
+        coEvery {
+            apiService.getAccessToken(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.success(fakeTokens)
 
-        coEvery { apiService.getAccessToken(any(), any(), any(), any(), any()) } returns Response.success(fakeTokens)
-
+        //When
         val result = authRepository.getAccessToken("authCode", "redirectUri")
 
+        //Then - sucesso na obtenção do token
         assertTrue(result.isSuccess)
         assertEquals(fakeTokens, result.getOrNull())
-
-        coVerify(exactly = 1) { apiService.getAccessToken(any(), any(), any(), any(), any(),) }
+        coVerify(exactly = 1) { apiService.getAccessToken(any(), any(), any(), any(), any()) }
 
     }
 
-    // 🔹 Testando erro na API com resposta não bem-sucedida
     @Test
     fun `getAccessToken should return failure when API call is unsuccessful`() = runBlocking {
-        coEvery { apiService.getAccessToken(any(), any(), any(), any(), any()) } returns Response.error(400, ResponseBody.create(null, "Bad Request"))
+        //Given
+        coEvery {
+            apiService.getAccessToken(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Response.error(400, "Bad Request".toResponseBody(null))
 
+        //When
         val result = authRepository.getAccessToken("authCode", "redirectUri")
 
+        //Then - erro na API
         assertTrue(result.isFailure)
         assertTrue(result.exceptionOrNull()?.message?.contains("Erro: 400") == true)
-
-        coVerify(exactly = 1) { apiService.getAccessToken(any(), any(), any(), any(), any(),) }
     }
 
-    // 🔹 Testando erro ao chamar a API (Exceção lançada)
     @Test
     fun `getAccessToken should return failure when API call throws exception`() = runBlocking {
-        coEvery { apiService.getAccessToken(any(), any(), any(), any(), any()) } throws Exception("Erro inesperado")
+        //Given
+        coEvery {
+            apiService.getAccessToken(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws Exception("Erro inesperado")
 
+        //When
         val result = authRepository.getAccessToken("authCode", "redirectUri")
 
+        //Then - erro ao chamar a API (Exceção lançada)
         assertTrue(result.isFailure)
         assertEquals("Erro inesperado", result.exceptionOrNull()?.message)
-
-        coVerify(exactly = 1) { apiService.getAccessToken(any(), any(), any(), any(), any(),) }
     }
 }

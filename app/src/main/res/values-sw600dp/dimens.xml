@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Tamanhos de texto -->
+    <!-- Tamanhos de texto para tablet-->
     <dimen name="text_12">14sp</dimen>
     <dimen name="text_14">24sp</dimen>
     <dimen name="text_16">18sp</dimen>
@@ -8,7 +8,7 @@
     <dimen name="text_20">22sp</dimen>
     <dimen name="text_24">26sp</dimen>
 
-    <!-- Margens e Padding -->
+    <!-- Margens e Padding para tablet-->
     <dimen name="margin_0">0dp</dimen>
     <dimen name="margin_8">12dp</dimen>
     <dimen name="margin_10">14dp</dimen>

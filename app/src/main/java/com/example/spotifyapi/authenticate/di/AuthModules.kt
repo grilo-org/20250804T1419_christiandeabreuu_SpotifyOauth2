@@ -8,13 +8,11 @@ import com.example.spotifyapi.authenticate.domain.usecase.ExtractTokensUseCase
 import com.example.spotifyapi.authenticate.domain.usecase.GetAccessTokenUseCase
 import com.example.spotifyapi.authenticate.ui.login.LoginViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.core.scope.get
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 val authModules = module {
-    factory { AuthRepository( apiService = get()) }
+    factory { AuthRepository(apiService = get()) }
     factory { TokenRepository(context = get()) }
 
     viewModel { LoginViewModel(get(), get()) }
@@ -26,7 +24,7 @@ val authModules = module {
 }
 
 val networkAuthModule = module {
-    
+
     single {
         retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
