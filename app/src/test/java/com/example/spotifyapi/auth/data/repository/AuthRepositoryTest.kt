@@ -1,6 +1,6 @@
-import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
-import com.example.spotifyapi.authenticate.data.networking.AuthApiService
-import com.example.spotifyapi.authenticate.data.repository.AuthRepository
+import com.example.spotifyapi.auth.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.networking.AuthApiService
+import com.example.spotifyapi.auth.data.repository.AuthRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

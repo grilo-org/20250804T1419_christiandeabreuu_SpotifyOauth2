@@ -7,14 +7,14 @@ import com.example.spotifyapi.app.domain.mapper.PlaylistMapper.toPlaylistDB
 
 class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
 
-    suspend fun getPlaylists(accessToken: String): List<Playlist> {
-        return fetchPlaylistsFromApi(accessToken).ifEmpty {
+    suspend fun getPlaylists(): List<Playlist> {
+        return fetchPlaylistsFromApi().ifEmpty {
             getPlaylistsFromDB()
         }
     }
 
-    private suspend fun fetchPlaylistsFromApi(accessToken: String): List<Playlist> {
-        val responseApi = repository.getPlaylistsFromApi(accessToken)
+    private suspend fun fetchPlaylistsFromApi(): List<Playlist> {
+        val responseApi = repository.getPlaylistsFromApi()
 
         if (responseApi.isEmpty()) {
             return emptyList()
@@ -27,7 +27,7 @@ class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
     private suspend fun savePlaylistsToDB(playlists: List<Playlist>) {
         val existingPlaylists = repository.getPlaylistsFromDB().map { it.id }.toSet()
 
-        val filteredPlaylists = playlists.filter { it.id !in existingPlaylists } // 🔹 Remove duplicatas antes de salvar
+        val filteredPlaylists = playlists.filter { it.id !in existingPlaylists }
 
         repository.insertPlaylistsIntoDB(filteredPlaylists.map { it.toPlaylistDB() })
     }

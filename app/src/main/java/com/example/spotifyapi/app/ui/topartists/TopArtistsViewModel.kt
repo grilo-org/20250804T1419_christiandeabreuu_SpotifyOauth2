@@ -8,10 +8,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.paging.ArtistPagingSource
-import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class TopArtistsViewModel(
     private val userProfileUseCase: GetUserProfileUseCase,
-    private val getTopArtistsUseCase: GetTopArtistsUseCase,
+    private val artistPagingSource: ArtistPagingSource,
 ) : ViewModel() {
 
     private val _userProfileLiveData = MutableLiveData<UserProfile?>()
@@ -31,25 +31,21 @@ class TopArtistsViewModel(
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun getArtistsPagingData(accessToken: String): Flow<PagingData<ArtistResponse>> {
+    fun getArtistsPagingData(): Flow<PagingData<ArtistResponse>> {
         return Pager(config = PagingConfig(
             pageSize = 20, enablePlaceholders = false
         ), pagingSourceFactory = {
-            ArtistPagingSource(
-                getTopArtistsUseCase,
-                accessToken,
-
-                )
+            artistPagingSource
         }).flow.cachedIn(viewModelScope)
     }
 
-    fun getUserProfile(accessToken: String) {
+    fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userProfile = userProfileUseCase.execute(accessToken)
+                val userProfile = userProfileUseCase.execute()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar perfil do usuário")
+                _errorLiveData.postValue(R.string.error_message_search_profile.toString())
             }
         }
     }

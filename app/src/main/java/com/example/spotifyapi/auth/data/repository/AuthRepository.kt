@@ -1,10 +1,14 @@
-package com.example.spotifyapi.authenticate.data.repository
+package com.example.spotifyapi.auth.data.repository
 
 import com.example.spotifyapi.BuildConfig
-import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
-import com.example.spotifyapi.authenticate.data.networking.AuthApiService
+import com.example.spotifyapi.auth.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.networking.AuthApiService
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 
-class AuthRepository(private val apiService: AuthApiService) {
+class AuthRepository(
+    private val apiService: AuthApiService,
+    private val resourcesPlugin: ResourcesPlugin
+) {
 
     suspend fun getAccessToken(
         authorizationCode: String, redirectUri: String
@@ -18,9 +22,8 @@ class AuthRepository(private val apiService: AuthApiService) {
             )
 
             if (!response.isSuccessful || response.body() == null) {
-                return Result.failure(Exception("Erro: ${response.code()} - ${response.message()}"))
+                return Result.failure(Exception(resourcesPlugin.getRequestTokenErrorMessage(response.code().toString(), response.message())))
             }
-
             Result.success(response.body()!!)
         } catch (e: Exception) {
             Result.failure(e)

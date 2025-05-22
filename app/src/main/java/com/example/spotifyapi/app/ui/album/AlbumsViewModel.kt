@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.app.domain.usecase.GetAlbumsUseCase
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +18,13 @@ class AlbumsViewModel(private val getAlbumsUseCase: GetAlbumsUseCase) : ViewMode
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun getAlbums(accessToken: String, artistId: String) {
+    fun getAlbums(artistId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val albums = getAlbumsUseCase.execute(accessToken, artistId)
+                val albums = getAlbumsUseCase.execute(artistId)
                 _albumsLiveData.postValue(albums)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar álbuns")
+                _errorLiveData.postValue(R.string.error_msg_search_albums.toString())
             }
         }
     }

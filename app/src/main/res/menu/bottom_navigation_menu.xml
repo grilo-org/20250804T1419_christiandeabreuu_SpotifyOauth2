@@ -5,7 +5,7 @@
         android:icon="@drawable/ic_artists"
         android:title="@string/artists" />
     <item
-        android:id="@+id/navigation_playlists"
+        android:id="@+id/playlistFragment"
         android:icon="@drawable/ic_playlists"
          android:title="@string/playlists" />
     <item

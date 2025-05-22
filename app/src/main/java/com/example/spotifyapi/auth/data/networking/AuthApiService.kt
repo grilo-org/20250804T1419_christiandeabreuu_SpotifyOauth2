@@ -1,6 +1,6 @@
-package com.example.spotifyapi.authenticate.data.networking
+package com.example.spotifyapi.auth.data.networking
 
-import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.model.SpotifyTokens
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -16,5 +16,4 @@ interface AuthApiService {
         @Field("client_id") clientId: String,
         @Field("client_secret") clientSecret: String
     ): Response<SpotifyTokens>
-
 }

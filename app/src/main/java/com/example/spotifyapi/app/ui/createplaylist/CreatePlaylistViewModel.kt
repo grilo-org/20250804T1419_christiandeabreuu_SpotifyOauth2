@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.domain.usecase.CreatePlaylistUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,13 +19,13 @@ class CreatePlaylistViewModel(
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun createPlaylist(accessToken: String, playlistName: String) {
+    fun createPlaylist(playlistName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = createPlaylistUseCase.execute(accessToken, playlistName)
+                val result = createPlaylistUseCase.execute(playlistName)
                 _createPlaylistLiveData.postValue(Result.success(result))
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao criar playlist")
+                _errorLiveData.postValue(R.string.error_create_playlist.toString())
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.spotifyapi.authenticate.data.repository
+package com.example.spotifyapi.auth.data.repository
 
 import android.content.Context
 import android.content.SharedPreferences

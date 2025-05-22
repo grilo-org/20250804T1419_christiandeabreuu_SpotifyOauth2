@@ -1,24 +1,23 @@
 package com.example.spotifyapi.app.ui.album
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentAlbumsBinding
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AlbumsFragment : Fragment() {
     private lateinit var binding: FragmentAlbumsBinding
     private val viewModel: AlbumsViewModel by viewModel()
     private lateinit var albumAdapter: AlbumAdapter
-    private var accessToken: String = ""
+
     private var artistId: String = ""
     private var artistName: String = ""
     private var imageUrl: String = ""
@@ -33,8 +32,6 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
         artistId = arguments?.getString("ARTIST_ID") ?: ""
         artistName = arguments?.getString("ARTIST") ?: ""
         imageUrl = arguments?.getString("IMAGE_URL") ?: ""
@@ -43,13 +40,13 @@ class AlbumsFragment : Fragment() {
         observeAlbums()
         observeError()
         setupBackButton()
-        viewModel.getAlbums(accessToken, artistId)
+        viewModel.getAlbums(artistId)
     }
 
     private fun observeError() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                toast(it)
             }
         }
     }
@@ -80,7 +77,7 @@ class AlbumsFragment : Fragment() {
         viewModel.albumsLiveData.observe(viewLifecycleOwner) { albums ->
             albums?.let {
                 albumAdapter.submitList(it)
-            } ?: Log.e("AlbumsFragment", "❌ Nenhum álbum recebido!")
+            }
         }
     }
 }

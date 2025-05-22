@@ -17,7 +17,7 @@
         android:theme="@style/SplashTheme">
 
         <activity
-            android:name=".authenticate.ui.login.LoginActivity"
+            android:name=".auth.ui.login.LoginActivity"
             android:exported="true">
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.MAIN" />

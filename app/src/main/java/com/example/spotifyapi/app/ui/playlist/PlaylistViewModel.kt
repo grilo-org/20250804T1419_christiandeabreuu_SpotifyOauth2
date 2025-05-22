@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
@@ -25,24 +26,24 @@ class PlaylistViewModel(
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
 
-    fun getPlaylists(accessToken: String) {
+    fun getPlaylists() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val playlists = playlistsUseCase.getPlaylists(accessToken)
+                val playlists = playlistsUseCase.getPlaylists()
                 _playlistsLiveData.postValue(playlists)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar playlists")
+                _errorLiveData.postValue(R.string.error_message_search_playlists.toString())
             }
         }
     }
 
-    fun getUserProfile(accessToken: String) {
+    fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userProfile = userProfileUseCase.execute(accessToken)
+                val userProfile = userProfileUseCase.execute()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
-                _errorLiveData.postValue("Erro ao buscar perfil do usuário")
+                _errorLiveData.postValue(R.string.error_message_search_profile.toString())
             }
         }
     }

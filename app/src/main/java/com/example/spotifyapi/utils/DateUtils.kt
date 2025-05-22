@@ -8,16 +8,16 @@ object DateUtils {
     fun formatDateFromIsoToBr(dateString: String?): String {
         if (dateString.isNullOrBlank()) return ""
         return try {
-            val inputFormat = when {
-                dateString.length == 10 -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                dateString.length == 7 -> SimpleDateFormat("yyyy-MM", Locale.getDefault())
-                dateString.length == 4 -> SimpleDateFormat("yyyy", Locale.getDefault())
+            val inputFormat = when (dateString.length) {
+                10 -> SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                7 -> SimpleDateFormat("yyyy-MM", Locale.getDefault())
+                4 -> SimpleDateFormat("yyyy", Locale.getDefault())
                 else -> return dateString
             }
-            val outputFormat = when {
-                dateString.length == 10 -> SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateString.length == 7 -> SimpleDateFormat("MM/yyyy", Locale.getDefault())
-                dateString.length == 4 -> SimpleDateFormat("yyyy", Locale.getDefault())
+            val outputFormat = when (dateString.length) {
+                10 -> SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                7 -> SimpleDateFormat("MM/yyyy", Locale.getDefault())
+                4 -> SimpleDateFormat("yyyy", Locale.getDefault())
                 else -> SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             }
             val date = inputFormat.parse(dateString)

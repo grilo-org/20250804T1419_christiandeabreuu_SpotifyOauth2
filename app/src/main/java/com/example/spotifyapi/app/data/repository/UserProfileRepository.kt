@@ -4,13 +4,17 @@ import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 
 class UserProfileRepository(
-    private val apiService: SpotifyApiService, private val spotifyDAO: SpotifyDAO
+    private val apiService: SpotifyApiService,
+    private val spotifyDAO: SpotifyDAO,
+    private val tokenRepository: TokenRepository
 ) {
-    suspend fun getUserProfileFromApi(accessToken: String): UserProfile? {
+    suspend fun getUserProfileFromApi(): UserProfile? {
         return try {
-            apiService.getUserProfile("Bearer $accessToken")
+            val token = tokenRepository.getAccessToken().orEmpty()
+            apiService.getUserProfile("Bearer $token")
         } catch (e: Exception) {
             null
         }

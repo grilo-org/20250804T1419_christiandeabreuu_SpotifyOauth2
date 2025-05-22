@@ -1,4 +1,4 @@
-package com.example.spotifyapi.authenticate.data.model
+package com.example.spotifyapi.auth.data.model
 
 import com.google.gson.annotations.SerializedName
 

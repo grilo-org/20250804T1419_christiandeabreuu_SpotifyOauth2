@@ -1,4 +1,4 @@
-package com.example.spotifyapi.authenticate.ui.login
+package com.example.spotifyapi.auth.ui.login
 
 import android.content.Intent
 import android.net.Uri
@@ -8,15 +8,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyapi.BuildConfig
-import com.example.spotifyapi.authenticate.data.model.SpotifyTokens
-import com.example.spotifyapi.authenticate.domain.usecase.AuthUseCase
-import com.example.spotifyapi.authenticate.domain.usecase.ExtractTokensUseCase
+import com.example.spotifyapi.auth.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
+import com.example.spotifyapi.auth.domain.usecase.AuthUseCase
+import com.example.spotifyapi.auth.domain.usecase.ExtractTokensUseCase
+import com.example.spotifyapi.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authUseCase: AuthUseCase, private val extractTokensUseCase: ExtractTokensUseCase
-
+    private val authUseCase: AuthUseCase,
+    private val extractTokensUseCase: ExtractTokensUseCase,
+    private val resourcesPlugin: ResourcesPlugin
 ) : ViewModel() {
 
     private val _connectionStatus = MutableLiveData<Boolean>()
@@ -27,7 +30,6 @@ class LoginViewModel(
 
     private val _authResult = MutableLiveData<Result<SpotifyTokens>>()
     val authResult: LiveData<Result<SpotifyTokens>> get() = _authResult
-
 
     private val _authError = MutableLiveData<String>()
     val authError: LiveData<String> get() = _authError
@@ -49,8 +51,8 @@ class LoginViewModel(
 
     fun handleRedirect(uri: Uri, redirectUri: String): LiveData<Result<SpotifyTokens>> =
         liveData(Dispatchers.IO) {
-            val authorizationCode = uri.getQueryParameter("code") ?: run {
-                _authError.postValue("Código de autorização não encontrado")
+            val authorizationCode = uri.getQueryParameter(Constants.CODE) ?: run {
+                _authError.postValue(resourcesPlugin.handleDirectCodeNotFound())
                 return@liveData
             }
 

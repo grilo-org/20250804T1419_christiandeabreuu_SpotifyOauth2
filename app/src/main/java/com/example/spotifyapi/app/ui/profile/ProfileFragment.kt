@@ -1,18 +1,16 @@
 package com.example.spotifyapi.app.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.spotifyapi.R
 import com.example.spotifyapi.databinding.FragmentProfileBinding
+import com.example.spotifyapi.utils.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -28,23 +26,22 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val accessToken = arguments?.getString("ACCESS_TOKEN") ?: ""
-
-        if (accessToken.isNotEmpty()) {
-            viewModel.getUserProfile(accessToken)
-        } else {
-            Log.e("ProfileFragment", "❌ Token não recebido!")
-        }
-
         observeUserProfile()
         observeError()
-        viewModel.getUserProfile(accessToken)
+        viewModel.getUserProfile()
+        setupCloseButton()
+    }
+
+    private fun setupCloseButton() {
+        binding.buttonClose.setOnClickListener {
+            requireActivity().finishAffinity()
+        }
     }
 
     private fun observeError() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                toast(it)
             }
         }
     }
@@ -52,13 +49,9 @@ class ProfileFragment : Fragment() {
     private fun observeUserProfile() {
         viewModel.userProfileLiveData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
-                Log.d(
-                    "ProfileFragment",
-                    "✅ Nome: ${it.displayName}, Imagem: ${it.images.firstOrNull()?.url}"
-                )
                 imageProfile(it.images.firstOrNull()?.url)
                 binding.profileTextView.text = it.displayName
-            } ?: Log.e("ProfileFragment", "❌ Perfil do usuário não carregado!")
+            }
         }
     }
 

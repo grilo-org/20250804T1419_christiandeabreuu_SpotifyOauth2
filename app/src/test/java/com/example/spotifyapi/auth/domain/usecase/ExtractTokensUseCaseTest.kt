@@ -1,4 +1,4 @@
-package com.example.spotifyapi.authenticate.domain.usecase
+package com.example.spotifyapi.auth.domain.usecase
 
 import android.net.Uri
 import io.mockk.every
