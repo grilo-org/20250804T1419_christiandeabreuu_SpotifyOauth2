@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -30,13 +31,14 @@ class ProfileViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: ProfileViewModel
     private val getUserProfileUseCase: GetUserProfileUseCase = mockk()
+    private val resourcesPlugin: ResourcesPlugin = mockk()
     private val userProfileObserver: Observer<UserProfile?> = mockk(relaxed = true)
     private val errorObserver: Observer<String> = mockk(relaxed = true)
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = ProfileViewModel(getUserProfileUseCase)
+        viewModel = ProfileViewModel(getUserProfileUseCase, resourcesPlugin)
         viewModel.userProfileLiveData.observeForever(userProfileObserver)
         viewModel.errorLiveData.observeForever(errorObserver)
     }
@@ -52,28 +54,28 @@ class ProfileViewModelTest {
         val mockkListImages: List<Image> =
             listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
         val fakeUserProfile = UserProfile("1", "User Name", mockkListImages)
-        coEvery { getUserProfileUseCase.execute(any()) } returns fakeUserProfile
+        coEvery { getUserProfileUseCase.getUserProfile() } returns fakeUserProfile
 
         //When
-        viewModel.getUserProfile("token123")
+        viewModel.getUserProfile()
         advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
 
         //Then - Teste de busca bem-sucedida do perfil do usuário
         verify { userProfileObserver.onChanged(fakeUserProfile) }
-        coVerify(exactly = 1) { getUserProfileUseCase.execute("token123") }
+        coVerify(exactly = 1) { getUserProfileUseCase.getUserProfile() }
     }
 
     @Test
     fun `getUserProfile should update errorLiveData when use case throws exception`() = runTest {
         //Given
-        coEvery { getUserProfileUseCase.execute(any()) } throws Exception("Erro ao buscar perfil do usuário")
+        coEvery { getUserProfileUseCase.getUserProfile() } throws Exception("Erro ao buscar perfil do usuário")
 
         //When
-        viewModel.getUserProfile("token123")
+        viewModel.getUserProfile()
         advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
 
         //Then
         verify { errorObserver.onChanged("Erro ao buscar perfil do usuário") }
-        coVerify(exactly = 1) { getUserProfileUseCase.execute("token123") }
+        coVerify(exactly = 1) { getUserProfileUseCase.getUserProfile() }
     }
 }

@@ -7,11 +7,11 @@ import com.example.spotifyapi.app.data.model.UserProfile
 
 class GetUserProfileUseCase(private val repository: UserProfileRepository) {
 
-    suspend fun execute(): UserProfile? {
-        return fetchUserProfile() ?: getLocalUserProfile()
+    suspend fun getUserProfile(): UserProfile? {
+        return getUserProfileFromApiAndCache() ?: getLocalUserProfile()
     }
 
-    private suspend fun fetchUserProfile(): UserProfile? {
+    private suspend fun getUserProfileFromApiAndCache(): UserProfile? {
         val responseApi = repository.getUserProfileFromApi() ?: return null
         repository.insertLocalUserProfile(responseApi.toUserProfileDB())
         return responseApi

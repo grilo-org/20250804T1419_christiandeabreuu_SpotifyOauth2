@@ -17,7 +17,7 @@ class ArtistPagingSource(
         return try {
             val nextPageNumber = params.key ?: 0
             val response: List<ArtistResponse> = try {
-                useCaseTopArtists.getFromApi(nextPageNumber).items
+                useCaseTopArtists.fetchAndSaveTopArtists(nextPageNumber).items
             } catch (apiException: Exception) {
                 emptyList()
             }

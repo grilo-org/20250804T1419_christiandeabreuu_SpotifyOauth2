@@ -9,15 +9,15 @@ class GetTopArtistsUseCase(
     private val repository: TopArtistsRepository
 ) {
 
-    suspend fun getFromApi(
+    suspend fun fetchAndSaveTopArtists(
         offset: Int = 0, timeRange: String = MEDIUM_TERM
     ): TopArtistsResponse {
         val responseApi = repository.getTopArtistsApi(offset, timeRange)
-        saveToDatabase(responseApi, timeRange)
+        saveTopArtistsToDatabase(responseApi, timeRange)
         return responseApi
     }
 
-    private suspend fun saveToDatabase(response: TopArtistsResponse, timeRange: String) {
+    private suspend fun saveTopArtistsToDatabase(response: TopArtistsResponse, timeRange: String) {
         val topArtistsDB = TopArtistsMapper.toTopArtistsDB(response, timeRange)
         val topArtistsId = repository.insertTopArtistsDB(topArtistsDB).toInt()
 

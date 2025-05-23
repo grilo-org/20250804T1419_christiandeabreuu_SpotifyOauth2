@@ -21,7 +21,7 @@ class AlbumsViewModel(private val getAlbumsUseCase: GetAlbumsUseCase) : ViewMode
     fun getAlbums(artistId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val albums = getAlbumsUseCase.execute(artistId)
+                val albums = getAlbumsUseCase.loadAlbums(artistId)
                 _albumsLiveData.postValue(albums)
             } catch (e: Exception) {
                 _errorLiveData.postValue(R.string.error_msg_search_albums.toString())

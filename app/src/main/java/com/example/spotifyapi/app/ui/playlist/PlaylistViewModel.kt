@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
@@ -42,7 +41,7 @@ class PlaylistViewModel(
     fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userProfile = userProfileUseCase.execute()
+                val userProfile = userProfileUseCase.getUserProfile()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
                 _errorLiveData.postValue(resourcesPlugin.searchProfileErrorMessage())
