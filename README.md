@@ -50,7 +50,7 @@ Este é um aplicativo Android que utiliza a API do Spotify para oferecer funcion
 - [x] Responsividade (celular e tablet)
 
 ## Passo a passo para executar a aplicação
-1. Clone este repositório em sua máquina local.
+1. Clone este repositório em sua máquina local. rodar na branch Master
 2. Crie uma conta no [Spotify Developer Console](https://developer.spotify.com/dashboard/) para obter suas credenciais (Client ID e Client Secret).
 3. Configure as credenciais no app.
 4. Adicione o seu `client_id` e `client_secret` no arquivo `local.properties` ou utilize variáveis de ambiente apropriadas.
