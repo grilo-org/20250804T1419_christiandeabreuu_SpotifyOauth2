@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.domain.mapper
 
-
 import com.example.spotifyapi.app.data.local.AlbumDB
 import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.app.data.local.ImageArtist
@@ -23,7 +22,7 @@ object AlbumMapper {
             name = this.name,
             artistId = this.artistId,
             releaseDate = this.releaseDate,
-            images = listOf(ImageArtist(url = this.imageUrl ?: "", artistId = 0)),
+            images = listOf(ImageArtist(url = this.imageUrl.orEmpty(), artistId = 0)),
         )
     }
 }

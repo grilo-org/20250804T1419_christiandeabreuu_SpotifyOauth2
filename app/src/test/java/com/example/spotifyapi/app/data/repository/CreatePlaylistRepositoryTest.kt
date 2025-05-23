@@ -1,6 +1,7 @@
 package com.example.spotifyapi.app.data.repository
 
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,11 +20,12 @@ class CreatePlaylistRepositoryTest {
     @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
     private lateinit var repository: CreatePlaylistRepository
+    private lateinit var token: TokenRepository
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = CreatePlaylistRepository(apiService)
+        repository = CreatePlaylistRepository(apiService, token)
     }
 
     @Test
@@ -35,7 +37,7 @@ class CreatePlaylistRepositoryTest {
         coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
 
         // When
-        val result = repository.createPlaylist("token123", "Minha Playlist")
+        val result = repository.createPlaylist("Minha Playlist")
 
         // Then - Verificando se o resultado é verdadeiro
         assertTrue(result)
@@ -51,7 +53,7 @@ class CreatePlaylistRepositoryTest {
         coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
 
         // When
-        val result = repository.createPlaylist("token123", "Minha Playlist")
+        val result = repository.createPlaylist("token123")
 
         // Then - Verificando se o resultado é falso
         assertFalse(result)

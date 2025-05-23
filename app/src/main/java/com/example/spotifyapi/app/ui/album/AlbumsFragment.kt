@@ -18,9 +18,9 @@ class AlbumsFragment : Fragment() {
     private val viewModel: AlbumsViewModel by viewModel()
     private lateinit var albumAdapter: AlbumAdapter
 
-    private var artistId: String = ""
-    private var artistName: String = ""
-    private var imageUrl: String = ""
+    private var artistId: String = String()
+    private var artistName: String = String()
+    private var imageUrl: String = String()
 
 
     override fun onCreateView(
@@ -32,9 +32,9 @@ class AlbumsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        artistId = arguments?.getString("ARTIST_ID") ?: ""
-        artistName = arguments?.getString("ARTIST") ?: ""
-        imageUrl = arguments?.getString("IMAGE_URL") ?: ""
+        artistId = arguments?.getString(ARTIST_ID).orEmpty()
+        artistName = arguments?.getString(ARTIST).orEmpty()
+        imageUrl = arguments?.getString(IMAGE_URL).orEmpty()
 
         setupViews()
         observeAlbums()
@@ -79,5 +79,11 @@ class AlbumsFragment : Fragment() {
                 albumAdapter.submitList(it)
             }
         }
+    }
+
+    private companion object {
+        const val ARTIST_ID = "ARTIST_ID"
+        const val ARTIST = "ARTIST"
+        const val IMAGE_URL = "IMAGE_URL"
     }
 }

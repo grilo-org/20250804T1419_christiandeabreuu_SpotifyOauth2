@@ -14,5 +14,3 @@ data class Album(
     @SerializedName("images") val images: List<ImageArtist>,
     @SerializedName("artistId") val artistId: String
 )
-
-

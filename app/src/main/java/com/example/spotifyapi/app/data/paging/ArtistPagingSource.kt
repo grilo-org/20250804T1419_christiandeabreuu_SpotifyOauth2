@@ -7,6 +7,7 @@ import com.example.spotifyapi.app.data.local.TopArtistsWithArtistsAndImages
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.ImageArtistResponse
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
+import com.example.spotifyapi.utils.Constants.MEDIUM_TERM
 
 class ArtistPagingSource(
     private val useCaseTopArtists: GetTopArtistsUseCase,
@@ -16,7 +17,7 @@ class ArtistPagingSource(
         return try {
             val nextPageNumber = params.key ?: 0
             val response: List<ArtistResponse> = try {
-                useCaseTopArtists.getFromApi(nextPageNumber).items
+                useCaseTopArtists.fetchAndSaveTopArtists(nextPageNumber).items
             } catch (apiException: Exception) {
                 emptyList()
             }
@@ -52,7 +53,7 @@ class ArtistPagingSource(
     }
 
     private suspend fun getFromDBWithOffsetAndLimit(
-        limit: Int, offset: Int, timeRange: String = "medium_term"
+        limit: Int, offset: Int, timeRange: String = MEDIUM_TERM
     ): TopArtistsWithArtistsAndImages {
         val dbResponse = spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
         return dbResponse

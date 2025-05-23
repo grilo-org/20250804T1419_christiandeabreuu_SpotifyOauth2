@@ -44,6 +44,7 @@
 
     //toast
     <string name="playlist_created_success">Playlist criada com sucesso!</string>
+    <string name="playlist_created_success_with_name">Playlist %s criada com sucesso!</string>
     <string name="error_create_playlist">Erro ao criar playlist</string>
     <string name="error_internet">Modo offline: Não é possível criar playlists</string>
     <string name="auth_error">Falha na autenticação</string>

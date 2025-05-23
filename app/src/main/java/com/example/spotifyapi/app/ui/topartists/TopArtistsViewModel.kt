@@ -42,7 +42,7 @@ class TopArtistsViewModel(
     fun getUserProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val userProfile = userProfileUseCase.execute()
+                val userProfile = userProfileUseCase.getUserProfile()
                 _userProfileLiveData.postValue(userProfile)
             } catch (e: Exception) {
                 _errorLiveData.postValue(R.string.error_message_search_profile.toString())

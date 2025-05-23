@@ -8,21 +8,21 @@ import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbumDB
 
 class GetAlbumsUseCase(private val repository: AlbumsRepository) {
 
-    suspend fun execute(artistId: String): List<Album> {
-        val albumsDB = getAlbumsFromDB(artistId)
+    suspend fun loadAlbums(artistId: String): List<Album> {
+        val albumsDB = getAlbumsFromLocal(artistId)
 
         return if (albumsDB.isEmpty()) {
-            fetchAndStoreAlbums(artistId)
+            fetchAndCacheAlbums(artistId)
         } else {
             albumsDB.map { it.toAlbum() }
         }
     }
 
-    private suspend fun getAlbumsFromDB(artistId: String): List<AlbumDB> {
+    private suspend fun getAlbumsFromLocal(artistId: String): List<AlbumDB> {
         return repository.getAlbumsFromDB(artistId)
     }
 
-    private suspend fun fetchAndStoreAlbums(artistId: String): List<Album> {
+    private suspend fun fetchAndCacheAlbums(artistId: String): List<Album> {
         val albumsFromApi = fetchAlbumsFromApi(artistId)
         repository.insertLocalAlbums(albumsFromApi)
 

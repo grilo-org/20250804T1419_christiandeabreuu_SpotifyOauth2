@@ -12,7 +12,7 @@ data class Playlist(
     @SerializedName ("description") val description: String?,
     @SerializedName("owner") val owner: Owner,
     @SerializedName("trackCount") val tracksCount: Int,
-    @SerializedName("images") val images: List<Image>
+    @SerializedName("images") val images: List<Image>?
 )
 
 data class Owner(

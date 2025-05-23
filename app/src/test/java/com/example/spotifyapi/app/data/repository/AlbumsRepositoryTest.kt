@@ -4,6 +4,7 @@ import com.example.spotifyapi.app.data.local.AlbumDB
 import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,11 +20,12 @@ class AlbumsRepositoryTest {
     private var apiService: SpotifyApiService = mockk(relaxed = true)
     private var spotifyDAO: SpotifyDAO = mockk(relaxed = true)
     private var repository: AlbumsRepository = mockk(relaxed = true)
+    private var tokenRepository: TokenRepository = mockk(relaxed = true)
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = AlbumsRepository(apiService, spotifyDAO)
+        repository = AlbumsRepository(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test
@@ -50,7 +52,7 @@ class AlbumsRepositoryTest {
         coEvery { apiService.getAlbums(any(), "123") } returns fakeResponse
 
         // When
-        val result = repository.getAlbumsFromApi("token", "123")
+        val result = repository.getAlbumsFromApi("token")
 
         // Then - Verificando se os resultados estão corretos
         assertNotNull(result)

@@ -17,6 +17,11 @@
         android:theme="@style/SplashTheme">
 
         <activity
+            android:name="androidx.fragment.app.testing.EmptyFragmentActivity"
+            android:exported="true"
+            tools:node="merge"/>
+
+        <activity
             android:name=".auth.ui.login.LoginActivity"
             android:exported="true">
             <intent-filter tools:ignore="AppLinkUrlError">

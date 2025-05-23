@@ -83,9 +83,9 @@ class TopArtistsFragment : Fragment() {
 
     private fun navigateToAlbumsFragment(artist: ArtistResponse) {
         val bundle = Bundle().apply {
-            putString("ARTIST_ID", artist.id)
-            putString("ARTIST", artist.name)
-            putString("IMAGE_URL", artist.images.firstOrNull()?.url)
+            putString(ARTIST_ID, artist.id)
+            putString(ARTIST, artist.name)
+            putString(IMAGE_URL, artist.images.firstOrNull()?.url)
         }
 
         findNavController().navigate(R.id.albumsFragment, bundle)
@@ -99,5 +99,11 @@ class TopArtistsFragment : Fragment() {
                 error(R.drawable.ic_spotify_full_black)
             }
         }
+    }
+
+    private companion object {
+        const val ARTIST_ID = "ARTIST_ID"
+        const val ARTIST = "ARTIST"
+        const val IMAGE_URL = "IMAGE_URL"
     }
 }

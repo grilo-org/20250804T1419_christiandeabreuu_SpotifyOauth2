@@ -52,7 +52,7 @@ class LoginViewModel(
     fun handleRedirect(uri: Uri, redirectUri: String): LiveData<Result<SpotifyTokens>> =
         liveData(Dispatchers.IO) {
             val authorizationCode = uri.getQueryParameter(Constants.CODE) ?: run {
-                _authError.postValue(resourcesPlugin.handleDirectCodeNotFound())
+                _authError.postValue(resourcesPlugin.handleDirectCodeNotFoundMessage())
                 return@liveData
             }
 
