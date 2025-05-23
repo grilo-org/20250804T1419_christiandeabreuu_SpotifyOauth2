@@ -19,7 +19,7 @@ class TopArtistsRepositoryImpl(
     ): TopArtistsResponse {
         val token = tokenRepository.getAccessToken().orEmpty()
         return apiService.getTopArtists(
-            accessToken = token.addBearer(), limit = 20, timeRange = timeRange, offset = offset
+            accessToken = token.addBearer(), limit = 50, timeRange = timeRange, offset = offset
         )
     }
 
