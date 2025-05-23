@@ -12,7 +12,7 @@ object TopArtistsMapper {
             total = response.total,
             limit = response.limit,
             offset = response.offset,
-            href = response.href ?: "",
+            href = response.href.orEmpty(),
             next = response.next,
             previous = response.previous,
             timeRange = timeRange

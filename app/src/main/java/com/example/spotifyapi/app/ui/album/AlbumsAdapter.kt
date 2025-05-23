@@ -10,7 +10,6 @@ import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.databinding.ItemAlbumsBinding
 import com.example.spotifyapi.utils.DateUtils
 
-
 class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {

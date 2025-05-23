@@ -1,6 +1,5 @@
 package com.example.spotifyapi.app.data.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class TopArtistsResponse(

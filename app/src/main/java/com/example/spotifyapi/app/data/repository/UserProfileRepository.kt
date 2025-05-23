@@ -5,6 +5,7 @@ import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.auth.data.repository.TokenRepository
+import com.example.spotifyapi.utils.addBearer
 
 class UserProfileRepository(
     private val apiService: SpotifyApiService,
@@ -14,7 +15,7 @@ class UserProfileRepository(
     suspend fun getUserProfileFromApi(): UserProfile? {
         return try {
             val token = tokenRepository.getAccessToken().orEmpty()
-            apiService.getUserProfile("Bearer $token")
+            apiService.getUserProfile(token.addBearer())
         } catch (e: Exception) {
             null
         }

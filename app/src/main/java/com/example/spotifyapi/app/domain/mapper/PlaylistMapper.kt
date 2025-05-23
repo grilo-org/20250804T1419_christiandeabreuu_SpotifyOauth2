@@ -14,7 +14,7 @@ object PlaylistMapper {
             description = this.description,
             ownerName = this.owner.name,
             tracksCount = this.tracksCount,
-            imageUrl = this.images?.firstOrNull()?.url ?: ""
+            imageUrl = this.images?.firstOrNull()?.url.orEmpty()
         )
     }
 

@@ -7,6 +7,8 @@ import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.auth.data.repository.TokenRepository
+import com.example.spotifyapi.utils.Constants.BEARER
+import com.example.spotifyapi.utils.addBearer
 
 class TopArtistsRepository(
     private val apiService: SpotifyApiService,
@@ -18,7 +20,7 @@ class TopArtistsRepository(
     ): TopArtistsResponse {
         val token = tokenRepository.getAccessToken().orEmpty()
         return apiService.getTopArtists(
-            accessToken = "Bearer $token", limit = 20, timeRange = timeRange, offset = offset
+            accessToken = token.addBearer(), limit = 20, timeRange = timeRange, offset = offset
         )
     }
 

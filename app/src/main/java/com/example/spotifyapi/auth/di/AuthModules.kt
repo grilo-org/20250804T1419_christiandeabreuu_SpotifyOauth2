@@ -4,6 +4,7 @@ import com.example.spotifyapi.auth.data.networking.AuthApiService
 import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import com.example.spotifyapi.auth.data.plugin.ResourcesPluginImpl
 import com.example.spotifyapi.auth.data.repository.AuthRepository
+import com.example.spotifyapi.auth.data.repository.AuthRepositoryImpl
 import com.example.spotifyapi.auth.data.repository.TokenRepository
 import com.example.spotifyapi.auth.domain.usecase.AuthUseCase
 import com.example.spotifyapi.auth.domain.usecase.ExtractTokensUseCase
@@ -14,7 +15,7 @@ import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
 
 val authModules = module {
-    factory { AuthRepository(apiService = get(), resourcesPlugin = get()) }
+    factory<AuthRepository> { AuthRepositoryImpl(apiService = get(), resourcesPlugin = get()) }
     factory { TokenRepository(context = get()) }
 
     viewModel { LoginViewModel(get(), get(), get()) }
@@ -22,7 +23,6 @@ val authModules = module {
     factory { GetAccessTokenUseCase(get()) }
     factory { AuthUseCase(get(), get(), get()) }
     factory { ExtractTokensUseCase() }
-    factory<ResourcesPlugin> { ResourcesPluginImpl(get()) }
 }
 
 val networkAuthModule = module {

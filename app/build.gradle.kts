@@ -74,7 +74,6 @@ dependencies {
 
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
-    androidTestImplementation(libs.roboelectric)
     androidTestImplementation(libs.androidx.runner)
     androidTestImplementation(libs.androidx.rules)
     androidTestImplementation(libs.androidx.junit)

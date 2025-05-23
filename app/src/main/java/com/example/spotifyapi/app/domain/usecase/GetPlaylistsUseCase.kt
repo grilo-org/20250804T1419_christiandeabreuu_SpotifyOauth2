@@ -26,9 +26,7 @@ class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
 
     private suspend fun savePlaylistsToDB(playlists: List<Playlist>) {
         val existingPlaylists = repository.getPlaylistsFromDB().map { it.id }.toSet()
-
         val filteredPlaylists = playlists.filter { it.id !in existingPlaylists }
-
         repository.insertPlaylistsIntoDB(filteredPlaylists.map { it.toPlaylistDB() })
     }
 

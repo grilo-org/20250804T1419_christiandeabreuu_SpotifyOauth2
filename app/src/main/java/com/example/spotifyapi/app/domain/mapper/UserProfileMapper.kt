@@ -10,7 +10,7 @@ object UserProfileMapper {
         return UserProfileDB(
             id = this.id,
             name = this.displayName,
-            imageUrl = this.images.firstOrNull()?.url ?: ""
+            imageUrl = this.images.firstOrNull()?.url.orEmpty()
         )
     }
 
@@ -18,7 +18,7 @@ object UserProfileMapper {
         return UserProfile(
             id = this.id,
             displayName = this.name,
-            images = listOf(Image(url = this.imageUrl ?: ""))
+            images = listOf(Image(url = this.imageUrl.orEmpty()))
         )
     }
 }

@@ -5,6 +5,7 @@ import com.example.spotifyapi.app.data.local.PlaylistDB
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.auth.data.repository.TokenRepository
+import com.example.spotifyapi.utils.addBearer
 
 class PlaylistRepository(
     private val apiService: SpotifyApiService,
@@ -15,7 +16,7 @@ class PlaylistRepository(
     suspend fun getPlaylistsFromApi(): List<Playlist> {
         return try {
             val token = tokenRepository.getAccessToken()
-            val response = apiService.getPlaylists("Bearer $token")
+            val response = apiService.getPlaylists(token.addBearer())
             response.items
         } catch (e: Exception) {
             emptyList()
