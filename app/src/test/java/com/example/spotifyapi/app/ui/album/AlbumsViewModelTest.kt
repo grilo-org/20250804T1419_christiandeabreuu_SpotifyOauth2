@@ -19,7 +19,6 @@ class AlbumsViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var viewModel: AlbumsViewModel
     private val getAlbumsUseCase: GetAlbumsUseCase = mockk()
-
     private val albumsObserver: Observer<List<Album>> = mockk(relaxed = true)
     private val errorObserver: Observer<String> = mockk(relaxed = true)
 
@@ -43,28 +42,28 @@ class AlbumsViewModelTest {
             Album("1", "Album 1", "release_date", emptyList(), "artist123"),
             Album("2", "Album 2", "release_date", emptyList(), "artist123")
         )
-        coEvery { getAlbumsUseCase.execute(any(), any()) } returns fakeAlbums
+        coEvery { getAlbumsUseCase.loadAlbums(any()) } returns fakeAlbums
 
         //When
-        viewModel.getAlbums("token123", "artist123")
+        viewModel.getAlbums("artist123")
         advanceUntilIdle() // 🔹 Aguarda execução das corrotinas
 
         //Then - Testando busca bem-sucedida de álbuns
         verify { albumsObserver.onChanged(fakeAlbums) }
-        coVerify(exactly = 1) { getAlbumsUseCase.execute("token123", "artist123") }
+        coVerify(exactly = 1) { getAlbumsUseCase.loadAlbums( "artist123") }
     }
 
     @Test
     fun `getAlbums should update errorLiveData when use case throws exception`() = runTest {
         //Given
-        coEvery { getAlbumsUseCase.execute(any(), any()) } throws Exception("Erro ao buscar álbuns")
+        coEvery { getAlbumsUseCase.loadAlbums(any()) } throws Exception("Erro ao buscar álbuns")
 
         //When
-        viewModel.getAlbums("token123", "artist123")
+        viewModel.getAlbums( "artist123")
         advanceUntilIdle()
 
         //Then -  Testando erro na busca de álbuns
         verify { errorObserver.onChanged("Erro ao buscar álbuns") }
-        coVerify(exactly = 1) { getAlbumsUseCase.execute("token123", "artist123") }
+        coVerify(exactly = 1) { getAlbumsUseCase.loadAlbums( "artist123") }
     }
 }
