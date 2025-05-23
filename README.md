@@ -20,6 +20,7 @@ Este é um aplicativo Android que utiliza a API do Spotify para oferecer funcion
 - **ViewModel e LiveData**: Para gerenciamento de ciclo de vida e reatividade das telas.
 - **Android Jetpack**: Incluindo Paging para suporte a grandes listas de dados.
 - **Retrofit**: Para requisições HTTP de forma segura e tipada.
+- **Koin**: Framework de injeção de dependências para Kotlin/Android.
 - **Coroutines**: Para gerenciamento de chamadas assíncronas e concorrência.
 - **SharedPreferences**: Persistência simples dos tokens de autenticação para manter sessão do usuário.
 - **Room**: funcionamento offline do app e persistência de dados localmente.
