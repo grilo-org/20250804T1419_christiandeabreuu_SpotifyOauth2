@@ -53,4 +53,12 @@ interface SpotifyDAO {
 
     @Query("SELECT * FROM playlist")
     suspend fun getLocalPlaylists(): List<PlaylistDB>
+
+    @Query("SELECT databaseId, id FROM artist WHERE id IN (:spotifyIds) AND topArtistsId = :topArtistsId")
+    suspend fun getArtistDatabaseIdsBySpotifyIds(spotifyIds: List<String>, topArtistsId: Int): List<ArtistIdMap>
+
+    data class ArtistIdMap(
+        val databaseId: Int,
+        val id: String
+    )
 }

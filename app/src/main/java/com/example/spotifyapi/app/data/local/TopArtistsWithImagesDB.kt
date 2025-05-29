@@ -22,6 +22,3 @@ data class ArtistWithImages(
     val images: List<ImageArtist>
 )
 
-
-
-

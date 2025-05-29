@@ -33,7 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModules = module {
 
-    viewModel { TopArtistsViewModel(get(), get()) }
+    viewModel { TopArtistsViewModel(get(), get(), get()) }
     viewModel { AlbumsViewModel(get()) }
     viewModel { ProfileViewModel(get(), get()) }
     viewModel { PlaylistViewModel(get(), get(), get()) }

@@ -37,26 +37,19 @@ class TopArtistsFragment : Fragment() {
         artistsAdapter = TopArtistsAdapter { artist ->
             navigateToAlbumsFragment(artist)
         }
+        setupRecyclerView()
         observeUserProfile()
-        observeArtists()
         observeError()
         observePagingData()
-        setupRecyclerView()
         viewModel.getUserProfile()
+        viewModel.preloadOfflineArtists()
     }
 
     private fun observePagingData() {
-
         lifecycleScope.launch {
             viewModel.getArtistsPagingData().collectLatest { pagingData ->
                 artistsAdapter.submitData(pagingData)
             }
-        }
-    }
-
-    private fun observeArtists() {
-        viewModel.artistsLiveData.observe(viewLifecycleOwner) { artists ->
-            artists?.let {}
         }
     }
 
@@ -87,7 +80,6 @@ class TopArtistsFragment : Fragment() {
             putString(ARTIST, artist.name)
             putString(IMAGE_URL, artist.images.firstOrNull()?.url)
         }
-
         findNavController().navigate(R.id.albumsFragment, bundle)
     }
 
