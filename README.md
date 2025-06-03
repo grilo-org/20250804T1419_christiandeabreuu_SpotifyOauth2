@@ -51,12 +51,21 @@ Este é um aplicativo Android que utiliza a API do Spotify para oferecer funcion
 - [x] Responsividade (celular e tablet)
 
 ## Passo a passo para executar a aplicação
-1. Clone este repositório em sua máquina local. rodar na branch Master
-2. Crie uma conta no [Spotify Developer Console](https://developer.spotify.com/dashboard/) para obter suas credenciais (Client ID e Client Secret).
-3. Configure as credenciais no app.
-4. Adicione o seu `client_id` e `client_secret` no arquivo `local.properties` ou utilize variáveis de ambiente apropriadas.
-    No arquivo `BuildConfig`, garanta que as chaves SPOTIFY_CLIENT_ID e SPOTIFY_CLIENT_SECRET estejam corretas.
-5. Compile o projeto e execute no emulador ou em um dispositivo físico Android.
+
+1. **Clone este repositório** e vá para a branch `master`.
+2. **Cadastre um app no [Spotify Developer Console](https://developer.spotify.com/dashboard/)**, obtenha seu `Client ID`, `Client Secret` e registre o `redirect_uri` (exemplo: `meuapp://callback`).
+3. **Adicione suas credenciais** no arquivo `local.properties`:
+   ```
+   SPOTIFY_CLIENT_ID=SEU_CLIENT_ID
+   SPOTIFY_CLIENT_SECRET=SEU_CLIENT_SECRET
+   ```
+4. **Defina a URL de autenticação** com seus dados:
+   ```
+   SPOTIFY_AUTH_URL="https://accounts.spotify.com/authorize?client_id=SEU_CLIENT_ID&response_type=code&redirect_uri=SEU_REDIRECT_URI&scope=user-read-private%20user-read-email%20playlist-modify-public%20playlist-modify-private%20user-top-read"
+   ```
+5. **Compile e execute o app** no Android Studio.
+
+> ⚠️ O `redirect_uri` deve ser igual ao cadastrado no painel do Spotify.
 
 
 
