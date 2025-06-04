@@ -54,6 +54,7 @@ class AuthUseCaseTest {
             }
         }
 
+
     @Test
     fun `authenticate should return failure when token retrieval fails`() = runBlocking {
         //Given
