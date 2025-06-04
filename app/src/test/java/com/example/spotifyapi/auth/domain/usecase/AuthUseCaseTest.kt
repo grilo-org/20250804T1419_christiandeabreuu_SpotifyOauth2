@@ -1,6 +1,7 @@
 package com.example.spotifyapi.auth.domain.usecase
 
 import com.example.spotifyapi.auth.data.model.SpotifyTokens
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -18,10 +19,11 @@ class AuthUseCaseTest {
     private lateinit var authUseCase: AuthUseCase
     private val getAccessTokenUseCase: GetAccessTokenUseCase = mockk()
     private val tokenRepository: TokenRepository = mockk()
+    private val resourcesPlugin: ResourcesPlugin = mockk()
 
     @Before
     fun setup() {
-        authUseCase = AuthUseCase(getAccessTokenUseCase, tokenRepository)
+        authUseCase = AuthUseCase(getAccessTokenUseCase, tokenRepository, resourcesPlugin)
     }
 
     @Test

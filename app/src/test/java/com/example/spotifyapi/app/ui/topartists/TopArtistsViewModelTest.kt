@@ -33,7 +33,7 @@ class TopArtistsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = TopArtistsViewModel(getUserProfileUseCase, artistPagingSource)
+        viewModel = TopArtistsViewModel(getUserProfileUseCase, artistPagingSource, getTopArtistsUseCase)
         viewModel.userProfileLiveData.observeForever(userProfileObserver)
         viewModel.errorLiveData.observeForever(errorObserver)
     }
