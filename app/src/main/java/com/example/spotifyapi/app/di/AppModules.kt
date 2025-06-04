@@ -27,6 +27,8 @@ import com.example.spotifyapi.app.ui.topartists.TopArtistsAdapter
 import com.example.spotifyapi.app.ui.topartists.TopArtistsViewModel
 import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import com.example.spotifyapi.auth.data.plugin.ResourcesPluginImpl
+import com.example.spotifyapi.utils.Constants.BASE_URL_SPOTIFY_APP
+import com.example.spotifyapi.utils.Constants.SPOTIFY_DATABASE
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
@@ -58,7 +60,7 @@ val appModules = module {
 
 val networkAppModule = module {
     single {
-        retrofit2.Retrofit.Builder().baseUrl("https://api.spotify.com/v1/")
+        retrofit2.Retrofit.Builder().baseUrl(BASE_URL_SPOTIFY_APP)
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(SpotifyApiService::class.java)
     }
@@ -68,7 +70,7 @@ val databaseModule = module {
 
     single {
         Room.databaseBuilder(
-            get(), SpotifyDatabase::class.java, "github_database"
+            get(), SpotifyDatabase::class.java, SPOTIFY_DATABASE
         ).fallbackToDestructiveMigration().build()
     }
 

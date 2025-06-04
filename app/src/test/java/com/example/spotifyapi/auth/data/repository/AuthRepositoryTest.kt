@@ -1,6 +1,8 @@
 import com.example.spotifyapi.auth.data.model.SpotifyTokens
 import com.example.spotifyapi.auth.data.networking.AuthApiService
+import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
 import com.example.spotifyapi.auth.data.repository.AuthRepository
+import com.example.spotifyapi.auth.data.repository.AuthRepositoryImpl
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -16,10 +18,11 @@ class AuthRepositoryTest {
 
     private lateinit var authRepository: AuthRepository
     private val apiService: AuthApiService = mockk()
+    private val resourcesPlugin : ResourcesPlugin = mockk()
 
     @Before
     fun setup() {
-        authRepository = AuthRepository(apiService)
+        authRepository = AuthRepositoryImpl(apiService, resourcesPlugin)
     }
 
     @Test

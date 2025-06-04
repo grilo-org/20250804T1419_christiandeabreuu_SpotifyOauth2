@@ -28,7 +28,7 @@ class PlaylistAdapter : ListAdapter<Playlist, PlaylistAdapter.PlaylistViewHolder
             binding.playlistNameTextView.text = playlist.name
             binding.playlistOwnerTextView.text = playlist.owner.name
 
-            val imageUrl = playlist.images?.firstOrNull()?.url ?: R.drawable.ic_spotify_full
+            val imageUrl = playlist.images?.firstOrNull()?.url ?: R.drawable.ic_spotify_square
             binding.playlistImageView.load(imageUrl)
         }
     }

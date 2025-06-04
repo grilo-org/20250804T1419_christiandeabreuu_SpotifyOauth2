@@ -4,6 +4,7 @@ import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -16,10 +17,13 @@ class TopArtistsRepositoryTest {
     private var repository: TopArtistsRepository = mockk(relaxed = true)
     private val apiService: SpotifyApiService = mockk(relaxed = true)
     private val spotifyDAO: SpotifyDAO = mockk(relaxed = true)
+    private var tokenRepository: TokenRepository = mockk(relaxed = true)
+
+
 
     @Before
     fun setup() {
-        repository = TopArtistsRepository(apiService, spotifyDAO)
+        repository = TopArtistsRepositoryImpl(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test
@@ -28,7 +32,7 @@ class TopArtistsRepositoryTest {
         coEvery { apiService.getTopArtists(any()) } throws Exception("API Error")
 
         // When
-         repository.getTopArtistsApi("token123")
+         repository.getTopArtistsApi()
 
         // Then - Verificando que retorna uma lista vazia
         coEvery {

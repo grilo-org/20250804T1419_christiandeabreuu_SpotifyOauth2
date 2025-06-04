@@ -7,6 +7,7 @@ import com.example.spotifyapi.app.data.model.Owner
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -25,11 +26,13 @@ class PlaylistRepositoryTest {
     @RelaxedMockK
     private lateinit var spotifyDAO: SpotifyDAO
     private lateinit var repository: PlaylistRepository
+    private var tokenRepository: TokenRepository = mockk(relaxed = true)
+
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = PlaylistRepository(apiService, spotifyDAO)
+        repository = PlaylistRepositoryImpl(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test
@@ -43,7 +46,7 @@ class PlaylistRepositoryTest {
         coEvery { apiService.getPlaylists(any()) } returns PlaylistsResponse(fakePlaylists)
 
         // When
-        val result = repository.getPlaylistsFromApi("token123")
+        val result = repository.getPlaylistsFromApi()
 
         // Then -Verificando se o resultado corresponde ao esperado
         assertEquals(fakePlaylists, result)
@@ -56,7 +59,7 @@ class PlaylistRepositoryTest {
         coEvery { apiService.getPlaylists(any()) } throws Exception("Erro na API")
 
         // When
-        val result = repository.getPlaylistsFromApi("token123")
+        val result = repository.getPlaylistsFromApi()
 
         // Then - Verificando se o retorno é uma lista vazia
         assertTrue(result.isEmpty())

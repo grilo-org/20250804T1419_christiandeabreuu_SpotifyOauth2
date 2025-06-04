@@ -35,6 +35,7 @@
     //create playlist
     <string name="close_button">Fechar</string>
     <string name="insert_name_your_playlist_title">Por favor, insira um nome para a playlist</string>
+    <string name="insert_name_your_playlist_title_description">Dê um nome a sua playlist</string>
     <string name="insert_name_your_playlist">Minha Playlist #1</string>
     <string name="create_your_playlist_button">Criar</string>
 

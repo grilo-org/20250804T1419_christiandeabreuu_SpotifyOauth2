@@ -33,28 +33,28 @@ class GetPlaylistsUseCaseTest {
         val fakePlaylists = listOf(
             Playlist("id", "name", "description", mockOwner, 1, mockkListImages)
         )
-        coEvery { repository.getPlaylistsFromApi(any()) } returns fakePlaylists
+        coEvery { repository.getPlaylistsFromApi() } returns fakePlaylists
 
         //When
-        val result = useCase.getPlaylists("token123")
+        val result = useCase.getPlaylists()
 
         //Then
         assertEquals(fakePlaylists, result)
-        coVerify(exactly = 1) { repository.getPlaylistsFromApi("token123") }
+        coVerify(exactly = 1) { repository.getPlaylistsFromApi() }
     }
 
     @Test
     fun `getPlaylists should return empty list when API and DB have no playlists`() = runBlocking {
         // Given
-        coEvery { repository.getPlaylistsFromApi(any()) } returns emptyList()
+        coEvery { repository.getPlaylistsFromApi() } returns emptyList()
         coEvery { repository.getPlaylistsFromDB() } returns emptyList()
 
         // When
-        val result = useCase.getPlaylists("token123")
+        val result = useCase.getPlaylists()
 
         // Then - Teste quando API e banco de dados estão vazios
         assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { repository.getPlaylistsFromApi("token123") }
+        coVerify(exactly = 1) { repository.getPlaylistsFromApi() }
         coVerify(exactly = 1) { repository.getPlaylistsFromDB() }
     }
 }
