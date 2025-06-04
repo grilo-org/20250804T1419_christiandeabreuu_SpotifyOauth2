@@ -33,7 +33,7 @@ class PlaylistMapperTest {
         assertEquals(playlist.description, playlistDB.description)
         assertEquals(playlist.owner.name, playlistDB.ownerName)
         assertEquals(playlist.tracksCount, playlistDB.tracksCount)
-        assertEquals(playlist.images.firstOrNull()?.url, playlistDB.imageUrl)
+        assertEquals(playlist.images?.firstOrNull()?.url, playlistDB.imageUrl)
     }
 
     @Test
@@ -57,7 +57,7 @@ class PlaylistMapperTest {
         assertEquals(playlistDB.description, playlist.description)
         assertEquals(playlistDB.ownerName, playlist.owner.name)
         assertEquals(playlistDB.tracksCount, playlist.tracksCount)
-        assertEquals(playlistDB.imageUrl, playlist.images.first().url)
+        assertEquals(playlistDB.imageUrl, playlist.images?.first()?.url ?: "")
     }
 
     @Test
@@ -76,6 +76,6 @@ class PlaylistMapperTest {
         val playlist = playlistDB.toPlaylist()
 
         // Then - Verificando se a URL da imagem fica vazia quando é blank
-        assertTrue(playlist.images.isEmpty())
+        playlist.images?.let { assertTrue(it.isEmpty()) }
     }
 }

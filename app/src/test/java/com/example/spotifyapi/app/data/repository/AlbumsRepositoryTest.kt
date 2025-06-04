@@ -25,7 +25,7 @@ class AlbumsRepositoryTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = AlbumsRepository(apiService, spotifyDAO, tokenRepository)
+        repository = AlbumsRepositoryImpl(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test

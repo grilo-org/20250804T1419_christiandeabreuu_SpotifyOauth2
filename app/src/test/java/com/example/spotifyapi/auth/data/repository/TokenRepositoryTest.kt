@@ -20,7 +20,7 @@ class TokenRepositoryTest {
         every { mockSharedPreferences.edit() } returns mockEditor
         every { mockEditor.putString(any(), any()) } returns mockEditor
         every { mockEditor.commit() } returns true
-        tokenRepository = TokenRepository(mockContext)
+        tokenRepository = TokenRepositoryImpl(mockContext)
     }
 
     @Test

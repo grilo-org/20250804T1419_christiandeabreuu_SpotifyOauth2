@@ -9,6 +9,7 @@ import com.example.spotifyapi.auth.domain.usecase.AuthUseCase
 import com.example.spotifyapi.auth.domain.usecase.ExtractTokensUseCase
 import com.example.spotifyapi.auth.domain.usecase.GetAccessTokenUseCase
 import com.example.spotifyapi.auth.ui.login.LoginViewModel
+import com.example.spotifyapi.utils.Constants.BASE_URL_AUTH
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,7 +28,7 @@ val authModules = module {
 val networkAuthModule = module {
 
     single {
-        retrofit2.Retrofit.Builder().baseUrl("https://accounts.spotify.com/")
+        retrofit2.Retrofit.Builder().baseUrl(BASE_URL_AUTH)
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(AuthApiService::class.java)
     }

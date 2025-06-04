@@ -5,6 +5,8 @@ import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
 import com.example.spotifyapi.app.data.repository.UserProfileRepository
+import com.example.spotifyapi.app.data.repository.UserProfileRepositoryImpl
+import com.example.spotifyapi.auth.data.repository.TokenRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -19,10 +21,12 @@ class UserProfileRepositoryTest {
     private lateinit var repository: UserProfileRepository
     private val apiService: SpotifyApiService = mockk(relaxed = true)
     private val spotifyDAO: SpotifyDAO = mockk(relaxed = true)
+    private lateinit var tokenRepository: TokenRepository
+
 
     @Before
     fun setup() {
-        repository = UserProfileRepository(apiService, spotifyDAO)
+        repository = UserProfileRepositoryImpl(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test
@@ -35,7 +39,7 @@ class UserProfileRepositoryTest {
             coEvery { apiService.getUserProfile(any()) } returns fakeProfile
 
             // When
-            val result = repository.getUserProfileFromApi("token123")
+            val result = repository.getUserProfileFromApi()
 
             // Then - Verificando se o resultado é sucesso
             assertEquals(fakeProfile, result)
@@ -48,7 +52,7 @@ class UserProfileRepositoryTest {
         coEvery { apiService.getUserProfile(any()) } throws Exception("API Error")
 
         // When
-        val result = repository.getUserProfileFromApi("token123")
+        val result = repository.getUserProfileFromApi()
 
         // Then - Verificando se o resultado é nulo
         assertNull(result)

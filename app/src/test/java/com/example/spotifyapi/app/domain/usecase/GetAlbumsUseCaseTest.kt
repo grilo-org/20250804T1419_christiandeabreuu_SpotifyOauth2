@@ -39,7 +39,7 @@ class GetAlbumsUseCaseTest {
         coEvery { repository.getAlbumsFromDB(any()) } returns fakeAlbumsDb
 
         //When
-        val result = useCase.execute("token123", "artist123")
+        val result = useCase.loadAlbums("token123")
 
         //Then
         assertEquals(fakeAlbums, result) // 🔹 Agora a comparação será entre objetos do mesmo tipo
@@ -51,14 +51,14 @@ class GetAlbumsUseCaseTest {
     fun `execute should return empty list when API and database have no albums`() = runBlocking {
         // Given
         coEvery { repository.getAlbumsFromDB(any()) } returns emptyList()
-        coEvery { repository.getAlbumsFromApi(any(), any()) } returns null
+        coEvery { repository.getAlbumsFromApi(any()) } returns null
 
         // When
-        val result = useCase.execute("token123", "artist123")
+        val result = useCase.loadAlbums("token123")
 
         // Then - Teste quando API e banco de dados estão vazios
         assertTrue(result.isEmpty())
         coVerify(exactly = 1) { repository.getAlbumsFromDB("artist123") }
-        coVerify(exactly = 1) { repository.getAlbumsFromApi("token123", "artist123") }
+        coVerify(exactly = 1) { repository.getAlbumsFromApi("token123") }
     }
 }

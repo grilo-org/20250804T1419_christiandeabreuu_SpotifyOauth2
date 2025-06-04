@@ -34,4 +34,7 @@ class TopArtistsRepositoryImpl(
     override suspend fun insertImageArtists(imageArtists: List<ImageArtist>) {
         spotifyDAO.insertImageArtists(imageArtists)
     }
+
+    override suspend fun getArtistDatabaseIdsBySpotifyIds(spotifyIds: List<String>, topArtistsId: Int) =
+        spotifyDAO.getArtistDatabaseIdsBySpotifyIds(spotifyIds, topArtistsId)
 }

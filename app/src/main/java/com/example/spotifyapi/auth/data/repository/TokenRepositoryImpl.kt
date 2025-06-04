@@ -1,10 +1,18 @@
 package com.example.spotifyapi.auth.data.repository
 
 import android.content.Context
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 
 class TokenRepositoryImpl(context: Context) : TokenRepository {
-    private val sharedPreferences =
-        context.getSharedPreferences(SPOTIFY_PREFS, Context.MODE_PRIVATE)
+
+    private val sharedPreferences = EncryptedSharedPreferences.create(
+        SPOTIFY_PREFS,
+        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
 
     override fun saveTokens(accessToken: String, refreshToken: String): Boolean {
         return try {

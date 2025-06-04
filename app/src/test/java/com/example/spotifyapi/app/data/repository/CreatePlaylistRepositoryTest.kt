@@ -20,12 +20,13 @@ class CreatePlaylistRepositoryTest {
     @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
     private lateinit var repository: CreatePlaylistRepository
-    private lateinit var token: TokenRepository
+    private var tokenRepository: TokenRepository = mockk(relaxed = true)
+
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
-        repository = CreatePlaylistRepository(apiService, token)
+        repository = CreatePlaylistRepositoryImpl(apiService, tokenRepository)
     }
 
     @Test
