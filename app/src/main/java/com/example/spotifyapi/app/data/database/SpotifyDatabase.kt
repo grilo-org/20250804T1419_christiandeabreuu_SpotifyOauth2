@@ -15,7 +15,7 @@ import com.example.spotifyapi.app.data.local.UserProfileDB
         AlbumDB::class,
     ],
 
-    version = 9
+    version = 10
 )
 abstract class SpotifyDatabase : RoomDatabase() {
 

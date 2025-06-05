@@ -10,9 +10,11 @@ class GetAlbumsUseCase(private val repository: AlbumsRepository) {
 
     suspend fun loadAlbums(artistId: String): List<Album> {
         val albumsDB = getAlbumsFromLocal(artistId)
+        val albumsFromApi = fetchAlbumsFromApi(artistId)
 
-        return if (albumsDB.isEmpty()) {
-            fetchAndCacheAlbums(artistId)
+        return if (albumsFromApi.isNotEmpty() && albumsFromApi != albumsDB) {
+            repository.insertLocalAlbums(albumsFromApi)
+            albumsFromApi.map { it.toAlbum() }
         } else {
             albumsDB.map { it.toAlbum() }
         }

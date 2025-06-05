@@ -8,8 +8,14 @@ import com.example.spotifyapi.app.domain.mapper.PlaylistMapper.toPlaylistDB
 class GetPlaylistsUseCase(private val repository: PlaylistRepository) {
 
     suspend fun getPlaylists(): List<Playlist> {
-        return fetchPlaylistsFromApi().ifEmpty {
-            getPlaylistsFromDB()
+        val localPlaylists = getPlaylistsFromDB()
+        val onlinePlaylists = fetchPlaylistsFromApi()
+
+        return if (onlinePlaylists.isNotEmpty() && onlinePlaylists != localPlaylists) {
+            savePlaylistsToDB(onlinePlaylists)
+            onlinePlaylists
+        } else {
+            localPlaylists
         }
     }
 

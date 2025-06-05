@@ -1,5 +1,6 @@
 package com.example.spotifyapi.app.di
 
+import AlbumsPagingSource
 import androidx.room.Room
 import com.example.spotifyapi.app.data.database.SpotifyDatabase
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
@@ -54,6 +55,7 @@ val appModules = module {
     factory<TopArtistsRepository> { TopArtistsRepositoryImpl(get(), get(), get()) }
 
     factory { ArtistPagingSource(get(), get()) }
+    factory { AlbumsPagingSource(get(), get()) }
     factory { TopArtistsAdapter(get()) }
     factory<ResourcesPlugin> { ResourcesPluginImpl(get()) }
 }
