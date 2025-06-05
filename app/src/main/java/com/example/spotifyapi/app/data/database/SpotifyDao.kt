@@ -5,36 +5,22 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.spotifyapi.app.data.local.ArtistWithImages
-import com.example.spotifyapi.app.data.local.TopArtistsWithArtistsAndImages
 import com.example.spotifyapi.app.data.local.AlbumDB
 import com.example.spotifyapi.app.data.local.ArtistDB
-import com.example.spotifyapi.app.data.local.ImageArtist
 import com.example.spotifyapi.app.data.local.PlaylistDB
-import com.example.spotifyapi.app.data.local.TopArtistsDB
 import com.example.spotifyapi.app.data.local.UserProfileDB
 
 @Dao
 interface SpotifyDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTopArtistsDB(topArtistsDB: TopArtistsDB): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertArtists(artists: List<ArtistDB>): List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertImageArtists(imageArtists: List<ImageArtist>)
-
     @Transaction
-    @Query("SELECT * FROM top_artists WHERE timeRange = :timeRange LIMIT :limit OFFSET :offset")
+    @Query("SELECT * FROM artist WHERE timeRange = :timeRange LIMIT :limit OFFSET :offset")
     suspend fun getTopArtistsWithOffsetAndLimit(
         limit: Int, offset: Int, timeRange: String
-    ): TopArtistsWithArtistsAndImages
-
-    @Transaction
-    @Query("SELECT * FROM artist WHERE topArtistsId = :topArtistsId LIMIT :limit OFFSET :offset")
-    fun getTopArtistsWithImages(topArtistsId: Int, limit: Int, offset: Int): List<ArtistWithImages>
+    ): List<ArtistDB>
 
     @Query("SELECT * FROM albums WHERE artistId = :artistId")
     suspend fun getLocalAlbumsByArtist(artistId: String): List<AlbumDB>
@@ -53,12 +39,4 @@ interface SpotifyDAO {
 
     @Query("SELECT * FROM playlist")
     suspend fun getLocalPlaylists(): List<PlaylistDB>
-
-    @Query("SELECT databaseId, id FROM artist WHERE id IN (:spotifyIds) AND topArtistsId = :topArtistsId")
-    suspend fun getArtistDatabaseIdsBySpotifyIds(spotifyIds: List<String>, topArtistsId: Int): List<ArtistIdMap>
-
-    data class ArtistIdMap(
-        val databaseId: Int,
-        val id: String
-    )
 }

@@ -1,5 +1,6 @@
 package com.example.spotifyapi.app.ui.topartists
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.spotifyapi.R
+import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.paging.ArtistPagingSource
@@ -21,8 +23,8 @@ import kotlinx.coroutines.launch
 
 class TopArtistsViewModel(
     private val userProfileUseCase: GetUserProfileUseCase,
-    private val artistPagingSource: ArtistPagingSource,
-    private val useCaseTopArtists: GetTopArtistsUseCase
+    private val useCaseTopArtists: GetTopArtistsUseCase,
+    private val spotifyDAO: SpotifyDAO
 ) : ViewModel() {
 
     private val _userProfileLiveData = MutableLiveData<UserProfile?>()
@@ -34,7 +36,7 @@ class TopArtistsViewModel(
     fun getArtistsPagingData(): Flow<PagingData<ArtistResponse>> {
         return Pager(
             config = PagingConfig(pageSize = 20, enablePlaceholders = false),
-            pagingSourceFactory = { artistPagingSource }
+            pagingSourceFactory = { ArtistPagingSource(useCaseTopArtists, spotifyDAO) }
         ).flow.cachedIn(viewModelScope)
     }
 
@@ -54,7 +56,7 @@ class TopArtistsViewModel(
             try {
                 useCaseTopArtists.preloadAllTopArtists(timeRange)
             } catch (e: Exception) {
-                // log ou notifique erro
+                Log.e("TopArtistsViewModel", "preloadOfflineArtists: ${e.message}")
             }
         }
     }
