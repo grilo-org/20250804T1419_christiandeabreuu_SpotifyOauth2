@@ -3,7 +3,7 @@ package com.example.spotifyapi.app.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.spotifyapi.app.data.database.SpotifyDAO
-import com.example.spotifyapi.app.data.local.TopArtistsWithArtistsAndImages
+import com.example.spotifyapi.app.data.local.ArtistDB
 import com.example.spotifyapi.app.data.model.ArtistResponse
 import com.example.spotifyapi.app.data.model.ImageArtistResponse
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
@@ -13,25 +13,31 @@ class ArtistPagingSource(
     private val useCaseTopArtists: GetTopArtistsUseCase,
     private val spotifyDAO: SpotifyDAO,
 ) : PagingSource<Int, ArtistResponse>() {
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArtistResponse> {
         return try {
             val nextPageNumber = params.key ?: 0
             val response: List<ArtistResponse> = try {
-                useCaseTopArtists.fetchAndSaveTopArtists(nextPageNumber).items
+                useCaseTopArtists.fetchAndSaveTopArtists(nextPageNumber).map { artist ->
+                    ArtistResponse(
+                        id = artist.id,
+                        name = artist.name,
+                        popularity = artist.popularity,
+                        images = listOf(ImageArtistResponse(url = artist.imageUrl))
+                    )
+                }
             } catch (apiException: Exception) {
                 emptyList()
             }
 
             val finalResponse = response.ifEmpty {
-                getFromDBWithOffsetAndLimit(
-                    20, nextPageNumber
-                ).artists.map { artistWithImages ->
-                    ArtistResponse(id = artistWithImages.artist.id,
-                        name = artistWithImages.artist.name,
-                        popularity = artistWithImages.artist.popularity,
-                        images = artistWithImages.images.map { image ->
-                            ImageArtistResponse(url = image.url)
-                        })
+                getFromDBWithOffsetAndLimit(20, nextPageNumber, MEDIUM_TERM).map { artist ->
+                    ArtistResponse(
+                        id = artist.id,
+                        name = artist.name,
+                        popularity = artist.popularity,
+                        images = listOf(ImageArtistResponse(url = artist.imageUrl))
+                    )
                 }
             }
 
@@ -53,9 +59,10 @@ class ArtistPagingSource(
     }
 
     private suspend fun getFromDBWithOffsetAndLimit(
-        limit: Int, offset: Int, timeRange: String = MEDIUM_TERM
-    ): TopArtistsWithArtistsAndImages {
-        val dbResponse = spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
-        return dbResponse
+        limit: Int,
+        offset: Int,
+        timeRange: String
+    ): List<ArtistDB> {
+        return spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
     }
 }
