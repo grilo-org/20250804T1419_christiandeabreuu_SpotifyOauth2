@@ -2,15 +2,16 @@ package com.example.spotifyapi.app.ui.album
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import coil.load
 import com.example.spotifyapi.R
 import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.databinding.ItemAlbumsBinding
 import com.example.spotifyapi.utils.DateUtils
 
-class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
+class AlbumsAdapter :
+    PagingDataAdapter<Album, AlbumsAdapter.AlbumViewHolder>(AlbumDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         val binding = ItemAlbumsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -18,7 +19,9 @@ class AlbumAdapter : ListAdapter<Album, AlbumAdapter.AlbumViewHolder>(AlbumDiffC
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        getItem(position)?.let { album ->
+            holder.bind(album)
+        }
     }
 
     class AlbumViewHolder(private val binding: ItemAlbumsBinding) :

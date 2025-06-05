@@ -3,8 +3,8 @@ package com.example.spotifyapi.app.data.networking
 import com.example.spotifyapi.app.data.model.AlbumsResponse
 import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.model.PlaylistsResponse
-import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.model.TopArtistsResponse
+import com.example.spotifyapi.app.data.model.UserProfile
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -31,7 +31,9 @@ interface SpotifyApiService {
     @GET("artists/{id}/albums")
     suspend fun getAlbums(
         @Header("Authorization") authorization: String,
-        @Path("id") artistId: String
+        @Path("id") artistId: String,
+        @Query("offset") offset: Int = 0,
+        @Query("limit") limit: Int = 20
     ): AlbumsResponse
 
     @GET("me/playlists")
@@ -41,8 +43,7 @@ interface SpotifyApiService {
 
     @POST("me/playlists")
     suspend fun createPlaylist(
-        @Header("Authorization") accessToken: String,
-        @Body requestBody: CreatePlaylistRequest
+        @Header("Authorization") accessToken: String, @Body requestBody: CreatePlaylistRequest
     ): Response<Unit>
 }
 
