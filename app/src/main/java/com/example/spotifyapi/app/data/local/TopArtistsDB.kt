@@ -10,8 +10,7 @@ data class ImageArtist(
 
 @Entity(tableName = "artist")
 data class ArtistDB(
-    @PrimaryKey(autoGenerate = true) val databaseId: Int = 0,
-    val id: String,
+    @PrimaryKey val id: String,
     val name: String,
     val popularity: Int,
     val imageUrl: String,

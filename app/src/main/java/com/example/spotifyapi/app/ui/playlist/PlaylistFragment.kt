@@ -40,6 +40,11 @@ class PlaylistFragment : Fragment() {
         setupCreatePlaylistButton()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylists()
+    }
+
     private fun observeError() {
         viewModel.errorLiveData.observe(viewLifecycleOwner) { errorMessage ->
             errorMessage?.let {
