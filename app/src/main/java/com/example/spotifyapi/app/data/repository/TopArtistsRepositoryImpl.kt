@@ -39,4 +39,9 @@ class TopArtistsRepositoryImpl(
         return spotifyDAO.insertArtists(artists)
     }
 
+    override suspend fun getTopArtistsFromDB(
+        limit: Int, offset: Int, timeRange: String
+    ): List<ArtistDB> {
+        return spotifyDAO.getTopArtistsWithOffsetAndLimit(limit, offset, timeRange)
+    }
 }
