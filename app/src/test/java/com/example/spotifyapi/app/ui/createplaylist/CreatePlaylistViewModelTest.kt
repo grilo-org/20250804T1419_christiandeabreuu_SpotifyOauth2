@@ -1,34 +1,40 @@
-package com.example.spotifyapi.app.ui.createplaylist
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import io.mockk.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
-import org.junit.*
 import com.example.spotifyapi.app.domain.usecase.CreatePlaylistUseCase
+import com.example.spotifyapi.app.ui.createplaylist.CreatePlaylistViewModel
 import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CreatePlaylistViewModelTest {
 
+    // Permite LiveData emitir valores instantaneamente no teste
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = StandardTestDispatcher()
-    private lateinit var viewModel: CreatePlaylistViewModel
     private val createPlaylistUseCase: CreatePlaylistUseCase = mockk()
     private val resourcesPlugin: ResourcesPlugin = mockk()
-    private val successObserver: Observer<Result<String>> = mockk(relaxed = true)
-    private val errorObserver: Observer<String> = mockk(relaxed = true)
+    private lateinit var viewModel: CreatePlaylistViewModel
+
+    private val testDispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         viewModel = CreatePlaylistViewModel(createPlaylistUseCase, resourcesPlugin)
-        viewModel.createPlaylistLiveData.observeForever(successObserver)
-        viewModel.errorLiveData.observeForever(errorObserver)
     }
 
     @After
@@ -36,33 +42,44 @@ class CreatePlaylistViewModelTest {
         Dispatchers.resetMain()
     }
 
-    // 🔹 Testando criação bem-sucedida da playlist
     @Test
-    fun `createPlaylist should update createPlaylistLiveData when use case returns success`() = runTest {
-        // Given
-        val fakeResponse = "Playlist 'Minha Playlist' criada com sucesso!"
-        coEvery { createPlaylistUseCase.createPlaylist(any()) } returns fakeResponse
+    fun `createPlaylist posts success when useCase returns successfully`() = runTest {
+        // Arrange
+        val playlistName = "New Playlist"
+        val expectedMessage = "Playlist criada!"
+        coEvery { createPlaylistUseCase.createPlaylist(playlistName) } returns expectedMessage
 
-        // When
-        viewModel.createPlaylist("Minha Playlist")
-        advanceUntilIdle()
+        val observer = mockk<Observer<Result<String>>>(relaxed = true)
+        viewModel.createPlaylistLiveData.observeForever(observer)
 
-        // Then
-        verify { successObserver.onChanged(Result.success(fakeResponse)) }
-        coVerify(exactly = 1) { createPlaylistUseCase.createPlaylist( "Minha Playlist") }
+        // Act
+        viewModel.createPlaylist(playlistName)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Assert
+        verify {
+            observer.onChanged(Result.success(expectedMessage))
+        }
+        viewModel.createPlaylistLiveData.removeObserver(observer)
     }
 
     @Test
-    fun `createPlaylist should update errorLiveData when use case throws exception`() = runTest {
-        // Given
-        coEvery { createPlaylistUseCase.createPlaylist(any()) } throws Exception("Erro ao criar playlist")
+    fun `createPlaylist posts error message when useCase throws exception`() = runTest {
+        // Arrange
+        val playlistName = "Bad Playlist"
+        val errorMsg = "Erro ao criar playlist"
+        coEvery { createPlaylistUseCase.createPlaylist(playlistName) } throws Exception("erro")
+        every { resourcesPlugin.createPlaylistErrorMessage() } returns errorMsg
 
-        // When
-        viewModel.createPlaylist( "Minha Playlist")
-        advanceUntilIdle()
+        val observer = mockk<Observer<String>>(relaxed = true)
+        viewModel.errorLiveData.observeForever(observer)
 
-        // Then - Teste de erro na criação de playlist
-        verify { errorObserver.onChanged("Erro ao criar playlist") }
-        coVerify(exactly = 1) { createPlaylistUseCase.createPlaylist( "Minha Playlist") }
+        // Act
+        viewModel.createPlaylist(playlistName)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Assert
+        verify { observer.onChanged(errorMsg) }
+        viewModel.errorLiveData.removeObserver(observer)
     }
 }

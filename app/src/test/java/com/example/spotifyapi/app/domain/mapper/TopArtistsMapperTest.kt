@@ -1,98 +1,85 @@
 package com.example.spotifyapi.app.domain.mapper
 
-import com.example.spotifyapi.app.domain.mapper.TopArtistsMapper.toTopArtistsDB
-import com.example.spotifyapi.app.domain.mapper.TopArtistsMapper.toArtistsDB
-import com.example.spotifyapi.app.domain.mapper.TopArtistsMapper.toImageArtistsDB
-import com.example.spotifyapi.app.data.model.TopArtistsResponse
+import com.example.spotifyapi.app.data.local.ArtistDB
 import com.example.spotifyapi.app.data.model.ArtistResponse
+import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.ImageArtistResponse
-import org.junit.Assert.*
+import com.example.spotifyapi.app.data.model.TopArtistsResponse
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class TopArtistsMapperTest {
 
     @Test
-    fun `toTopArtistsDB should correctly map TopArtistsResponse to TopArtistsDB`() {
-        // Given
-        val response = TopArtistsResponse(
-            items = listOf(),
-            total = 100,
+    fun `toArtistsDB maps TopArtistsResponse to ArtistDB list correctly`() {
+        // Arrange
+        val imageArtistResponde = ImageArtistResponse(url = "http://img.com/1.jpg")
+        val artistImage = Image(url = "http://img.com/1.jpg")
+        val artist = ArtistResponse(
+            id = "artist1",
+            name = "Artist One",
+            popularity = 88,
+            images = listOf(imageArtistResponde),
+            // adicione outros campos obrigatórios do seu modelo Artist
+        )
+        val topArtistsResponse = TopArtistsResponse(
+            items = listOf(artist),
+            total = 1,
             limit = 20,
             offset = 0,
-            href = "https://api.spotify.com/v1/me/top/artists",
-            next = null,
+            href = "http://api.com/artists",
+            next = "http://api.com/artists?page=2",
             previous = null
         )
-        // When
-        val result = toTopArtistsDB(response, "medium_term")
+        val timeRange = "short_term"
 
-        // Then
-        assertEquals(response.total, result.total)
-        assertEquals(response.limit, result.limit)
-        assertEquals(response.offset, result.offset)
-        assertEquals(response.href, result.href)
-        assertEquals(response.next, result.next)
-        assertEquals(response.previous, result.previous)
-        assertEquals("medium_term", result.timeRange)
+        // Act
+        val result = TopArtistsMapper.toArtistsDB(topArtistsResponse, timeRange)
+
+        // Assert
+        val expected = listOf(
+            ArtistDB(
+                id = "artist1",
+                name = "Artist One",
+                popularity = 88,
+                imageUrl = "http://img.com/1.jpg",
+                timeRange = "short_term",
+                total = 1,
+                limit = 20,
+                offset = 0,
+                href = "http://api.com/artists",
+                next = "http://api.com/artists?page=2",
+                previous = null
+            )
+        )
+        assertEquals(expected, result)
     }
 
     @Test
-    fun `toArtistsDB should correctly map TopArtistsResponse to List ArtistDB`() {
-        // Given
-        val response = TopArtistsResponse(
-            items = listOf(
-                ArtistResponse("1", "Artist 1", 90, listOf(ImageArtistResponse("url1"))),
-                ArtistResponse("2", "Artist 2", 80, listOf(ImageArtistResponse("url2")))
-            ),
-            total = 2,
+    fun `toArtistsDB maps empty images to empty imageUrl`() {
+        // Arrange
+        val artist = ArtistResponse(
+            id = "artist2",
+            name = "Artist Two",
+            popularity = 50,
+            images = emptyList(),
+            // adicione outros campos obrigatórios do seu modelo Artist
+        )
+        val topArtistsResponse = TopArtistsResponse(
+            items = listOf(artist),
+            total = 1,
             limit = 20,
             offset = 0,
-            href = "https://api.spotify.com/v1/me/top/artists",
+            href = null,
             next = null,
             previous = null
         )
-        // When
-        val result = toArtistsDB(response, 101)
+        val timeRange = "long_term"
 
-        // Then - Verificando se os atributos estão corretos
-        assertEquals(2, result.size)
-        assertEquals("1", result[0].id)
-        assertEquals("Artist 1", result[0].name)
-        assertEquals(90, result[0].popularity)
-        assertEquals(101, result[0].topArtistsId)
-        assertEquals("2", result[1].id)
-        assertEquals("Artist 2", result[1].name)
-        assertEquals(80, result[1].popularity)
-        assertEquals(101, result[1].topArtistsId)
-    }
+        // Act
+        val result = TopArtistsMapper.toArtistsDB(topArtistsResponse, timeRange)
 
-    @Test
-    fun `toImageArtistsDB should correctly map TopArtistsResponse to List ImageArtist`() {
-        // Given
-        val response = TopArtistsResponse(
-            items = listOf(
-                ArtistResponse("1", "Artist 1", 90, listOf(ImageArtistResponse("url1"), ImageArtistResponse("url3"))),
-                ArtistResponse("2", "Artist 2", 80, listOf(ImageArtistResponse("url2")))
-            ),
-            total = 2,
-            limit = 20,
-            offset = 0,
-            href = "https://api.spotify.com/v1/me/top/artists",
-            next = null,
-            previous = null
-        )
-        val artistsIds = listOf(10L, 20L)
-
-        // When
-        val result = toImageArtistsDB(response, artistsIds)
-
-        // Then - Verificando se os atributos estão corretos
-        assertEquals(3, result.size)
-        assertEquals("url1", result[0].url)
-        assertEquals(10, result[0].artistId)
-        assertEquals("url3", result[1].url)
-        assertEquals(10, result[1].artistId)
-        assertEquals("url2", result[2].url)
-        assertEquals(20, result[2].artistId)
+        // Assert
+        assertEquals("", result[0].imageUrl)
     }
 }

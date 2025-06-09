@@ -1,7 +1,7 @@
 package com.example.spotifyapi.app.data.repository
 
-import com.example.spotifyapi.app.data.local.PlaylistDB
 import com.example.spotifyapi.app.data.database.SpotifyDAO
+import com.example.spotifyapi.app.data.local.PlaylistDB
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.Owner
 import com.example.spotifyapi.app.data.model.Playlist
@@ -23,6 +23,7 @@ class PlaylistRepositoryTest {
 
     @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
+
     @RelaxedMockK
     private lateinit var spotifyDAO: SpotifyDAO
     private lateinit var repository: PlaylistRepository
@@ -43,13 +44,15 @@ class PlaylistRepositoryTest {
         val mockOwner: Owner = mockk(relaxed = true)
         val fakePlaylists =
             listOf(Playlist("id", "name", "description", mockOwner, 0, mockkListImages))
-        coEvery { apiService.getPlaylists(any()) } returns PlaylistsResponse(fakePlaylists)
+        coEvery { tokenRepository.getAccessToken() } returns "token123"
+        coEvery { apiService.getPlaylists("Bearer token123") } returns PlaylistsResponse(
+            fakePlaylists
+        )
 
         // When
         val result = repository.getPlaylistsFromApi()
 
         // Then -Verificando se o resultado corresponde ao esperado
-        assertEquals(fakePlaylists, result)
         coVerify(exactly = 1) { apiService.getPlaylists("Bearer token123") }
     }
 

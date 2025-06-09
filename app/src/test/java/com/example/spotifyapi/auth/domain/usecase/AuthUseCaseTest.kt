@@ -63,6 +63,7 @@ class AuthUseCaseTest {
                 any(), any()
             )
         } returns Result.failure(Exception("Erro ao obter token"))
+        every { resourcesPlugin.getAccessTokenErrorMessage() } returns "Erro ao obter token"
 
         //When
         val result = authUseCase.authenticate("authCode", "redirectUri")
@@ -89,6 +90,7 @@ class AuthUseCaseTest {
                 fakeTokens.accessToken, fakeTokens.refreshToken
             )
         } returns false
+        every { resourcesPlugin.getSaveTokenErrorMessage() } returns "Erro ao salvar tokens"
 
         //When
         val result = authUseCase.authenticate("authCode", "redirectUri")

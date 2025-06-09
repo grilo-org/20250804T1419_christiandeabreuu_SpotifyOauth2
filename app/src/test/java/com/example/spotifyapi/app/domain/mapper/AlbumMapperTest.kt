@@ -1,11 +1,11 @@
 package com.example.spotifyapi.app.domain.mapper
 
+import com.example.spotifyapi.app.data.local.AlbumDB
+import com.example.spotifyapi.app.data.local.ImageArtist
+import com.example.spotifyapi.app.data.model.Album
 import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbum
 import com.example.spotifyapi.app.domain.mapper.AlbumMapper.toAlbumDB
-import com.example.spotifyapi.app.data.local.AlbumDB
-import com.example.spotifyapi.app.data.model.Album
-import com.example.spotifyapi.app.data.local.ImageArtist
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AlbumMapperTest {
