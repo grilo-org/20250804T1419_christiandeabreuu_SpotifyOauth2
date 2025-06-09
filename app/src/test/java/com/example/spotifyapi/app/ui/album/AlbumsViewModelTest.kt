@@ -1,5 +1,8 @@
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListUpdateCallback
 import app.cash.turbine.test
 import com.example.spotifyapi.app.data.local.ImageArtist
 import com.example.spotifyapi.app.data.model.Album
@@ -10,11 +13,11 @@ import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
-import androidx.paging.AsyncPagingDataDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListUpdateCallback
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -70,9 +73,7 @@ class AlbumsViewModelTest {
 
                 override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean =
                     oldItem == newItem
-            },
-            updateCallback = NoopListUpdateCallback(),
-            workerDispatcher = testDispatcher
+            }, updateCallback = NoopListUpdateCallback(), workerDispatcher = testDispatcher
         )
 
         flow.test {

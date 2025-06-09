@@ -1,49 +1,79 @@
-package com.example.spotifyapi.auth.data.repository
-
 import android.content.Context
 import android.content.SharedPreferences
-import io.mockk.*
+import com.example.spotifyapi.auth.data.repository.TokenRepositoryImpl
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.verify
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 
-class TokenRepositoryTest {
+class TokenRepositoryImplTest {
 
-    private lateinit var tokenRepository: TokenRepository
-    private val mockContext: Context = mockk()
-    private val mockSharedPreferences: SharedPreferences = mockk()
-    private val mockEditor: SharedPreferences.Editor = mockk()
+    private lateinit var context: Context
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    private lateinit var repo: TokenRepositoryImpl
 
     @Before
-    fun setup() {
-        every { mockContext.getSharedPreferences(any(), any()) } returns mockSharedPreferences
-        every { mockSharedPreferences.edit() } returns mockEditor
-        every { mockEditor.putString(any(), any()) } returns mockEditor
-        every { mockEditor.commit() } returns true
-        tokenRepository = TokenRepositoryImpl(mockContext)
+    fun setUp() {
+        context = mockk(relaxed = true)
+        sharedPreferences = mockk(relaxed = true)
+        editor = mockk(relaxed = true)
+
+        // Mock EncryptedSharedPreferences.create to return our mock
+        mockkStatic("androidx.security.crypto.EncryptedSharedPreferences")
+        every {
+            androidx.security.crypto.EncryptedSharedPreferences.create(
+                any(), any(), any(), any(), any()
+            )
+        } returns sharedPreferences
+
+        every { sharedPreferences.edit() } returns editor
+        every { editor.putString(any(), any()) } returns editor
+        every { editor.commit() } returns true
+
+        repo = TokenRepositoryImpl(context)
     }
 
     @Test
-    fun `saveTokens should save access and refresh tokens correctly`() {
-        val success = tokenRepository.saveTokens("access123", "refresh456")
+    fun `saveTokens returns true on successful save`() {
+        val result = repo.saveTokens("access", "refresh")
 
-        //Then -  sucesso ao salvar tokens
-        assertTrue(success)
-        verify { mockEditor.putString("ACCESS_TOKEN", "access123") }
-        verify { mockEditor.putString("REFRESH_TOKEN", "refresh456") }
-        verify { mockEditor.commit() }
+        assertTrue(result)
+        verify { editor.putString("ACCESS_TOKEN", "access") }
+        verify { editor.putString("REFRESH_TOKEN", "refresh") }
+        verify { editor.commit() }
     }
 
     @Test
-    fun `saveTokens should return false when commit fails`() {
-        //Given
-        every { mockEditor.commit() } returns false
+    fun `saveTokens returns false on exception`() {
+        every { editor.commit() } throws RuntimeException("fail")
 
-        //When
-        val success = tokenRepository.saveTokens("access123", "refresh456")
+        val result = repo.saveTokens("access", "refresh")
 
-        //Then -  falha ao salvar tokens
-        assertFalse(success)
-        verify { mockEditor.commit() }
+        assertFalse(result)
+    }
+
+    @Test
+    fun `getAccessToken returns token from shared preferences`() {
+        every { sharedPreferences.getString("ACCESS_TOKEN", null) } returns "token123"
+
+        val token = repo.getAccessToken()
+
+        assertEquals("token123", token)
+    }
+
+    @Test
+    fun `getAccessToken returns null if not set`() {
+        every { sharedPreferences.getString("ACCESS_TOKEN", null) } returns null
+
+        val token = repo.getAccessToken()
+
+        assertNull(token)
     }
 }

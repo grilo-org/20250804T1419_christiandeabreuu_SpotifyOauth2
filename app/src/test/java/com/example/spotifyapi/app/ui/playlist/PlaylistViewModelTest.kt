@@ -1,42 +1,45 @@
-package com.example.spotifyapi.app.ui.playlist
-
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.Owner
-import io.mockk.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.*
-import org.junit.*
-import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
-import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
 import com.example.spotifyapi.app.data.model.Playlist
 import com.example.spotifyapi.app.data.model.UserProfile
+import com.example.spotifyapi.app.domain.usecase.GetPlaylistsUseCase
+import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
+import com.example.spotifyapi.app.ui.playlist.PlaylistViewModel
 import com.example.spotifyapi.auth.data.plugin.ResourcesPlugin
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaylistViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    private val playlistsUseCase: GetPlaylistsUseCase = mockk()
+    private val userProfileUseCase: GetUserProfileUseCase = mockk()
+    private val resourcesPlugin: ResourcesPlugin = mockk()
+    private lateinit var viewModel: PlaylistViewModel
 
     private val testDispatcher = StandardTestDispatcher()
-    private lateinit var viewModel: PlaylistViewModel
-    private val getPlaylistsUseCase: GetPlaylistsUseCase = mockk()
-    private val getUserProfileUseCase: GetUserProfileUseCase = mockk()
-    private val playlistsObserver: Observer<List<Playlist>> = mockk(relaxed = true)
-    private val userProfileObserver: Observer<UserProfile?> = mockk(relaxed = true)
-    private val errorObserver: Observer<String> = mockk(relaxed = true)
-    private val resourcesPlugin: ResourcesPlugin = mockk()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = PlaylistViewModel(getPlaylistsUseCase, getUserProfileUseCase, resourcesPlugin)
-        viewModel.playlistsLiveData.observeForever(playlistsObserver)
-        viewModel.userProfileLiveData.observeForever(userProfileObserver)
-        viewModel.errorLiveData.observeForever(errorObserver)
+        viewModel = PlaylistViewModel(playlistsUseCase, userProfileUseCase, resourcesPlugin)
     }
 
     @After
@@ -45,65 +48,70 @@ class PlaylistViewModelTest {
     }
 
     @Test
-    fun `getPlaylists should update playlistsLiveData when use case returns data`() = runTest {
-        //Given
-        val mockkListImages: List<Image> = listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-        val mockOwner : Owner = mockk(relaxed = true)
-        val fakePlaylists = listOf(Playlist("id" , "name", "description", mockOwner, 0, mockkListImages))
-        Playlist("id1" , "name1", "description1", mockOwner, 1, mockkListImages)
-        coEvery { getPlaylistsUseCase.getPlaylists() } returns fakePlaylists
-
-        //When
-        viewModel.getPlaylists()
-        advanceUntilIdle()
-
-        //Then - Teste de busca bem-sucedida de playlists
-        verify { playlistsObserver.onChanged(fakePlaylists) }
-        coVerify(exactly = 1) { getPlaylistsUseCase.getPlaylists() }
-    }
-
-    @Test
-    fun `getPlaylists should update errorLiveData when use case throws exception`() = runTest {
-        //Given
-        coEvery { getPlaylistsUseCase.getPlaylists() } throws Exception("Erro ao buscar playlists")
-
-        //When
-        viewModel.getPlaylists()
-        advanceUntilIdle()
-
-        //Then - Teste de erro na busca de playlists
-        verify { errorObserver.onChanged("Erro ao buscar playlists") }
-        coVerify(exactly = 1) { getPlaylistsUseCase.getPlaylists() }
-    }
-
-    @Test
-    fun `getUserProfile should update userProfileLiveData when use case returns data`() = runTest {
-        //Given
+    fun `getPlaylists posts playlists when use case succeeds`() = runTest {
         val mockkListImages: List<Image> =
             listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-        val fakeUserProfile = UserProfile("1", "User Name", mockkListImages)
-        coEvery { getUserProfileUseCase.getUserProfile() } returns fakeUserProfile
+        val mockOwner: Owner = mockk(relaxed = true)
+        val playlists = listOf(
+            Playlist(id = "1", name = "Rock", description = "", mockOwner, 0, mockkListImages),
 
-        //When
-        viewModel.getUserProfile()
-        advanceUntilIdle()
+            )
+        coEvery { playlistsUseCase.getPlaylists() } returns playlists
 
-        //Then - Teste de busca bem-sucedida do perfil do usuário
-        verify { userProfileObserver.onChanged(fakeUserProfile) }
-        coVerify(exactly = 1) { getUserProfileUseCase.getUserProfile() }
+        val observer = mockk<Observer<List<Playlist>>>(relaxed = true)
+        viewModel.playlistsLiveData.observeForever(observer)
+
+        viewModel.getPlaylists()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify { observer.onChanged(playlists) }
+        viewModel.playlistsLiveData.removeObserver(observer)
     }
 
     @Test
-    fun `getUserProfile should update errorLiveData when use case throws exception`() = runTest {
-        //Given
-        coEvery { getUserProfileUseCase.getUserProfile() } throws Exception("Erro ao buscar perfil do usuário")
+    fun `getPlaylists posts error when use case throws`() = runTest {
+        val errorMsg = "Erro ao buscar playlists"
+        coEvery { playlistsUseCase.getPlaylists() } throws Exception("fail")
+        every { resourcesPlugin.searchPlaylistsErrorMessage() } returns errorMsg
 
-        //When
+        val observer = mockk<Observer<String>>(relaxed = true)
+        viewModel.errorLiveData.observeForever(observer)
+
+        viewModel.getPlaylists()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify { observer.onChanged(errorMsg) }
+        viewModel.errorLiveData.removeObserver(observer)
+    }
+
+    @Test
+    fun `getUserProfile posts user profile when use case succeeds`() = runTest {
+        val userProfile = UserProfile(id = "1", displayName = "Chris", images = emptyList())
+        coEvery { userProfileUseCase.getUserProfile() } returns userProfile
+
+        val observer = mockk<Observer<UserProfile?>>(relaxed = true)
+        viewModel.userProfileLiveData.observeForever(observer)
+
         viewModel.getUserProfile()
-        advanceUntilIdle()
+        testDispatcher.scheduler.advanceUntilIdle()
 
-        //Then - Teste de erro na busca do perfil do usuário
-        verify { errorObserver.onChanged("Erro ao buscar perfil do usuário") }
-        coVerify(exactly = 1) { getUserProfileUseCase.getUserProfile() }
+        verify { observer.onChanged(userProfile) }
+        viewModel.userProfileLiveData.removeObserver(observer)
+    }
+
+    @Test
+    fun `getUserProfile posts error when use case throws`() = runTest {
+        val errorMsg = "Erro ao buscar perfil"
+        coEvery { userProfileUseCase.getUserProfile() } throws Exception("fail")
+        every { resourcesPlugin.searchProfileErrorMessage() } returns errorMsg
+
+        val observer = mockk<Observer<String>>(relaxed = true)
+        viewModel.errorLiveData.observeForever(observer)
+
+        viewModel.getUserProfile()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify { observer.onChanged(errorMsg) }
+        viewModel.errorLiveData.removeObserver(observer)
     }
 }

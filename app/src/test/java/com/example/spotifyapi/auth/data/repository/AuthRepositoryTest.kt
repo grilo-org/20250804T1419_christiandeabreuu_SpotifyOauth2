@@ -18,7 +18,7 @@ class AuthRepositoryTest {
 
     private lateinit var authRepository: AuthRepository
     private val apiService: AuthApiService = mockk()
-    private val resourcesPlugin : ResourcesPlugin = mockk()
+    private val resourcesPlugin: ResourcesPlugin = mockk()
 
     @Before
     fun setup() {
@@ -31,11 +31,7 @@ class AuthRepositoryTest {
         val fakeTokens = SpotifyTokens("access123", "refresh456")
         coEvery {
             apiService.getAccessToken(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                any(), any(), any(), any(), any()
             )
         } returns Response.success(fakeTokens)
 
@@ -54,11 +50,7 @@ class AuthRepositoryTest {
         //Given
         coEvery {
             apiService.getAccessToken(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                any(), any(), any(), any(), any()
             )
         } returns Response.error(400, "Bad Request".toResponseBody(null))
 
@@ -75,11 +67,7 @@ class AuthRepositoryTest {
         //Given
         coEvery {
             apiService.getAccessToken(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                any(), any(), any(), any(), any()
             )
         } throws Exception("Erro inesperado")
 

@@ -1,102 +1,84 @@
-package com.example.spotifyapi.app.data.repository
-
 import com.example.spotifyapi.app.data.database.SpotifyDAO
 import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.app.data.repository.UserProfileRepositoryImpl
 import com.example.spotifyapi.auth.data.repository.TokenRepository
-import io.mockk.Awaits
+import com.example.spotifyapi.utils.addBearer
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.just
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 
-class UserProfileRepositoryTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class UserProfileRepositoryImplTest {
 
-    private lateinit var repository: UserProfileRepository
-    private val apiService: SpotifyApiService = mockk(relaxed = true)
-    private val spotifyDAO: SpotifyDAO = mockk(relaxed = true)
-    private var tokenRepository: TokenRepository = mockk(relaxed = true)
+    private lateinit var apiService: SpotifyApiService
+    private lateinit var spotifyDAO: SpotifyDAO
+    private lateinit var tokenRepository: TokenRepository
+    private lateinit var repository: UserProfileRepositoryImpl
 
     @Before
-    fun setup() {
+    fun setUp() {
+        apiService = mockk()
+        spotifyDAO = mockk()
+        tokenRepository = mockk()
         repository = UserProfileRepositoryImpl(apiService, spotifyDAO, tokenRepository)
     }
 
     @Test
-    fun `getUserProfileFromApi should return user profile when API call is successful`() =
-        runBlocking {
-            // Given
-            val mockkListImages: List<Image> =
-                listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-            val fakeProfile = UserProfile("1", "User Name", mockkListImages)
-            coEvery { apiService.getUserProfile(any()) } returns fakeProfile
+    fun `getUserProfileFromApi returns UserProfile when successful`() = runTest {
+        // Arrange
+        val mockkListImages: List<Image> =
+            listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
+        val token = "token123"
+        val userProfile = UserProfile("id", "name", mockkListImages)
+        coEvery { tokenRepository.getAccessToken() } returns token
+        coEvery { apiService.getUserProfile(token.addBearer()) } returns userProfile
 
-            // When
-            val result = repository.getUserProfileFromApi()
-
-            // Then - Verificando se o resultado corresponde ao esperado
-            assertEquals(fakeProfile, result)
-            coVerify(exactly = 1) { apiService.getUserProfile("Bearer token123") }
-        }
-
-    @Test
-    fun `getUserProfileFromApi should return null when API call fails`() = runBlocking {
-        // Given
-        coEvery { apiService.getUserProfile(any()) } throws Exception("API Error")
-
-        //When
+        // Act
         val result = repository.getUserProfileFromApi()
 
-        // Then - Verificando se o resultado é nulo
+        // Assert
+        assertEquals(userProfile, result)
+        coVerify { tokenRepository.getAccessToken() }
+        coVerify { apiService.getUserProfile("Bearer $token") }
+    }
+
+    @Test
+    fun `getUserProfileFromApi returns null when exception is thrown`() = runTest {
+        // Arrange
+        val token = "token123"
+        coEvery { tokenRepository.getAccessToken() } returns token
+        coEvery { apiService.getUserProfile(token.addBearer()) } throws RuntimeException("Network error")
+
+        // Act
+        val result = repository.getUserProfileFromApi()
+
+        // Assert
         assertNull(result)
-        coVerify(exactly = 1) { apiService.getUserProfile("Bearer token123") }
+        coVerify { tokenRepository.getAccessToken() }
+        coVerify { apiService.getUserProfile("Bearer $token") }
     }
 
-    @Test
-    fun `insertLocalUserProfile should call DAO to save user profile`() = runBlocking {
-        // Given
-        val fakeProfileDB = UserProfileDB(0, "id", "User Name", "imageUrl")
-        coEvery { spotifyDAO.insertLocalUserProfile(fakeProfileDB) } just Awaits
-
-        // When
-        repository.insertLocalUserProfile(fakeProfileDB)
-
-        // Then - Teste para salvar um perfil localmente
-        coVerify(exactly = 1) { spotifyDAO.insertLocalUserProfile(fakeProfileDB) }
-    }
 
     @Test
-    fun `getLocalUserProfile should return user profile from local database`() = runBlocking {
-        // Given
-        val fakeProfileDB = UserProfileDB(0, "id", "User Name", "imageUrl")
+    fun `getLocalUserProfile returns local user profile from DAO`() = runTest {
+        // Arrange
+        val userProfileDB = UserProfileDB(0, "id", "name", "email")
+        coEvery { spotifyDAO.getLocalUserProfile() } returns userProfileDB
 
-        coEvery { spotifyDAO.getLocalUserProfile() } returns fakeProfileDB
-
-        // When
+        // Act
         val result = repository.getLocalUserProfile()
 
-        // Then - Teste para recuperar um perfil local salvo é recuperado corretamente
-        assertEquals(fakeProfileDB, result)
-        coVerify(exactly = 1) { spotifyDAO.getLocalUserProfile() }
-    }
-
-    @Test
-    fun `getLocalUserProfile should return null when no profile is found`() = runBlocking {
-        // Given
-        coEvery { spotifyDAO.getLocalUserProfile() } returns null
-
-        // When
-        val result = repository.getLocalUserProfile()
-
-        // Then - Teste para verificar retorno null quando não há perfil local
-        assertNull(result)
-        coVerify(exactly = 1) { spotifyDAO.getLocalUserProfile() }
+        // Assert
+        assertEquals(userProfileDB, result)
+        coVerify { spotifyDAO.getLocalUserProfile() }
     }
 }

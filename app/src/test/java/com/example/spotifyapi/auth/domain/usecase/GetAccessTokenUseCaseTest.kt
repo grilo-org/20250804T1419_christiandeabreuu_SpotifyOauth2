@@ -2,9 +2,12 @@ package com.example.spotifyapi.auth.domain.usecase
 
 import com.example.spotifyapi.auth.data.model.SpotifyTokens
 import com.example.spotifyapi.auth.data.repository.AuthRepository
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -36,7 +39,12 @@ class GetAccessTokenUseCaseTest {
     @Test
     fun `execute should return failure when API call fails`() = runBlocking {
         //Given
-        coEvery { repository.getAccessToken(any(), any()) } returns Result.failure(Exception("Erro na API"))
+        coEvery {
+            repository.getAccessToken(
+                any(),
+                any()
+            )
+        } returns Result.failure(Exception("Erro na API"))
 
         //When
         val result = getAccessTokenUseCase.execute("authCode", "redirectUri")

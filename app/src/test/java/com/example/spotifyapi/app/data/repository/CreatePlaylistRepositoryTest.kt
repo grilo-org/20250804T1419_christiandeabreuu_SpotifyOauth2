@@ -1,63 +1,74 @@
-package com.example.spotifyapi.app.data.repository
-
+import com.example.spotifyapi.app.data.model.CreatePlaylistRequest
 import com.example.spotifyapi.app.data.networking.SpotifyApiService
+import com.example.spotifyapi.app.data.repository.CreatePlaylistRepositoryImpl
 import com.example.spotifyapi.auth.data.repository.TokenRepository
-import io.mockk.MockKAnnotations
+import com.example.spotifyapi.utils.addBearer
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
 
-class CreatePlaylistRepositoryTest {
+@OptIn(ExperimentalCoroutinesApi::class)
+class CreatePlaylistRepositoryImplTest {
 
-    @RelaxedMockK
     private lateinit var apiService: SpotifyApiService
-    private lateinit var repository: CreatePlaylistRepository
-    private var tokenRepository: TokenRepository = mockk(relaxed = true)
-
+    private lateinit var tokenRepository: TokenRepository
+    private lateinit var repository: CreatePlaylistRepositoryImpl
 
     @Before
-    fun setup() {
-        MockKAnnotations.init(this)
+    fun setUp() {
+        apiService = mockk()
+        tokenRepository = mockk()
         repository = CreatePlaylistRepositoryImpl(apiService, tokenRepository)
     }
 
     @Test
-    fun `createPlaylist should return true when API call is successful`() = runBlocking {
-        // Given
-        val fakeResponse = mockk<Response<Unit>> {
-            every { isSuccessful } returns true
-        }
-        coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
+    fun `createPlaylist returns true when response is successful`() = runTest {
+        // Arrange
+        val playlistName = "My Playlist"
+        val token = "token123"
+        val bearerToken = token.addBearer()
+        val request = CreatePlaylistRequest(name = playlistName, public = true)
+        val response = Response.success(Unit)
 
-        // When
-        val result = repository.createPlaylist("Minha Playlist")
+        coEvery { tokenRepository.getAccessToken() } returns token
+        coEvery { apiService.createPlaylist(bearerToken, request) } returns response
 
-        // Then - Verificando se o resultado é verdadeiro
+        // Act
+        val result = repository.createPlaylist(playlistName)
+
+        // Assert
         assertTrue(result)
-        coVerify(exactly = 1) { apiService.createPlaylist("Bearer token123", any()) }
+        coVerify { tokenRepository.getAccessToken() }
+        coVerify { apiService.createPlaylist(bearerToken, request) }
     }
 
     @Test
-    fun `createPlaylist should return false when API call fails`() = runBlocking {
-        // Given
-        val fakeResponse = mockk<Response<Unit>> {
-            every { isSuccessful } returns false
-        }
-        coEvery { apiService.createPlaylist(any(), any()) } returns fakeResponse
+    fun `createPlaylist returns false when response is not successful`() = runTest {
+        // Arrange
+        val playlistName = "My Playlist"
+        val token = "token123"
+        val bearerToken = token.addBearer()
+        val request = CreatePlaylistRequest(name = playlistName, public = true)
+        val errorResponse = Response.error<Unit>(400, "error".toResponseBody(null))
 
-        // When
-        val result = repository.createPlaylist("token123")
+        coEvery { tokenRepository.getAccessToken() } returns token
+        coEvery { apiService.createPlaylist(bearerToken, request) } returns errorResponse
 
-        // Then - Verificando se o resultado é falso
+        // Act
+        val result = repository.createPlaylist(playlistName)
+
+        // Assert
         assertFalse(result)
-        coVerify(exactly = 1) { apiService.createPlaylist("Bearer token123", any()) }
+        coVerify { tokenRepository.getAccessToken() }
+        coVerify { apiService.createPlaylist(bearerToken, request) }
     }
 }

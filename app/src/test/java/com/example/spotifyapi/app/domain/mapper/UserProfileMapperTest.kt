@@ -1,61 +1,74 @@
-package com.example.spotifyapi.app.domain.mapper
-
-import com.example.spotifyapi.app.data.database.SpotifyDAO
+import com.example.spotifyapi.app.data.local.UserProfileDB
 import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.UserProfile
-import com.example.spotifyapi.app.data.networking.SpotifyApiService
-import com.example.spotifyapi.app.data.repository.UserProfileRepository
-import com.example.spotifyapi.app.data.repository.UserProfileRepositoryImpl
-import com.example.spotifyapi.auth.data.repository.TokenRepository
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
-import kotlinx.coroutines.runBlocking
+import com.example.spotifyapi.app.domain.mapper.UserProfileMapper.toUserProfile
+import com.example.spotifyapi.app.domain.mapper.UserProfileMapper.toUserProfileDB
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Before
 import org.junit.Test
 
-class UserProfileRepositoryTest {
+class UserProfileMapperTest {
 
-    private lateinit var repository: UserProfileRepository
-    private val apiService: SpotifyApiService = mockk(relaxed = true)
-    private val spotifyDAO: SpotifyDAO = mockk(relaxed = true)
-    private lateinit var tokenRepository: TokenRepository
+    @Test
+    fun `toUserProfileDB maps UserProfile to UserProfileDB correctly`() {
+        val userProfile = UserProfile(
+            id = "123",
+            displayName = "User Name",
+            images = listOf(Image(url = "http://img.com/pic.jpg"))
+        )
 
+        val result = userProfile.toUserProfileDB()
 
-    @Before
-    fun setup() {
-        repository = UserProfileRepositoryImpl(apiService, spotifyDAO, tokenRepository)
+        val expected = UserProfileDB(
+            id = "123", name = "User Name", imageUrl = "http://img.com/pic.jpg"
+        )
+
+        assertEquals(expected, result)
     }
 
     @Test
-    fun `getUserProfileFromApi should return user profile when API call is successful`() =
-        runBlocking {
-            // Given
-            val mockkListImages: List<Image> =
-                listOf(mockk(relaxed = true), mockk(relaxed = true), mockk(relaxed = true))
-            val fakeProfile = UserProfile("1", "User Name", mockkListImages)
-            coEvery { apiService.getUserProfile(any()) } returns fakeProfile
+    fun `toUserProfileDB handles empty images list`() {
+        val userProfile = UserProfile(
+            id = "321", displayName = "No Pic", images = emptyList()
+        )
 
-            // When
-            val result = repository.getUserProfileFromApi()
+        val result = userProfile.toUserProfileDB()
 
-            // Then - Verificando se o resultado é sucesso
-            assertEquals(fakeProfile, result)
-            coVerify(exactly = 1) { apiService.getUserProfile("Bearer token123") }
-        }
+        val expected = UserProfileDB(
+            id = "321", name = "No Pic", imageUrl = ""
+        )
+
+        assertEquals(expected, result)
+    }
 
     @Test
-    fun `getUserProfileFromApi should return null when API call fails`() = runBlocking {
-        // Given
-        coEvery { apiService.getUserProfile(any()) } throws Exception("API Error")
+    fun `toUserProfile maps UserProfileDB to UserProfile correctly`() {
+        val userProfileDB = UserProfileDB(
+            id = "456", name = "DB Name", imageUrl = "http://img.com/dbpic.jpg"
+        )
 
-        // When
-        val result = repository.getUserProfileFromApi()
+        val result = userProfileDB.toUserProfile()
 
-        // Then - Verificando se o resultado é nulo
-        assertNull(result)
-        coVerify(exactly = 1) { apiService.getUserProfile("Bearer token123") }
+        val expected = UserProfile(
+            id = "456",
+            displayName = "DB Name",
+            images = listOf(Image(url = "http://img.com/dbpic.jpg"))
+        )
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `toUserProfile handles null imageUrl`() {
+        val userProfileDB = UserProfileDB(
+            id = "789", name = "Null Image", imageUrl = null
+        )
+
+        val result = userProfileDB.toUserProfile()
+
+        val expected = UserProfile(
+            id = "789", displayName = "Null Image", images = listOf(Image(url = ""))
+        )
+
+        assertEquals(expected, result)
     }
 }

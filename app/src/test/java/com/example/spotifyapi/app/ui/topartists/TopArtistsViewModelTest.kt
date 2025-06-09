@@ -2,7 +2,6 @@ package com.example.spotifyapi.app.ui.topartists
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.example.spotifyapi.app.data.model.Image
 import com.example.spotifyapi.app.data.model.UserProfile
 import com.example.spotifyapi.app.domain.usecase.GetTopArtistsUseCase
 import com.example.spotifyapi.app.domain.usecase.GetUserProfileUseCase
@@ -17,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain

@@ -20,7 +20,6 @@ class TopArtistsRepositoryTest {
     private var tokenRepository: TokenRepository = mockk(relaxed = true)
 
 
-
     @Before
     fun setup() {
         repository = TopArtistsRepositoryImpl(apiService, spotifyDAO, tokenRepository)
@@ -32,7 +31,7 @@ class TopArtistsRepositoryTest {
         coEvery { apiService.getTopArtists(any()) } throws Exception("API Error")
 
         // When
-         repository.getTopArtistsApi()
+        repository.getTopArtistsApi()
 
         // Then - Verificando que retorna uma lista vazia
         coEvery {
