@@ -67,7 +67,7 @@ Este é um aplicativo Android que utiliza a API do Spotify para oferecer funcion
 
 > ⚠️ O `redirect_uri` deve ser igual ao cadastrado no painel do Spotify.
 
-📌 **Documentação e Design**  
+📌 **Documentação e Design** . 
 - [📝 Descrição do Projeto](./descricao.md)  
 - [🎨 Protótipo no Figma](./figmaProjetoSpotify.png)  
 
